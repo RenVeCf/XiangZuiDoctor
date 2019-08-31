@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/y250"
+    android:layout_marginTop="@dimen/y50">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x50"
+        android:layout_marginTop="@dimen/y20"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="1"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/iv_img"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/x50"
+        android:layout_marginBottom="@dimen/y20"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="2"
+        android:maxLines="2"
+        android:textColor="@color/tx_bottom_navigation"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_img" />
+
+    <com.xuexiang.xui.widget.imageview.RadiusImageView
+        android:id="@+id/iv_img"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:riv_corner_radius="7dp"
+        app:riv_is_touch_select_mode_enabled="true"
+        app:riv_selected_mask_color="@color/xui_config_color_gray_8" />
+</androidx.constraintlayout.widget.ConstraintLayout>

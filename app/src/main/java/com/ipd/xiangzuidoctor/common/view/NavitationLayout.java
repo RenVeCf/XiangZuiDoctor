@@ -73,7 +73,7 @@ public class NavitationLayout extends RelativeLayout {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT);
         params.weight = 1;
         params.gravity = Gravity.CENTER;
-        params.setMargins(70, 30, 70, 30);
+        params.setMargins(60, 30, 60, 30);
         // 循环，根据标题栏动态生成TextView来显示标题，每个标题栏的宽度比例为1:1,其中的内容居中。
         for (int i = 0; i < titles.length; i++) {
             final int index = i;

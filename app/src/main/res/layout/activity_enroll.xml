@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.EnrollActivity">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y10"
+        android:background="@color/white"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_enroll">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_pay_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="@dimen/x50"
+            android:layout_marginTop="@dimen/y50"
+            android:text="选择支付方式"
+            android:textColor="@color/black" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/tv_wechat_pay"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y150"
+            app:sDividerLineType="none"
+            app:sLeftIconRes="@drawable/ic_wechat_pay"
+            app:sLeftTextString="微信支付"
+            app:sRightIconRes="@drawable/ic_check_blue" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/tv_ali_pay"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y150"
+            app:sDividerLineType="none"
+            app:sLeftIconRes="@drawable/ic_ali_pay"
+            app:sLeftTextString="支付宝支付"
+            app:sRightIconRes="@drawable/ic_check_gray" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/tv_balance_pay"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y150"
+            app:sCenterTextColor="@color/tx_bottom_navigation"
+            app:sCenterTextSize="12sp"
+            app:sDividerLineType="none"
+            app:sLeftIconRes="@drawable/ic_balance_pay"
+            app:sLeftTextString="余额支付"
+            app:sRightIconRes="@drawable/ic_check_gray" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_enroll"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y200"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_enroll">
+
+        <View
+            android:layout_width="@dimen/y200"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="@dimen/x50"
+            android:layout_marginBottom="@dimen/y70"
+            android:background="@color/tx_bottom_navigation"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_discount_fee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y50"
+            android:text="¥178"
+            android:textColor="@color/tx_fee"
+            app:layout_constraintStart_toEndOf="@+id/tv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_market_fee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x50"
+            android:layout_marginBottom="@dimen/y50"
+            android:text="市场价：¥178"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x50"
+            android:layout_marginTop="@dimen/y50"
+            android:text="平台优惠价："
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.ipd.xiangzuidoctor.common.view.TopView
+        android:id="@+id/tv_enroll"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:gravity="bottom"
+        app:is_back="true"
+        app:is_customer_service="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="报名" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:layout_marginTop="@dimen/y100"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+            android:id="@+id/bt_pay"
+            style="@style/SuperButton.Blue"
+            app:sGradientType="linear"
+            app:sGradientStartColor="#6BB6FF"
+            app:sGradientEndColor="#4088FE"
+            app:sGradientOrientation="LEFT_RIGHT"
+            android:layout_width="@dimen/x400"
+            android:layout_height="@dimen/y110"
+            android:text="支付" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

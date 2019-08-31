@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.StartOperationActivity">
+
+    <com.ipd.xiangzuidoctor.common.view.TopView
+        android:id="@+id/tv_start_operation"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:gravity="bottom"
+        app:is_back="true"
+        app:is_customer_service="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_content"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:background="@color/white"
+        android:textColor="@color/black"
+        android:gravity="start|center_vertical"
+        android:paddingStart="@dimen/x50"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_start_operation" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:layout_marginTop="@dimen/y100"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+            android:id="@+id/bt_confirm"
+            style="@style/SuperButton.Blue"
+            app:sGradientType="linear"
+            app:sGradientStartColor="#6BB6FF"
+            app:sGradientEndColor="#4088FE"
+            app:sGradientOrientation="LEFT_RIGHT"
+            android:layout_width="@dimen/x400"
+            android:layout_height="@dimen/y110"
+            android:text="确认" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

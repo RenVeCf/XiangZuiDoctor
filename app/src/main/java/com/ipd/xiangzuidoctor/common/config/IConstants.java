@@ -34,24 +34,24 @@ public interface IConstants {
      * requestCode
      * 请求码
      */
-    int REQUEST_CODE_90 = 90;//实名认证头像上传
-    int REQUEST_CODE_91 = 91;//实名认证代理人身份证上传
-    int REQUEST_CODE_92 = 92;//实名认证医院营业执照上传
-    int REQUEST_CODE_93 = 93;//实名认证医疗机构资格证上传
-    int REQUEST_CODE_94 = 94;//实名认证医院代理人管理授权书上传
-    int REQUEST_CODE_95 = 95;//患者身份证上传
-    int REQUEST_CODE_96 = 96;//患者保险同意书上传
-    int REQUEST_CODE_97 = 97;//连台新增患者身份证上传
-    int REQUEST_CODE_98 = 98;//连台新增患者保险同意书上传
-    int REQUEST_CODE_99 = 99;//地址的增删改
-    int REQUEST_CODE_100 = 100;//地址选中
-    int REQUEST_CODE_101 = 101;//医院信息回跳
-    int REQUEST_CODE_102 = 102;//账户的增删改
-    int REQUEST_CODE_103 = 103;//手术相关病历上传回跳
-    int REQUEST_CODE_104 = 104;//血常规上传回跳
-    int REQUEST_CODE_105 = 105;//心电图上传回跳
-    int REQUEST_CODE_106 = 106;//凝血功能上传回跳
-    int REQUEST_CODE_107 = 107;//传染病指标上传回跳
+    int REQUEST_CODE_90 = 90;//实名认证照片上传
+    int REQUEST_CODE_91 = 91;//实名认证身份证上传
+    int REQUEST_CODE_92 = 92;//实名认证执业资格证/医师资格证上传
+    int REQUEST_CODE_93 = 93;//实名认证胸牌上传
+    int REQUEST_CODE_94 = 94;//结束手术麻醉单上传
+    int REQUEST_CODE_95 = 95;//
+    int REQUEST_CODE_96 = 96;//
+    int REQUEST_CODE_97 = 97;//
+    int REQUEST_CODE_98 = 98;//
+    int REQUEST_CODE_99 = 99;//
+    int REQUEST_CODE_100 = 100;//
+    int REQUEST_CODE_101 = 101;//
+    int REQUEST_CODE_102 = 102;//
+    int REQUEST_CODE_103 = 103;//
+    int REQUEST_CODE_104 = 104;//
+    int REQUEST_CODE_105 = 105;//
+    int REQUEST_CODE_106 = 106;
+    int REQUEST_CODE_107 = 107;
     int REQUEST_CODE_108 = 108;
     int REQUEST_CODE_109 = 109;
 
