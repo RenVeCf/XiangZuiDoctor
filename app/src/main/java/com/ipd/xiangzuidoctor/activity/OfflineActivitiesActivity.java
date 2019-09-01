@@ -11,6 +11,7 @@ import com.ipd.xiangzuidoctor.adapter.ViewPagerAdapter;
 import com.ipd.xiangzuidoctor.base.BaseActivity;
 import com.ipd.xiangzuidoctor.base.BasePresenter;
 import com.ipd.xiangzuidoctor.base.BaseView;
+import com.ipd.xiangzuidoctor.common.view.ActivitesNavitationLayout;
 import com.ipd.xiangzuidoctor.common.view.NavitationLayout;
 import com.ipd.xiangzuidoctor.common.view.TopView;
 import com.ipd.xiangzuidoctor.fragment.OfflineActivitiesFragment;
@@ -33,7 +34,7 @@ public class OfflineActivitiesActivity extends BaseActivity {
     @BindView(R.id.tv_offline_activities)
     TopView tvOfflineActivities;
     @BindView(R.id.nfsl_offline_activities)
-    NavitationLayout nfslOfflineActivities;
+    ActivitesNavitationLayout nfslOfflineActivities;
     @BindView(R.id.vp_offline_activities)
     ViewPager vpOfflineActivities;
 

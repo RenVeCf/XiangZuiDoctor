@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.OfflineActivitiesActivity">
+    tools:context=".activity.CollectionActivity">
 
     <com.ipd.xiangzuidoctor.common.view.TopView
-        android:id="@+id/tv_offline_activities"
+        android:id="@+id/tv_collection"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
@@ -17,23 +17,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="线下活动" />
+        app:title="我的收藏" />
 
-    <com.ipd.xiangzuidoctor.common.view.ActivitesNavitationLayout
-        android:id="@+id/nfsl_offline_activities"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:background="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_offline_activities" />
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/vp_offline_activities"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/srl_collection"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nfsl_offline_activities" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_collection">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_collection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingTop="@dimen/y50" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

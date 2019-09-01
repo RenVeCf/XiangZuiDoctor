@@ -65,16 +65,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_enroll">
 
-        <View
-            android:layout_width="@dimen/y200"
-            android:layout_height="0.5dp"
-            android:layout_marginStart="@dimen/x50"
-            android:layout_marginBottom="@dimen/y70"
-            android:background="@color/tx_bottom_navigation"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv" />
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_discount_fee"
             android:layout_width="wrap_content"
@@ -92,7 +82,17 @@
             android:layout_marginStart="@dimen/x50"
             android:layout_marginBottom="@dimen/y50"
             android:text="市场价：¥178"
-            android:textColor="@color/black"
+            android:textColor="@color/tx_bottom_navigation"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv" />
+
+        <View
+            android:layout_width="@dimen/y200"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/x50"
+            android:layout_marginBottom="@dimen/y50"
+            android:background="@color/tx_bottom_navigation"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv" />

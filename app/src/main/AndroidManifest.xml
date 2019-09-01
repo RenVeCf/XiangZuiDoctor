@@ -16,8 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon, android:allowBackup, theme, label">
-        <activity android:name=".activity.EnrollActivity"></activity>
-        <activity android:name=".activity.OfflineActivitiesDetailsActivity" />
+
         <activity
             android:name=".activity.CaptchaLoginActivity"
             android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
@@ -99,6 +98,96 @@
             android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
             android:exported="false"
             android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.CollectionActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.MyActivitiesActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.EnrollActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.OfflineActivitiesDetailsActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.AboutActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.FeedbackActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.HospitialInfoActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.ModifyPwdActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.MsgActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.MsgRemindActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.PlatformAgreementActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.RechargeActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.RechargeRecordActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.SettingActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.WalletActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.WithdrawActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.WithdrawalsRecordActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.WithdrawSuccessActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
 
         <meta-data
             android:name="channel"
@@ -119,6 +208,7 @@
             android:name="design_height_in_dp"
             android:value="640" />
     </application>
+
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

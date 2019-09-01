@@ -14,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ipd.xiangzuidoctor.R;
+import com.ipd.xiangzuidoctor.activity.RechargeRecordActivity;
+import com.ipd.xiangzuidoctor.activity.WithdrawalsRecordActivity;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
 import com.ipd.xiangzuidoctor.utils.isClickUtil;
 
@@ -99,10 +101,10 @@ public class TopView extends RelativeLayout implements View.OnClickListener {
                 //                ApplicationUtil.getContext().startActivity(new Intent(ApplicationUtil.getContext(), CustomerServiceActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 break;
             case R.id.bt_top_withdrawals_record:
-//                ApplicationUtil.getContext().startActivity(new Intent(ApplicationUtil.getContext(), WithdrawalsRecordActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                ApplicationUtil.getContext().startActivity(new Intent(ApplicationUtil.getContext(), WithdrawalsRecordActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 break;
             case R.id.bt_top_recharge_record:
-//                ApplicationUtil.getContext().startActivity(new Intent(ApplicationUtil.getContext(), RechargeRecordActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                ApplicationUtil.getContext().startActivity(new Intent(ApplicationUtil.getContext(), RechargeRecordActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 break;
             default:
                 break;

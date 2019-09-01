@@ -4,8 +4,93 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".activity.OfflineActivitiesDetailsActivity">
+
+    <com.ipd.xiangzuidoctor.common.view.BounceScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_offline_activities_details">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <com.xuexiang.xui.widget.imageview.RadiusImageView
+                android:id="@+id/iv_img"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.3"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="@dimen/y50"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.9"
+                android:src="@mipmap/bg_special_big"
+                app:riv_corner_radius="7dp"
+                app:riv_is_touch_select_mode_enabled="true"
+                app:riv_selected_mask_color="@color/xui_config_color_gray_8" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x50"
+                android:layout_marginTop="@dimen/y50"
+                android:text="2019-05-05"
+                android:textColor="@color/tx_bottom_navigation"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:layout_marginTop="@dimen/y50"
+                android:layout_marginStart="@dimen/x50"
+                android:layout_marginEnd="@dimen/x50"
+                android:text="历史上外科治疗肺气肿的方法有：肋软骨切除松动胸壁、自主神经切除，以Gore-Tex、腹直肌鞘、阔筋膜或塑料替代物制作胸廓、支气管成形术等，效果均不理想。 1957年，Brantigan等为肺气肿病人作多处肺表楔形切除术，术后75%的病人自觉呼吸困难缓解，呼吸功能改善。但由于近期病死率达16%，又缺乏客观判断疗效指标的依据，致使此术未能被医学界同道所接爱。 1991年，Wakabayashi采用激光切除肺大泡治疗弥漫性大疱性肺气肿获得成功，但术后肺漏气率高。历史上外科治疗肺气肿的方法有：肋软骨切除松动胸壁、自主神经切除，以Gore-Tex、腹直肌鞘、阔筋膜或塑料替代物制作胸廓、支气管成形术等，效果均不理想。"
+                android:textColor="@color/tx_bottom_navigation"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_time" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x50"
+                android:layout_marginTop="@dimen/y50"
+                android:text="看病有学问，“寻医”有窍门"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_img" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/x50"
+                android:layout_marginTop="@dimen/y50"
+                android:paddingStart="@dimen/x10"
+                android:textSize="10sp"
+                android:paddingEnd="@dimen/x10"
+                android:paddingTop="@dimen/y5"
+                android:paddingBottom="@dimen/y5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_img"
+                android:gravity="center"
+                android:textColor="@color/white" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.ipd.xiangzuidoctor.common.view.BounceScrollView>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_enroll"
@@ -16,7 +101,6 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/tv_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -42,7 +126,6 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/tv_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -60,61 +143,6 @@
             app:sStrokeWidth="0.5dp"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/x50"
-        android:layout_marginTop="@dimen/y50"
-        android:text="2019-05-05"
-        android:textColor="@color/tx_bottom_navigation"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_content"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:layout_marginTop="@dimen/y50"
-        android:layout_marginStart="@dimen/x50"
-        android:layout_marginEnd="@dimen/x50"
-        android:text="历史上外科治疗肺气肿的方法有：肋软骨切除松动胸壁、自主神经切除，以Gore-Tex、腹直肌鞘、阔筋膜或塑料替代物制作胸廓、支气管成形术等，效果均不理想。 1957年，Brantigan等为肺气肿病人作多处肺表楔形切除术，术后75%的病人自觉呼吸困难缓解，呼吸功能改善。但由于近期病死率达16%，又缺乏客观判断疗效指标的依据，致使此术未能被医学界同道所接爱。 1991年，Wakabayashi采用激光切除肺大泡治疗弥漫性大疱性肺气肿获得成功，但术后肺漏气率高。历史上外科治疗肺气肿的方法有：肋软骨切除松动胸壁、自主神经切除，以Gore-Tex、腹直肌鞘、阔筋膜或塑料替代物制作胸廓、支气管成形术等，效果均不理想。"
-        android:textColor="@color/tx_bottom_navigation"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_time" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/x50"
-        android:layout_marginTop="@dimen/y50"
-        android:text="看病有学问，“寻医”有窍门"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_img" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/x50"
-        android:layout_marginTop="@dimen/y50"
-        android:paddingStart="@dimen/x10"
-        android:textSize="10sp"
-        android:paddingEnd="@dimen/x10"
-        android:paddingTop="@dimen/y5"
-        android:paddingBottom="@dimen/y5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_img"
-        android:gravity="center"
-        android:textColor="@color/white" />
-
     <com.ipd.xiangzuidoctor.common.view.TopView
         android:id="@+id/tv_offline_activities_details"
         android:layout_width="0dp"
@@ -127,18 +155,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:title="活动详情" />
-
-    <com.xuexiang.xui.widget.imageview.RadiusImageView
-        android:id="@+id/iv_img"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_offline_activities_details"
-        app:layout_constraintWidth_percent="0.9"
-        android:src="@mipmap/bg_special_big"
-        app:riv_corner_radius="7dp"
-        app:riv_is_touch_select_mode_enabled="true"
-        app:riv_selected_mask_color="@color/xui_config_color_gray_8" />
 </androidx.constraintlayout.widget.ConstraintLayout>

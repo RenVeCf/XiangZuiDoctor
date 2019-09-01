@@ -75,7 +75,8 @@ public class SpecialColumnDetailsActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_share:
-                new ShareDialog(this){}.show();
+                new ShareDialog(this) {
+                }.show();
                 break;
             case R.id.bt_collection:
                 if ("收藏".equals(btCollection.getText().toString()))

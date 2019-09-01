@@ -39,7 +39,7 @@ public interface IConstants {
     int REQUEST_CODE_92 = 92;//实名认证执业资格证/医师资格证上传
     int REQUEST_CODE_93 = 93;//实名认证胸牌上传
     int REQUEST_CODE_94 = 94;//结束手术麻醉单上传
-    int REQUEST_CODE_95 = 95;//
+    int REQUEST_CODE_95 = 95;//医生信息回跳
     int REQUEST_CODE_96 = 96;//
     int REQUEST_CODE_97 = 97;//
     int REQUEST_CODE_98 = 98;//

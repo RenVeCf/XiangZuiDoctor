@@ -13,7 +13,6 @@ import com.ipd.xiangzuidoctor.base.BasePresenter;
 import com.ipd.xiangzuidoctor.base.BaseView;
 import com.ipd.xiangzuidoctor.common.view.NavitationLayout;
 import com.ipd.xiangzuidoctor.common.view.TopView;
-import com.ipd.xiangzuidoctor.fragment.OrderFragment;
 import com.ipd.xiangzuidoctor.fragment.SpecialColumnFragment;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
 

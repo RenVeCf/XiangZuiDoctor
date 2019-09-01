@@ -94,6 +94,12 @@ public class AuthenticationResultActivity extends BaseActivity {
                 tvTitle.setText("取消成功");
                 tvContent.setText("您的报名费将于2日内返还至您的账户中");
                 break;
+            case 5:
+                ivResult.setImageResource(R.drawable.ic_recharge_success);
+                tvTopTitle.setText("充值成功");
+                tvTitle.setText("充值成功");
+                tvContent.setText("您已充值成功，钱款已到账");
+                break;
         }
     }
 

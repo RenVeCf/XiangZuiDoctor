@@ -15,7 +15,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.ipd.xiangzuidoctor.R;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * Description : 滑动导航栏
@@ -24,7 +23,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  * Time : 2017/11/loading1
  */
 
-public class NavitationLayout extends RelativeLayout {
+public class ActivitesNavitationLayout extends RelativeLayout {
 
     private TextView[] textViews; // 标题栏数组，用于存储要显示的标题
     private LinearLayout titleLayout; //标题栏父控件
@@ -45,15 +44,15 @@ public class NavitationLayout extends RelativeLayout {
     private OnNaPageChangeListener onNaPageChangeListener;
 
 
-    public NavitationLayout(Context context) {
+    public ActivitesNavitationLayout(Context context) {
         this(context, null);
     }
 
-    public NavitationLayout(Context context, AttributeSet attrs) {
+    public ActivitesNavitationLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public NavitationLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ActivitesNavitationLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         titleLayout = new LinearLayout(context);
@@ -76,7 +75,7 @@ public class NavitationLayout extends RelativeLayout {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, MATCH_PARENT);
         params.weight = 1;
         params.gravity = Gravity.CENTER;
-        params.setMargins(60, 30, 60, 30);
+        params.setMargins(150, 30, 150, 30);
         // 循环，根据标题栏动态生成TextView来显示标题，每个标题栏的宽度比例为1:1,其中的内容居中。
         for (int i = 0; i < titles.length; i++) {
             final int index = i;

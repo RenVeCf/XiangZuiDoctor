@@ -11,6 +11,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.ipd.xiangzuidoctor.R;
+import com.ipd.xiangzuidoctor.activity.AuthenticationResultActivity;
+import com.ipd.xiangzuidoctor.activity.EnrollActivity;
 import com.ipd.xiangzuidoctor.activity.OfflineActivitiesDetailsActivity;
 import com.ipd.xiangzuidoctor.activity.SpecialColumnDetailsActivity;
 import com.ipd.xiangzuidoctor.adapter.OfflineActivitiesAdapter;
@@ -103,6 +105,20 @@ public class OfflineActivitiesFragment extends BaseFragment {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                         startActivity(new Intent(getContext(), OfflineActivitiesDetailsActivity.class).putExtra("offline_activities_type", offlineActivitiesType));
+                    }
+                });
+
+                offlineActivitiesAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                    @Override
+                    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                        switch (view.getId()){
+                            case R.id.bt_enroll:
+                                startActivity(new Intent(getContext(), EnrollActivity.class));
+                                break;
+                            case R.id.bt_cancel:
+                                startActivity(new Intent(getContext(), AuthenticationResultActivity.class).putExtra("result_type", 4));
+                                break;
+                        }
                     }
                 });
 
