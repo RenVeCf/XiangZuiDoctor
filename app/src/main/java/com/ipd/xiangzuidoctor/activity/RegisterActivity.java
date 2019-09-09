@@ -7,15 +7,33 @@ import android.widget.CheckBox;
 import com.gyf.immersionbar.ImmersionBar;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.base.BaseActivity;
-import com.ipd.xiangzuidoctor.base.BasePresenter;
-import com.ipd.xiangzuidoctor.base.BaseView;
+import com.ipd.xiangzuidoctor.bean.CaptchaBean;
+import com.ipd.xiangzuidoctor.bean.CaptchaLoginBean;
+import com.ipd.xiangzuidoctor.bean.PwdLoginBean;
+import com.ipd.xiangzuidoctor.bean.RegistsBean;
+import com.ipd.xiangzuidoctor.bean.ResetPwdBean;
+import com.ipd.xiangzuidoctor.contract.LoginContract;
+import com.ipd.xiangzuidoctor.presenter.LoginPresenter;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
+import com.ipd.xiangzuidoctor.utils.MD5Utils;
+import com.ipd.xiangzuidoctor.utils.SPUtil;
+import com.ipd.xiangzuidoctor.utils.StringUtils;
+import com.ipd.xiangzuidoctor.utils.ToastUtil;
 import com.xuexiang.xui.utils.CountDownButtonHelper;
 import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
 import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
 
+import java.util.TreeMap;
+
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.ObservableTransformer;
+
+import static com.ipd.xiangzuidoctor.common.config.IConstants.NIKE_NAME;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.PHONE;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.TOKEN;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
 
 /**
  * Description ：注册
@@ -23,7 +41,7 @@ import butterknife.OnClick;
  * Email ： 942685687@qq.com
  * Time ： 2019/7/4.
  */
-public class RegisterActivity extends BaseActivity {
+public class RegisterActivity extends BaseActivity<LoginContract.View, LoginContract.Presenter> implements LoginContract.View {
 
     @BindView(R.id.et_phone)
     MaterialEditText etPhone;
@@ -46,13 +64,13 @@ public class RegisterActivity extends BaseActivity {
     }
 
     @Override
-    public BasePresenter createPresenter() {
-        return null;
+    public LoginContract.Presenter createPresenter() {
+        return new LoginPresenter(this);
     }
 
     @Override
-    public BaseView createView() {
-        return null;
+    public LoginContract.View createView() {
+        return this;
     }
 
     @Override
@@ -85,7 +103,16 @@ public class RegisterActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_captcha:
-                mCountDownHelper.start();
+                if (etPhone.getText().toString().trim().length() > 0) {
+                    mCountDownHelper.start();
+
+                    TreeMap<String, String> captchaMap = new TreeMap<>();
+                    captchaMap.put("telPhone", etPhone.getText().toString().trim());
+                    captchaMap.put("type", "1");
+                    captchaMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(captchaMap.toString().replaceAll(" ", "") + SIGN)));
+                    getPresenter().getCaptcha(captchaMap, true, false);
+                } else
+                    ToastUtil.showShortToast("请填写号码!");
                 break;
             case R.id.tv_agreement:
                 break;
@@ -94,9 +121,58 @@ public class RegisterActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.rv_register:
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
+                if (cbRegister.isChecked())
+                    if (etPhone.getText().toString().trim().length() > 0 && etCaptcha.getText().toString().trim().length() > 0 && etPwd.getText().toString().trim().length() > 0) {
+                        TreeMap<String, String> registsMap = new TreeMap<>();
+                        registsMap.put("telPhone", etPhone.getText().toString().trim());
+                        registsMap.put("password", etPwd.getText().toString().trim());
+                        registsMap.put("smsCode", etCaptcha.getText().toString().trim());
+                        registsMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(registsMap.toString().replaceAll(" ", "") + SIGN)));
+                        getPresenter().getRegists(registsMap, true, false);
+                    } else
+                        ToastUtil.showShortToast("请填写号码！");
+                else
+                    ToastUtil.showShortToast("请同意用户协议！");
                 break;
         }
+    }
+
+    @Override
+    public void resultCaptcha(CaptchaBean data) {
+        ToastUtil.showLongToast(data.getMsg());
+    }
+
+    @Override
+    public void resultRegists(RegistsBean data) {
+        if (data.getCode() == 200) {
+            SPUtil.put(this, TOKEN, data.getData().getToken());
+            SPUtil.put(this, USER_ID, data.getData().getUser().getUserId() +"");
+            SPUtil.put(this, PHONE, data.getData().getUser().getTelPhone());
+            SPUtil.put(this, NIKE_NAME, data.getData().getUser().getNickname());
+
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        } else
+            ToastUtil.showShortToast(data.getMsg());
+    }
+
+    @Override
+    public void resultCaptchaLogin(CaptchaLoginBean data) {
+
+    }
+
+    @Override
+    public void resultPwdLogin(PwdLoginBean data) {
+
+    }
+
+    @Override
+    public void resultResetPwd(ResetPwdBean data) {
+
+    }
+
+    @Override
+    public <T> ObservableTransformer<T, T> bindLifecycle() {
+        return this.bindToLifecycle();
     }
 }

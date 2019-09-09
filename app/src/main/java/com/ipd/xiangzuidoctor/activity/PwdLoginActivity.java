@@ -6,14 +6,32 @@ import android.view.View;
 import com.gyf.immersionbar.ImmersionBar;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.base.BaseActivity;
-import com.ipd.xiangzuidoctor.base.BasePresenter;
-import com.ipd.xiangzuidoctor.base.BaseView;
+import com.ipd.xiangzuidoctor.bean.CaptchaBean;
+import com.ipd.xiangzuidoctor.bean.CaptchaLoginBean;
+import com.ipd.xiangzuidoctor.bean.PwdLoginBean;
+import com.ipd.xiangzuidoctor.bean.RegistsBean;
+import com.ipd.xiangzuidoctor.bean.ResetPwdBean;
+import com.ipd.xiangzuidoctor.contract.LoginContract;
+import com.ipd.xiangzuidoctor.presenter.LoginPresenter;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
+import com.ipd.xiangzuidoctor.utils.MD5Utils;
+import com.ipd.xiangzuidoctor.utils.SPUtil;
+import com.ipd.xiangzuidoctor.utils.StringUtils;
 import com.ipd.xiangzuidoctor.utils.ToastUtil;
 import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
 
+import java.util.TreeMap;
+
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.ObservableTransformer;
+
+import static com.ipd.xiangzuidoctor.common.config.IConstants.IS_SUPPLEMENT_INFO;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.NIKE_NAME;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.PHONE;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.TOKEN;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
 
 /**
  * Description ：密码登录
@@ -21,7 +39,7 @@ import butterknife.OnClick;
  * Email ： 942685687@qq.com
  * Time ： 2019/7/4.
  */
-public class PwdLoginActivity extends BaseActivity {
+public class PwdLoginActivity extends BaseActivity<LoginContract.View, LoginContract.Presenter> implements LoginContract.View {
 
     @BindView(R.id.et_phone)
     MaterialEditText etPhone;
@@ -36,13 +54,13 @@ public class PwdLoginActivity extends BaseActivity {
     }
 
     @Override
-    public BasePresenter createPresenter() {
-        return null;
+    public LoginContract.Presenter createPresenter() {
+        return new LoginPresenter(this);
     }
 
     @Override
-    public BaseView createView() {
-        return null;
+    public LoginContract.View createView() {
+        return this;
     }
 
     @Override
@@ -72,7 +90,6 @@ public class PwdLoginActivity extends BaseActivity {
             firstTime = secondTime;
         } else {
             ApplicationUtil.getManager().exitApp();
-
         }
     }
 
@@ -86,13 +103,59 @@ public class PwdLoginActivity extends BaseActivity {
                 startActivity(new Intent(this, RegisterActivity.class));
                 break;
             case R.id.rv_login:
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
+                if (etPhone.getText().toString().trim().length() > 0 && etPwd.getText().toString().trim().length() > 0) {
+                    TreeMap<String, String> pwdLoginMap = new TreeMap<>();
+                    pwdLoginMap.put("telPhone", etPhone.getText().toString().trim());
+                    pwdLoginMap.put("password", etPwd.getText().toString().trim());
+                    pwdLoginMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(pwdLoginMap.toString().replaceAll(" ", "") + SIGN)));
+                    getPresenter().getPwdLogin(pwdLoginMap, true, false);
+                } else
+                    ToastUtil.showShortToast("请填写号码！");
                 break;
             case R.id.bt_login_captcha:
                 startActivity(new Intent(this, CaptchaLoginActivity.class));
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void resultCaptcha(CaptchaBean data) {
+
+    }
+
+    @Override
+    public void resultRegists(RegistsBean data) {
+
+    }
+
+    @Override
+    public void resultCaptchaLogin(CaptchaLoginBean data) {
+
+    }
+
+    @Override
+    public void resultPwdLogin(PwdLoginBean data) {
+        if (data.getCode() == 200) {
+            SPUtil.put(this, TOKEN, data.getData().getToken());
+            SPUtil.put(this, USER_ID, data.getData().getUser().getUserId() +"");
+            SPUtil.put(this, PHONE, data.getData().getUser().getTelPhone());
+            SPUtil.put(this, NIKE_NAME, data.getData().getUser().getNickname());
+            SPUtil.put(this, IS_SUPPLEMENT_INFO, data.getData().getUser().getApproveStatus());
+
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        } else
+            ToastUtil.showShortToast(data.getMsg());
+    }
+
+    @Override
+    public void resultResetPwd(ResetPwdBean data) {
+
+    }
+
+    @Override
+    public <T> ObservableTransformer<T, T> bindLifecycle() {
+        return this.bindToLifecycle();
     }
 }

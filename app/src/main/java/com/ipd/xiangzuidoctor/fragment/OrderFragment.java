@@ -34,7 +34,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.ipd.xiangzuidoctor.common.config.IConstants.IS_SUPPLEMENT_INFO;
-import static com.ipd.xiangzuidoctor.utils.StringUtils.isEmpty;
 import static com.ipd.xiangzuidoctor.utils.isClickUtil.isFastClick;
 
 /**
@@ -188,7 +187,7 @@ public class OrderFragment extends BaseFragment {
                             case R.id.bt_third:
                                 switch (str1.get(position).getOrderType()) {
                                     case "0":
-                                        if (isFastClick() && isEmpty(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
+                                        if (isFastClick() && "1".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
                                             new TwoBtDialog(getActivity(), "请先实名认证后才可以接单", "去认证") {
                                                 @Override
                                                 public void confirm() {

@@ -14,6 +14,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.gyf.immersionbar.ImmersionBar;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.activity.AuthenticationActivity;
+import com.ipd.xiangzuidoctor.activity.CaptchaLoginActivity;
 import com.ipd.xiangzuidoctor.activity.OfflineActivitiesActivity;
 import com.ipd.xiangzuidoctor.activity.OrderActivity;
 import com.ipd.xiangzuidoctor.activity.OrderDetailsActivity;
@@ -23,8 +24,7 @@ import com.ipd.xiangzuidoctor.adapter.MainOrderAdapter;
 import com.ipd.xiangzuidoctor.adapter.RecyclerViewBannerAdapter;
 import com.ipd.xiangzuidoctor.adapter.TodayRecommendationAdapter;
 import com.ipd.xiangzuidoctor.base.BaseFragment;
-import com.ipd.xiangzuidoctor.base.BasePresenter;
-import com.ipd.xiangzuidoctor.base.BaseView;
+import com.ipd.xiangzuidoctor.bean.HomeBean;
 import com.ipd.xiangzuidoctor.bean.TestMultiItemEntityBean;
 import com.ipd.xiangzuidoctor.common.view.CustomLinearLayoutManager;
 import com.ipd.xiangzuidoctor.common.view.GridSpacingItemDecoration;
@@ -33,7 +33,13 @@ import com.ipd.xiangzuidoctor.common.view.SimpleNoticeMFs;
 import com.ipd.xiangzuidoctor.common.view.SpacesItemDecoration;
 import com.ipd.xiangzuidoctor.common.view.TopView;
 import com.ipd.xiangzuidoctor.common.view.TwoBtDialog;
+import com.ipd.xiangzuidoctor.contract.HomeContract;
+import com.ipd.xiangzuidoctor.presenter.HomePresenter;
+import com.ipd.xiangzuidoctor.utils.MD5Utils;
 import com.ipd.xiangzuidoctor.utils.SPUtil;
+import com.ipd.xiangzuidoctor.utils.StringUtils;
+import com.ipd.xiangzuidoctor.utils.ToastUtil;
+import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.xuexiang.xui.widget.banner.recycler.BannerLayout;
 import com.xuexiang.xui.widget.textview.marqueen.MarqueeFactory;
 import com.xuexiang.xui.widget.textview.marqueen.MarqueeView;
@@ -41,15 +47,18 @@ import com.xuexiang.xui.widget.textview.marqueen.MarqueeView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.ObservableTransformer;
 
 import static com.ipd.xiangzuidoctor.common.config.IConstants.IS_SUPPLEMENT_INFO;
-import static com.ipd.xiangzuidoctor.utils.StringUtils.isEmpty;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
 import static com.ipd.xiangzuidoctor.utils.isClickUtil.isFastClick;
 
-public class MainFragment extends BaseFragment {
+public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.Presenter> implements HomeContract.View {
 
     @BindView(R.id.tv_main)
     TopView tvMain;
@@ -71,6 +80,7 @@ public class MainFragment extends BaseFragment {
     private List<TestMultiItemEntityBean> isOrderList = new ArrayList<>();//已接订单
     private List<TestMultiItemEntityBean> waitOrderList = new ArrayList<>();//待接订单
     private List<TestMultiItemEntityBean> todayRecommendationList = new ArrayList<>();//今日推荐
+    private RecyclerViewBannerAdapter recyclerViewBannerAdapter;
     private MainGridAdapter mainGridAdapter;
     private MainOrderAdapter mainOrderAdapter;
     private MainOrderAdapter mainNoOrderAdapter;
@@ -83,13 +93,13 @@ public class MainFragment extends BaseFragment {
     }
 
     @Override
-    public BasePresenter createPresenter() {
-        return null;
+    public HomeContract.Presenter createPresenter() {
+        return new HomePresenter(mContext);
     }
 
     @Override
-    public BaseView createView() {
-        return null;
+    public HomeContract.View createView() {
+        return this;
     }
 
     @Override
@@ -221,7 +231,7 @@ public class MainFragment extends BaseFragment {
                     case R.id.bt_second:
                         break;
                     case R.id.bt_third:
-                        if (isFastClick() && isEmpty(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
+                        if (isFastClick() && "1".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
                             new TwoBtDialog(getActivity(), "请先实名认证后才可以接单", "去认证") {
                                 @Override
                                 public void confirm() {
@@ -265,7 +275,7 @@ public class MainFragment extends BaseFragment {
                     case R.id.bt_second:
                         break;
                     case R.id.bt_third:
-                        if (isFastClick() && isEmpty(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
+                        if (isFastClick() && "1".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
                             new TwoBtDialog(getActivity(), "请先实名认证后才可以接单", "去认证") {
                                 @Override
                                 public void confirm() {
@@ -293,11 +303,10 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        //轮播
-        for (int i = 0; i < 3; i++) {
-            str.add(new TestMultiItemEntityBean());
-        }
-        blBanner.setAdapter(new RecyclerViewBannerAdapter(str));
+        TreeMap<String, String> homeMap = new TreeMap<>();
+        homeMap.put("userId", SPUtil.get(getContext(), USER_ID, "") + "");
+        homeMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(homeMap.toString().replaceAll(" ", "") + SIGN)));
+        getPresenter().getHome(homeMap, true, false);
 
         //大喇叭
         MarqueeFactory<TextView, CharSequence> marqueeFactory = new SimpleNoticeMFs(getContext());
@@ -320,5 +329,42 @@ public class MainFragment extends BaseFragment {
                 startActivity(new Intent(getContext(), OrderActivity.class));
                 break;
         }
+    }
+
+    @Override
+    public void resultHome(HomeBean data) {
+        switch (data.getCode()) {
+            case 200:
+                //轮播
+                recyclerViewBannerAdapter = new RecyclerViewBannerAdapter(data.getData().getPictureList());
+                blBanner.setAdapter(recyclerViewBannerAdapter);
+
+                recyclerViewBannerAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        switch (data.getData().getPictureList().get(position).getType()) {
+                            case "1"://无链接
+                                break;
+                            case "2"://有链接
+
+                                break;
+                            case "3"://文本内容
+
+                                break;
+                        }
+                    }
+                });
+                break;
+            case 900:
+                ToastUtil.showLongToast(data.getMsg());
+                startActivity(new Intent(getActivity(), CaptchaLoginActivity.class));
+                getActivity().finish();
+                break;
+        }
+    }
+
+    @Override
+    public <T> ObservableTransformer<T, T> bindLifecycle() {
+        return this.bindUntilEvent(FragmentEvent.PAUSE);
     }
 }

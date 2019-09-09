@@ -10,14 +10,20 @@ public interface UrlConfig {
     /**
      * 域名
      */
-    String BASE_URL = "http://47.93.126.235:8010/jhzc/";
-    String BASE_LOCAL_URL = "http://47.93.126.235:8010/";
+    String BASE_URL = "http://47.244.137.174:8083/xz/";
+    String BASE_LOCAL_URL = "http://47.244.137.174:8083/";
 
     /**
      * 登陆
      */
-    String CAPTCHA = "appUser/util/getSms"; //验证码
-    String FORGET_PWD = "appUser/login/forgetPassword"; //忘记密码
-    String LOGIN = "appUser/login/login"; //登陆
-    String REGISTER = "appUser/login/regists"; //注册
+    String CAPTCHA = "ah/util/getSms"; //获取短信接口
+    String REGISTER = "ad/login/regists"; //注册
+    String CAPTCHA_LOGIN = "ad/login/smsCodelogin"; //验证码登录
+    String PWD_LOGIN = "ad/login/login"; //密码登陆
+    String RESET_PWD = "ad/login/passReset"; //重置密码
+
+    /**
+     * 首页
+     */
+    String HOME = "ad/index/indexData"; //首页数据
 }

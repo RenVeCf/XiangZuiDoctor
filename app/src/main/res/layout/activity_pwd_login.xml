@@ -40,7 +40,7 @@
         android:id="@+id/tv_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/y50"
+        android:layout_marginTop="@dimen/y100"
         android:gravity="start"
         android:text="登录"
         android:textColor="@color/black"

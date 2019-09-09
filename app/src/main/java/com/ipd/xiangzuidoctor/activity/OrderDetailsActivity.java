@@ -301,7 +301,7 @@ public class OrderDetailsActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_get_order:
-                if (isFastClick() && isEmpty(SPUtil.get(this, IS_SUPPLEMENT_INFO, "") + ""))
+                if (isFastClick() && "1".equals(SPUtil.get(this, IS_SUPPLEMENT_INFO, "") + ""))
                     new TwoBtDialog(this, "请先实名认证后才可以接单", "去认证") {
                         @Override
                         public void confirm() {

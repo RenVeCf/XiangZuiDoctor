@@ -10,7 +10,7 @@ public interface IConstants {
     /**
      * 包名
      */
-    String PACKAGE_NAME = "com.ipd.xiangzui";
+    String PACKAGE_NAME = "com.ipd.xiangzuidoctor";
 
     /**
      * SharedPreferences
@@ -21,12 +21,15 @@ public interface IConstants {
     String IS_SUPPLEMENT_INFO = "is_supplement_info"; //认证
     String USER_ID = "user_id"; //用户标识
     String NAME = "name"; //用户真实姓名
+    String NIKE_NAME = "nike_name"; //用户姓名
     String PHONE = "phone"; //用户手机号码
     String SERVICE_PHONE = "service_phone"; //咨询客服号码
     String AVATAR = "avatar"; //头像
     String LATIUDE = "latitude"; //经度
     String LONGTITUDE = "longtitude"; //纬度
     String CITY = "city"; //城市
+    String TOKEN = "is_token"; //token
+    String SIGN = "40777B235DFE79175B6D921D1B7536C4"; //签名后缀
     int JPUSH_SEQUENCE = 100; //极光精准推送序列
 
 
