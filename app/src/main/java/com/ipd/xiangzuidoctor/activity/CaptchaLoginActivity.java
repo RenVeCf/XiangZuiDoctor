@@ -14,6 +14,7 @@ import com.ipd.xiangzuidoctor.bean.ResetPwdBean;
 import com.ipd.xiangzuidoctor.contract.LoginContract;
 import com.ipd.xiangzuidoctor.presenter.LoginPresenter;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
+import com.ipd.xiangzuidoctor.utils.L;
 import com.ipd.xiangzuidoctor.utils.MD5Utils;
 import com.ipd.xiangzuidoctor.utils.SPUtil;
 import com.ipd.xiangzuidoctor.utils.StringUtils;
@@ -34,6 +35,7 @@ import static com.ipd.xiangzuidoctor.common.config.IConstants.PHONE;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.TOKEN;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
+import static com.ipd.xiangzuidoctor.utils.StringUtils.isEmpty;
 
 /**
  * Description ：验证码登录
@@ -96,6 +98,11 @@ public class CaptchaLoginActivity extends BaseActivity<LoginContract.View, Login
         ApplicationUtil.getManager().addActivity(this);
         //防止状态栏和标题重叠
         ImmersionBar.with(this).statusBarDarkFont(false).init();
+
+        if (!isEmpty(SPUtil.get(this, TOKEN, "") + "")) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
 
         mCountDownHelper = new CountDownButtonHelper(btCaptcha, 60);
     }
@@ -181,7 +188,7 @@ public class CaptchaLoginActivity extends BaseActivity<LoginContract.View, Login
     public void resultCaptchaLogin(CaptchaLoginBean data) {
         if (data.getCode() == 200) {
             SPUtil.put(this, TOKEN, data.getData().getToken());
-            SPUtil.put(this, USER_ID, data.getData().getUser().getUserId() +"");
+            SPUtil.put(this, USER_ID, data.getData().getUser().getUserId() + "");
             SPUtil.put(this, PHONE, data.getData().getUser().getTelPhone());
             SPUtil.put(this, NIKE_NAME, data.getData().getUser().getNickname());
             SPUtil.put(this, IS_SUPPLEMENT_INFO, data.getData().getUser().getApproveStatus());

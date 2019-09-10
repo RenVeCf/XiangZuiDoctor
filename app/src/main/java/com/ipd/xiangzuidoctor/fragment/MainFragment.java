@@ -3,8 +3,10 @@ package com.ipd.xiangzuidoctor.fragment;
 import android.content.Intent;
 import android.text.Html;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +17,7 @@ import com.gyf.immersionbar.ImmersionBar;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.activity.AuthenticationActivity;
 import com.ipd.xiangzuidoctor.activity.CaptchaLoginActivity;
+import com.ipd.xiangzuidoctor.activity.MainActivity;
 import com.ipd.xiangzuidoctor.activity.OfflineActivitiesActivity;
 import com.ipd.xiangzuidoctor.activity.OrderActivity;
 import com.ipd.xiangzuidoctor.activity.OrderDetailsActivity;
@@ -25,7 +28,6 @@ import com.ipd.xiangzuidoctor.adapter.RecyclerViewBannerAdapter;
 import com.ipd.xiangzuidoctor.adapter.TodayRecommendationAdapter;
 import com.ipd.xiangzuidoctor.base.BaseFragment;
 import com.ipd.xiangzuidoctor.bean.HomeBean;
-import com.ipd.xiangzuidoctor.bean.TestMultiItemEntityBean;
 import com.ipd.xiangzuidoctor.common.view.CustomLinearLayoutManager;
 import com.ipd.xiangzuidoctor.common.view.GridSpacingItemDecoration;
 import com.ipd.xiangzuidoctor.common.view.OneBtDialog;
@@ -35,6 +37,7 @@ import com.ipd.xiangzuidoctor.common.view.TopView;
 import com.ipd.xiangzuidoctor.common.view.TwoBtDialog;
 import com.ipd.xiangzuidoctor.contract.HomeContract;
 import com.ipd.xiangzuidoctor.presenter.HomePresenter;
+import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
 import com.ipd.xiangzuidoctor.utils.MD5Utils;
 import com.ipd.xiangzuidoctor.utils.SPUtil;
 import com.ipd.xiangzuidoctor.utils.StringUtils;
@@ -45,7 +48,6 @@ import com.xuexiang.xui.widget.textview.marqueen.MarqueeFactory;
 import com.xuexiang.xui.widget.textview.marqueen.MarqueeView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -74,18 +76,20 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
     RecyclerView rvWaitMoreOrder;
     @BindView(R.id.rv_today_recommendation)
     RecyclerView rvTodayRecommendation;
+    @BindView(R.id.tv_authentication)
+    AppCompatTextView tvAuthentication;
+    @BindView(R.id.ll_is_order)
+    LinearLayout llIsOrder;
+    @BindView(R.id.ll_wait_order)
+    LinearLayout llWaitOrder;
 
-    private List<TestMultiItemEntityBean> str = new ArrayList<>();//轮播
+    private List<CharSequence> hornList = new ArrayList<>();//广播
     private List<Integer> itr = new ArrayList<>();//菜单
-    private List<TestMultiItemEntityBean> isOrderList = new ArrayList<>();//已接订单
-    private List<TestMultiItemEntityBean> waitOrderList = new ArrayList<>();//待接订单
-    private List<TestMultiItemEntityBean> todayRecommendationList = new ArrayList<>();//今日推荐
     private RecyclerViewBannerAdapter recyclerViewBannerAdapter;
     private MainGridAdapter mainGridAdapter;
     private MainOrderAdapter mainOrderAdapter;
     private MainOrderAdapter mainNoOrderAdapter;
     private TodayRecommendationAdapter todayRecommendationAdapter;
-    final List<CharSequence> datas = Arrays.asList(Html.fromHtml("医生李**已完成订单<font color=\"#000000\">阑尾切除术</font>费用<font color=\"#FF5555\">¥" + 300 + "元</font>"), Html.fromHtml("医生李**已完成订单<font color=\"#000000\">阑尾切除术</font>费用<font color=\"#FF5555\">¥" + 300 + "元</font>"));
 
     @Override
     public int getLayoutId() {
@@ -113,6 +117,9 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
         //防止状态栏和标题重叠
         ImmersionBar.setTitleBar(getActivity(), tvMain);
 
+        if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
+            tvAuthentication.setVisibility(View.GONE);
+
         //菜单
         GridLayoutManager NotUseList = new GridLayoutManager(getContext(), 4);
         rvGridMain.setLayoutManager(NotUseList);
@@ -135,15 +142,6 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
         rvIsMoreOrder.setHasFixedSize(true);// 如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
         rvIsMoreOrder.setItemAnimator(new DefaultItemAnimator());//加载动画
 
-        for (int i = 0; i < 2; i++) {
-            TestMultiItemEntityBean testData = new TestMultiItemEntityBean();
-            testData.setOrderType("0");
-            isOrderList.add(testData);
-        }
-        rvIsMoreOrder.setAdapter(mainOrderAdapter = new MainOrderAdapter(isOrderList));
-        mainOrderAdapter.bindToRecyclerView(rvIsMoreOrder);
-        mainOrderAdapter.openLoadAnimation();
-
         //待接订单
         CustomLinearLayoutManager layoutManager1 = new CustomLinearLayoutManager(getContext());
         layoutManager1.setOrientation(LinearLayoutManager.VERTICAL);//方向
@@ -153,15 +151,6 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
         rvWaitMoreOrder.setHasFixedSize(true);// 如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
         rvWaitMoreOrder.setItemAnimator(new DefaultItemAnimator());//加载动画
 
-        for (int i = 0; i < 2; i++) {
-            TestMultiItemEntityBean testData = new TestMultiItemEntityBean();
-            testData.setOrderType("1");
-            waitOrderList.add(testData);
-        }
-        rvWaitMoreOrder.setAdapter(mainNoOrderAdapter = new MainOrderAdapter(waitOrderList));
-        mainNoOrderAdapter.bindToRecyclerView(rvWaitMoreOrder);
-        mainNoOrderAdapter.openLoadAnimation();
-
         //今日推荐
         CustomLinearLayoutManager layoutManager2 = new CustomLinearLayoutManager(getContext());
         layoutManager2.setOrientation(LinearLayoutManager.VERTICAL);//方向
@@ -170,14 +159,6 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
         rvTodayRecommendation.addItemDecoration(new SpacesItemDecoration(1, 50));
         rvTodayRecommendation.setHasFixedSize(true);// 如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
         rvTodayRecommendation.setItemAnimator(new DefaultItemAnimator());//加载动画
-
-        for (int i = 0; i < 2; i++) {
-            TestMultiItemEntityBean testData = new TestMultiItemEntityBean();
-            todayRecommendationList.add(testData);
-        }
-        rvTodayRecommendation.setAdapter(todayRecommendationAdapter = new TodayRecommendationAdapter(todayRecommendationList));
-        todayRecommendationAdapter.bindToRecyclerView(rvTodayRecommendation);
-        todayRecommendationAdapter.openLoadAnimation();
     }
 
     @Override
@@ -204,101 +185,6 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                 }
             }
         });
-
-        mainOrderAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                switch (view.getId()) {
-                    case R.id.cv_order_item:
-                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "1"));
-                        break;
-                    case R.id.stv_start_time:
-                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "1"));
-                        break;
-                    case R.id.stv_fee:
-                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "1"));
-                        break;
-                    case R.id.stv_name:
-                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "1"));
-                        break;
-                    case R.id.stv_address:
-                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "1"));
-                        break;
-                    case R.id.bt_first:
-                        if (isFastClick())
-                            startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "1"));
-                        break;
-                    case R.id.bt_second:
-                        break;
-                    case R.id.bt_third:
-                        if (isFastClick() && "1".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
-                            new TwoBtDialog(getActivity(), "请先实名认证后才可以接单", "去认证") {
-                                @Override
-                                public void confirm() {
-                                    startActivity(new Intent(getContext(), AuthenticationActivity.class));
-                                }
-                            }.show();
-                        else if (isFastClick())
-                            new OneBtDialog(getActivity(), "请提前做好多点执业备案") {
-                                @Override
-                                public void confirm() {
-                                }
-                            }.show();
-                        break;
-                }
-            }
-        });
-
-        mainNoOrderAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                switch (view.getId()) {
-                    case R.id.cv_order_item:
-                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "0"));
-                        break;
-                    case R.id.stv_start_time:
-                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "0"));
-                        break;
-                    case R.id.stv_fee:
-                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "0"));
-                        break;
-                    case R.id.stv_name:
-                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "0"));
-                        break;
-                    case R.id.stv_address:
-                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "0"));
-                        break;
-                    case R.id.bt_first:
-                        if (isFastClick())
-                            startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "0"));
-                        break;
-                    case R.id.bt_second:
-                        break;
-                    case R.id.bt_third:
-                        if (isFastClick() && "1".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
-                            new TwoBtDialog(getActivity(), "请先实名认证后才可以接单", "去认证") {
-                                @Override
-                                public void confirm() {
-                                    startActivity(new Intent(getContext(), AuthenticationActivity.class));
-                                }
-                            }.show();
-                        else if (isFastClick())
-                            new OneBtDialog(getActivity(), "请提前做好多点执业备案") {
-                                @Override
-                                public void confirm() {
-                                }
-                            }.show();
-                        break;
-                }
-            }
-        });
-
-        todayRecommendationAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
-            }
-        });
     }
 
     @Override
@@ -307,13 +193,6 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
         homeMap.put("userId", SPUtil.get(getContext(), USER_ID, "") + "");
         homeMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(homeMap.toString().replaceAll(" ", "") + SIGN)));
         getPresenter().getHome(homeMap, true, false);
-
-        //大喇叭
-        MarqueeFactory<TextView, CharSequence> marqueeFactory = new SimpleNoticeMFs(getContext());
-        marqueeFactory.setData(datas);
-//        mvHorn.setAnimInAndOut(R.anim.marquee_top_in, R.anim.marquee_bottom_out);
-        mvHorn.setMarqueeFactory(marqueeFactory);
-        mvHorn.startFlipping();
     }
 
     @OnClick({R.id.tv_authentication, R.id.bt_is_more_order, R.id.bt_wait_more_order})
@@ -354,9 +233,134 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                         }
                     }
                 });
+
+                //大喇叭
+                for (int i = 0; i < data.getData().getInfoList().size(); i++) {
+                    hornList.add(Html.fromHtml("医生" + data.getData().getInfoList().get(i).getNickname() + "已完成订单<font color=\"#000000\">" + data.getData().getInfoList().get(i).getSurgeryName() + "</font>费用<font color=\"#FF5555\">¥" + data.getData().getInfoList().get(i).getOrderCost() + "元</font>"));
+                }
+                MarqueeFactory<TextView, CharSequence> marqueeFactory = new SimpleNoticeMFs(getContext());
+                marqueeFactory.setData(hornList);
+//        mvHorn.setAnimInAndOut(R.anim.marquee_top_in, R.anim.marquee_bottom_out); //向下滚动
+                mvHorn.setMarqueeFactory(marqueeFactory);
+                mvHorn.startFlipping();
+
+                //已接订单
+                llIsOrder.setVisibility(data.getData().getAlreadyList().size() > 0 ? View.VISIBLE : View.GONE);
+                rvIsMoreOrder.setAdapter(mainOrderAdapter = new MainOrderAdapter(data.getData().getAlreadyList()));
+                mainOrderAdapter.bindToRecyclerView(rvIsMoreOrder);
+                mainOrderAdapter.openLoadAnimation();
+
+                mainOrderAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                    @Override
+                    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                        switch (view.getId()) {
+                            case R.id.cv_order_item:
+                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "1"));
+                                break;
+                            case R.id.stv_start_time:
+                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "1"));
+                                break;
+                            case R.id.stv_fee:
+                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "1"));
+                                break;
+                            case R.id.stv_name:
+                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "1"));
+                                break;
+                            case R.id.stv_address:
+                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "1"));
+                                break;
+                            case R.id.bt_first:
+                                if (isFastClick())
+                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "1"));
+                                break;
+                            case R.id.bt_second:
+                                break;
+                            case R.id.bt_third:
+                                if (isFastClick() && "1".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
+                                    new TwoBtDialog(getActivity(), "请先实名认证后才可以接单", "去认证") {
+                                        @Override
+                                        public void confirm() {
+                                            startActivity(new Intent(getContext(), AuthenticationActivity.class));
+                                        }
+                                    }.show();
+                                else if (isFastClick())
+                                    new OneBtDialog(getActivity(), "请提前做好多点执业备案") {
+                                        @Override
+                                        public void confirm() {
+                                        }
+                                    }.show();
+                                break;
+                        }
+                    }
+                });
+
+                //待接订单
+                llWaitOrder.setVisibility(data.getData().getStayList().size() > 0 ? View.VISIBLE : View.GONE);
+                rvWaitMoreOrder.setAdapter(mainNoOrderAdapter = new MainOrderAdapter(data.getData().getStayList()));
+                mainNoOrderAdapter.bindToRecyclerView(rvWaitMoreOrder);
+                mainNoOrderAdapter.openLoadAnimation();
+
+                mainNoOrderAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                    @Override
+                    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                        switch (view.getId()) {
+                            case R.id.cv_order_item:
+                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "0"));
+                                break;
+                            case R.id.stv_start_time:
+                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "0"));
+                                break;
+                            case R.id.stv_fee:
+                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "0"));
+                                break;
+                            case R.id.stv_name:
+                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "0"));
+                                break;
+                            case R.id.stv_address:
+                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "0"));
+                                break;
+                            case R.id.bt_first:
+                                if (isFastClick())
+                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_type", "0"));
+                                break;
+                            case R.id.bt_second:
+                                break;
+                            case R.id.bt_third:
+                                if (isFastClick() && "1".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
+                                    new TwoBtDialog(getActivity(), "请先实名认证后才可以接单", "去认证") {
+                                        @Override
+                                        public void confirm() {
+                                            startActivity(new Intent(getContext(), AuthenticationActivity.class));
+                                        }
+                                    }.show();
+                                else if (isFastClick())
+                                    new OneBtDialog(getActivity(), "请提前做好多点执业备案") {
+                                        @Override
+                                        public void confirm() {
+                                        }
+                                    }.show();
+                                break;
+                        }
+                    }
+                });
+
+                //今日推荐
+                rvTodayRecommendation.setAdapter(todayRecommendationAdapter = new TodayRecommendationAdapter(data.getData().getActivityList()));
+                todayRecommendationAdapter.bindToRecyclerView(rvTodayRecommendation);
+                todayRecommendationAdapter.openLoadAnimation();
+
+                todayRecommendationAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+
+                    }
+                });
                 break;
             case 900:
                 ToastUtil.showLongToast(data.getMsg());
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
                 startActivity(new Intent(getActivity(), CaptchaLoginActivity.class));
                 getActivity().finish();
                 break;

@@ -1,6 +1,7 @@
 package com.ipd.xiangzuidoctor.activity;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.TextView;
@@ -13,17 +14,31 @@ import com.bumptech.glide.request.transition.Transition;
 import com.gyf.immersionbar.ImmersionBar;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.base.BaseActivity;
-import com.ipd.xiangzuidoctor.base.BasePresenter;
-import com.ipd.xiangzuidoctor.base.BaseView;
+import com.ipd.xiangzuidoctor.bean.UploadImgBean;
 import com.ipd.xiangzuidoctor.common.view.TopView;
+import com.ipd.xiangzuidoctor.contract.UploadImgContract;
+import com.ipd.xiangzuidoctor.presenter.UploadImgPresenter;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
+import com.ipd.xiangzuidoctor.utils.MD5Utils;
+import com.ipd.xiangzuidoctor.utils.SPUtil;
+import com.ipd.xiangzuidoctor.utils.StringUtils;
+import com.ipd.xiangzuidoctor.utils.ToastUtil;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
 
+import java.io.File;
+import java.util.TreeMap;
+
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.ObservableTransformer;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+
+import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
+import static com.ipd.xiangzuidoctor.common.config.UrlConfig.BASE_LOCAL_URL;
 
 /**
  * Description ：头像
@@ -31,7 +46,7 @@ import butterknife.OnClick;
  * Email ： 942685687@qq.com
  * Time ： 2019/7/8.
  */
-public class PhotoActivity extends BaseActivity {
+public class PhotoActivity extends BaseActivity<UploadImgContract.View, UploadImgContract.Presenter> implements UploadImgContract.View {
 
     @BindView(R.id.tv_head)
     TopView tvHead;
@@ -46,13 +61,13 @@ public class PhotoActivity extends BaseActivity {
     }
 
     @Override
-    public BasePresenter createPresenter() {
-        return null;
+    public UploadImgContract.Presenter createPresenter() {
+        return new UploadImgPresenter(this);
     }
 
     @Override
-    public BaseView createView() {
-        return null;
+    public UploadImgContract.View createView() {
+        return this;
     }
 
     @Override
@@ -75,20 +90,24 @@ public class PhotoActivity extends BaseActivity {
 
     }
 
+    public static RequestBody getImageRequestBody(String filePath) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+        return RequestBody.create(MediaType.parse(options.outMimeType), new File(filePath));
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             switch (requestCode) {
                 case PictureConfig.CHOOSE_REQUEST:
-                    Glide.with(this)
-                            .load(PictureSelector.obtainMultipleResult(data).get(0).getCompressPath())
-                            .into(new SimpleTarget<Drawable>() {
-                                @Override
-                                public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-                                    rivHead.setImageDrawable(resource);
-                                }
-                            });
+                    String picturePath = PictureSelector.obtainMultipleResult(data).get(0).getCompressPath();
+                    TreeMap<String, RequestBody> map = new TreeMap<>();
+                    map.put("file\";filename=\"" + ".jpeg", getImageRequestBody(picturePath));
+                    String sign = StringUtils.toUpperCase(MD5Utils.encodeMD5("{}" + SIGN));
+                    getPresenter().getUploadImg(map, sign, false, false);
                     break;
             }
         }
@@ -111,5 +130,34 @@ public class PhotoActivity extends BaseActivity {
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void resultUploadImg(UploadImgBean data) {
+        switch (data.getCode()) {
+            case 200:
+                Glide.with(this)
+                        .load(BASE_LOCAL_URL + data.getFileName())
+                        .into(new SimpleTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                                rivHead.setImageDrawable(resource);
+                            }
+                        });
+                break;
+            case 900:
+                ToastUtil.showShortToast(data.getMsg());
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(this, CaptchaLoginActivity.class));
+                finish();
+                break;
+        }
+    }
+
+    @Override
+    public <T> ObservableTransformer<T, T> bindLifecycle() {
+        return this.bindToLifecycle();
     }
 }

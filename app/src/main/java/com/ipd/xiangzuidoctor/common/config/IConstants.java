@@ -18,7 +18,7 @@ public interface IConstants {
      */
     String FIRST_APP = "is_first"; //第一次进应用
     String IS_LOGIN = "is_login"; //已经登录
-    String IS_SUPPLEMENT_INFO = "is_supplement_info"; //认证
+    String IS_SUPPLEMENT_INFO = "is_supplement_info"; //认证   1 未认证 2认证了
     String USER_ID = "user_id"; //用户标识
     String NAME = "name"; //用户真实姓名
     String NIKE_NAME = "nike_name"; //用户姓名

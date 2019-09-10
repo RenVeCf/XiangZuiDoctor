@@ -17,22 +17,33 @@ import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.base.BaseActivity;
-import com.ipd.xiangzuidoctor.base.BasePresenter;
-import com.ipd.xiangzuidoctor.base.BaseView;
+import com.ipd.xiangzuidoctor.bean.TitleListBean;
+import com.ipd.xiangzuidoctor.bean.VerifiedBean;
 import com.ipd.xiangzuidoctor.common.view.TopView;
+import com.ipd.xiangzuidoctor.contract.VerifiedContract;
+import com.ipd.xiangzuidoctor.presenter.VerifiedPresenter;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
+import com.ipd.xiangzuidoctor.utils.MD5Utils;
+import com.ipd.xiangzuidoctor.utils.SPUtil;
+import com.ipd.xiangzuidoctor.utils.StringUtils;
+import com.ipd.xiangzuidoctor.utils.ToastUtil;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.ObservableTransformer;
 
 import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_90;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_91;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_92;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_93;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
+import static com.ipd.xiangzuidoctor.utils.StringUtils.isEmpty;
 
 /**
  * Description ：实名认证
@@ -40,7 +51,7 @@ import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_93;
  * Email ： 942685687@qq.com
  * Time ： 2019/7/8.
  */
-public class AuthenticationActivity extends BaseActivity {
+public class AuthenticationActivity extends BaseActivity<VerifiedContract.View, VerifiedContract.Presenter> implements VerifiedContract.View {
 
     @BindView(R.id.tv_authentication)
     TopView tvAuthentication;
@@ -64,7 +75,11 @@ public class AuthenticationActivity extends BaseActivity {
     SuperTextView tvChestCard;
 
     private List<String> listData;
+    private List<String> titleDataList = new ArrayList<>();//职位
+    private List<TitleListBean.DataBean.TitleListsBean> titleListsBean = new ArrayList<>();//职位(取ID用)
     private OptionsPickerView pvOptions; //条件选择器
+    private int titleId = 0;//职位ID
+    private String photo, positiveCard, reverseCard, certificate, chestCard; //认证图片的返回链接
 
     @Override
     public int getLayoutId() {
@@ -72,13 +87,13 @@ public class AuthenticationActivity extends BaseActivity {
     }
 
     @Override
-    public BasePresenter createPresenter() {
-        return null;
+    public VerifiedContract.Presenter createPresenter() {
+        return new VerifiedPresenter(this);
     }
 
     @Override
-    public BaseView createView() {
-        return null;
+    public VerifiedContract.View createView() {
+        return this;
     }
 
     @Override
@@ -91,7 +106,10 @@ public class AuthenticationActivity extends BaseActivity {
 
     @Override
     public void initData() {
-
+        TreeMap<String, String> titleListMap = new TreeMap<>();
+        titleListMap.put("userId", SPUtil.get(this, USER_ID, "") + "");
+        titleListMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(titleListMap.toString().replaceAll(" ", "") + SIGN)));
+        getPresenter().getTitleList(titleListMap, false, false);
     }
 
     @Override
@@ -108,6 +126,10 @@ public class AuthenticationActivity extends BaseActivity {
         pvOptions = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
+                for (int i = 0; i < titleListsBean.size(); i++) {
+                    if (titleListsBean.get(i).getTitleName().equals(listData.get(options1)))
+                        titleId = titleListsBean.get(i).getTitleId();
+                }
                 tvTitle.setRightString(listData.get(options1))
                         .setRightTextColor(getResources().getColor(R.color.black));
             }
@@ -138,10 +160,7 @@ public class AuthenticationActivity extends BaseActivity {
     }
 
     private List<String> getTitleData() {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < 5; i++)
-            list.add("...(主治医师)");
-        return list;
+        return titleDataList;
     }
 
     @Override
@@ -188,9 +207,56 @@ public class AuthenticationActivity extends BaseActivity {
                 startActivityForResult(new Intent(this, PhotoActivity.class).putExtra("title", "胸牌"), REQUEST_CODE_93);
                 break;
             case R.id.bt_confirm:
-                startActivity(new Intent(this, AuthenticationResultActivity.class).putExtra("result_type", 1));
+                if (!isEmpty(etName.getText().toString().trim()) && !isEmpty(etDepartment.getText().toString().trim()) && titleId != 0 && !isEmpty(etInitialHospital.getText().toString().trim()) && !isEmpty(etPhone.getText().toString().trim()) && !isEmpty(photo) && !isEmpty(positiveCard) && !isEmpty(reverseCard) && !isEmpty(certificate) && !isEmpty(chestCard)) {
+                    TreeMap<String, String> verifiedMap = new TreeMap<>();
+                    verifiedMap.put("userId", SPUtil.get(this, USER_ID, "") + "");
+                    verifiedMap.put("truename", etName.getText().toString().trim());
+                    verifiedMap.put("depart", etDepartment.getText().toString().trim());
+                    verifiedMap.put("titleId", titleId + "");
+                    verifiedMap.put("hospital", etInitialHospital.getText().toString().trim());
+                    verifiedMap.put("contactNumber", etPhone.getText().toString().trim());
+                    verifiedMap.put("photo", photo);
+                    verifiedMap.put("positiveCard", positiveCard);
+                    verifiedMap.put("reverseCard", reverseCard);
+                    verifiedMap.put("certificate", certificate);
+                    verifiedMap.put("chestCard", chestCard);
+                    verifiedMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(verifiedMap.toString().replaceAll(" ", "") + SIGN)));
+                    getPresenter().getVerified(verifiedMap, true, false);
+                } else
+                    ToastUtil.showLongToast("请将信息填写完整！");
+                break;
+        }
+    }
+
+    @Override
+    public void resultTitleList(TitleListBean data) {
+        switch (data.getCode()) {
+            case 200:
+                titleListsBean.clear();
+                titleListsBean.addAll(data.getData().getTitleList());
+                for (TitleListBean.DataBean.TitleListsBean datas : data.getData().getTitleList()) {
+                    titleDataList.add(datas.getTitleName());
+                }
+                break;
+            case 900:
+                ToastUtil.showLongToast(data.getMsg());
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(this, CaptchaLoginActivity.class));
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void resultVerified(VerifiedBean data) {
+        startActivity(new Intent(this, AuthenticationResultActivity.class).putExtra("result_type", 1));
+        finish();
+    }
+
+    @Override
+    public <T> ObservableTransformer<T, T> bindLifecycle() {
+        return this.bindToLifecycle();
     }
 }

@@ -26,4 +26,8 @@ public interface UrlConfig {
      * 首页
      */
     String HOME = "ad/index/indexData"; //首页数据
+    String TITLE_LIST = "ad/user/titleList"; //职称-列表
+    String VERIFIED = "ad/user/userApprove"; //用户信息认证-修改保存
+    String UPLOAD_IMG = "ah/util/upload"; //上传图片
+    String UPLOAD_IMGS = "ah/util/arrUpload"; //上传图片
 }

@@ -38,17 +38,17 @@ public class HomeBean {
     }
 
     public static class DataBean {
-        private List<?> alreadyList;
+        private List<AlreadyListBean> alreadyList;
         private List<StayListBean> stayList;
         private List<InfoListBean> infoList;
         private List<ActivityListBean> activityList;
         private List<PictureListBean> pictureList;
 
-        public List<?> getAlreadyList() {
+        public List<AlreadyListBean> getAlreadyList() {
             return alreadyList;
         }
 
-        public void setAlreadyList(List<?> alreadyList) {
+        public void setAlreadyList(List<AlreadyListBean> alreadyList) {
             this.alreadyList = alreadyList;
         }
 
@@ -82,6 +82,406 @@ public class HomeBean {
 
         public void setPictureList(List<PictureListBean> pictureList) {
             this.pictureList = pictureList;
+        }
+
+        public static class AlreadyListBean {
+
+            /**
+             * searchValue : null
+             * createBy : null
+             * createTime : null
+             * updateBy : null
+             * updateTime : null
+             * remark : null
+             * params : {}
+             * orderId : 3
+             * userId : 4
+             * orderType : 1
+             * surgeryName : 1
+             * hospitalName : 1
+             * prov : 1
+             * city : 1
+             * dist : 1
+             * address : 1
+             * duration : 1
+             * urgent : 1
+             * urgentMoney : 1
+             * premium : null
+             * premiumMoney : null
+             * evenNum : null
+             * expectMoney : null
+             * status : 2
+             * payType : null
+             * takeOrderId : 4
+             * takeOrderTime : null
+             * cancelTime : null
+             * prompt : null
+             * arriveTime : null
+             * beginTime : null
+             * waitTime : null
+             * surgeryTime : null
+             * waitMoney : null
+             * surgeryMoney : null
+             * totalMoney : null
+             * taxMoney : null
+             * version : 1
+             * orderNo : null
+             */
+
+            private Object searchValue;
+            private Object createBy;
+            private Object createTime;
+            private Object updateBy;
+            private Object updateTime;
+            private Object remark;
+            private ParamsBean params;
+            private int orderId;
+            private int userId;
+            private String orderType;
+            private String surgeryName;
+            private String hospitalName;
+            private String prov;
+            private String city;
+            private String dist;
+            private String address;
+            private int duration;
+            private String urgent;
+            private int urgentMoney;
+            private Object premium;
+            private Object premiumMoney;
+            private Object evenNum;
+            private double expectMoney;
+            private String status;
+            private Object payType;
+            private int takeOrderId;
+            private Object takeOrderTime;
+            private Object cancelTime;
+            private Object prompt;
+            private Object arriveTime;
+            private String beginTime;
+            private Object waitTime;
+            private Object surgeryTime;
+            private Object waitMoney;
+            private Object surgeryMoney;
+            private Object totalMoney;
+            private Object taxMoney;
+            private int version;
+            private Object orderNo;
+
+            public Object getSearchValue() {
+                return searchValue;
+            }
+
+            public void setSearchValue(Object searchValue) {
+                this.searchValue = searchValue;
+            }
+
+            public Object getCreateBy() {
+                return createBy;
+            }
+
+            public void setCreateBy(Object createBy) {
+                this.createBy = createBy;
+            }
+
+            public Object getCreateTime() {
+                return createTime;
+            }
+
+            public void setCreateTime(Object createTime) {
+                this.createTime = createTime;
+            }
+
+            public Object getUpdateBy() {
+                return updateBy;
+            }
+
+            public void setUpdateBy(Object updateBy) {
+                this.updateBy = updateBy;
+            }
+
+            public Object getUpdateTime() {
+                return updateTime;
+            }
+
+            public void setUpdateTime(Object updateTime) {
+                this.updateTime = updateTime;
+            }
+
+            public Object getRemark() {
+                return remark;
+            }
+
+            public void setRemark(Object remark) {
+                this.remark = remark;
+            }
+
+            public ParamsBean getParams() {
+                return params;
+            }
+
+            public void setParams(ParamsBean params) {
+                this.params = params;
+            }
+
+            public int getOrderId() {
+                return orderId;
+            }
+
+            public void setOrderId(int orderId) {
+                this.orderId = orderId;
+            }
+
+            public int getUserId() {
+                return userId;
+            }
+
+            public void setUserId(int userId) {
+                this.userId = userId;
+            }
+
+            public String getOrderType() {
+                return orderType;
+            }
+
+            public void setOrderType(String orderType) {
+                this.orderType = orderType;
+            }
+
+            public String getSurgeryName() {
+                return surgeryName;
+            }
+
+            public void setSurgeryName(String surgeryName) {
+                this.surgeryName = surgeryName;
+            }
+
+            public String getHospitalName() {
+                return hospitalName;
+            }
+
+            public void setHospitalName(String hospitalName) {
+                this.hospitalName = hospitalName;
+            }
+
+            public String getProv() {
+                return prov;
+            }
+
+            public void setProv(String prov) {
+                this.prov = prov;
+            }
+
+            public String getCity() {
+                return city;
+            }
+
+            public void setCity(String city) {
+                this.city = city;
+            }
+
+            public String getDist() {
+                return dist;
+            }
+
+            public void setDist(String dist) {
+                this.dist = dist;
+            }
+
+            public String getAddress() {
+                return address;
+            }
+
+            public void setAddress(String address) {
+                this.address = address;
+            }
+
+            public int getDuration() {
+                return duration;
+            }
+
+            public void setDuration(int duration) {
+                this.duration = duration;
+            }
+
+            public String getUrgent() {
+                return urgent;
+            }
+
+            public void setUrgent(String urgent) {
+                this.urgent = urgent;
+            }
+
+            public int getUrgentMoney() {
+                return urgentMoney;
+            }
+
+            public void setUrgentMoney(int urgentMoney) {
+                this.urgentMoney = urgentMoney;
+            }
+
+            public Object getPremium() {
+                return premium;
+            }
+
+            public void setPremium(Object premium) {
+                this.premium = premium;
+            }
+
+            public Object getPremiumMoney() {
+                return premiumMoney;
+            }
+
+            public void setPremiumMoney(Object premiumMoney) {
+                this.premiumMoney = premiumMoney;
+            }
+
+            public Object getEvenNum() {
+                return evenNum;
+            }
+
+            public void setEvenNum(Object evenNum) {
+                this.evenNum = evenNum;
+            }
+
+            public double getExpectMoney() {
+                return expectMoney;
+            }
+
+            public void setExpectMoney(double expectMoney) {
+                this.expectMoney = expectMoney;
+            }
+
+            public String getStatus() {
+                return status;
+            }
+
+            public void setStatus(String status) {
+                this.status = status;
+            }
+
+            public Object getPayType() {
+                return payType;
+            }
+
+            public void setPayType(Object payType) {
+                this.payType = payType;
+            }
+
+            public int getTakeOrderId() {
+                return takeOrderId;
+            }
+
+            public void setTakeOrderId(int takeOrderId) {
+                this.takeOrderId = takeOrderId;
+            }
+
+            public Object getTakeOrderTime() {
+                return takeOrderTime;
+            }
+
+            public void setTakeOrderTime(Object takeOrderTime) {
+                this.takeOrderTime = takeOrderTime;
+            }
+
+            public Object getCancelTime() {
+                return cancelTime;
+            }
+
+            public void setCancelTime(Object cancelTime) {
+                this.cancelTime = cancelTime;
+            }
+
+            public Object getPrompt() {
+                return prompt;
+            }
+
+            public void setPrompt(Object prompt) {
+                this.prompt = prompt;
+            }
+
+            public Object getArriveTime() {
+                return arriveTime;
+            }
+
+            public void setArriveTime(Object arriveTime) {
+                this.arriveTime = arriveTime;
+            }
+
+            public String getBeginTime() {
+                return beginTime;
+            }
+
+            public void setBeginTime(String beginTime) {
+                this.beginTime = beginTime;
+            }
+
+            public Object getWaitTime() {
+                return waitTime;
+            }
+
+            public void setWaitTime(Object waitTime) {
+                this.waitTime = waitTime;
+            }
+
+            public Object getSurgeryTime() {
+                return surgeryTime;
+            }
+
+            public void setSurgeryTime(Object surgeryTime) {
+                this.surgeryTime = surgeryTime;
+            }
+
+            public Object getWaitMoney() {
+                return waitMoney;
+            }
+
+            public void setWaitMoney(Object waitMoney) {
+                this.waitMoney = waitMoney;
+            }
+
+            public Object getSurgeryMoney() {
+                return surgeryMoney;
+            }
+
+            public void setSurgeryMoney(Object surgeryMoney) {
+                this.surgeryMoney = surgeryMoney;
+            }
+
+            public Object getTotalMoney() {
+                return totalMoney;
+            }
+
+            public void setTotalMoney(Object totalMoney) {
+                this.totalMoney = totalMoney;
+            }
+
+            public Object getTaxMoney() {
+                return taxMoney;
+            }
+
+            public void setTaxMoney(Object taxMoney) {
+                this.taxMoney = taxMoney;
+            }
+
+            public int getVersion() {
+                return version;
+            }
+
+            public void setVersion(int version) {
+                this.version = version;
+            }
+
+            public Object getOrderNo() {
+                return orderNo;
+            }
+
+            public void setOrderNo(Object orderNo) {
+                this.orderNo = orderNo;
+            }
+
+            public static class ParamsBean {
+            }
         }
 
         public static class StayListBean {
