@@ -79,7 +79,7 @@ public class AuthenticationActivity extends BaseActivity<VerifiedContract.View, 
     private List<TitleListBean.DataBean.TitleListsBean> titleListsBean = new ArrayList<>();//职位(取ID用)
     private OptionsPickerView pvOptions; //条件选择器
     private int titleId = 0;//职位ID
-    private String photo, positiveCard, reverseCard, certificate, chestCard; //认证图片的返回链接
+    private String photo, positiveUrl, negativeUrl, certificate, chestCard; //认证图片的返回链接
 
     @Override
     public int getLayoutId() {
@@ -131,7 +131,7 @@ public class AuthenticationActivity extends BaseActivity<VerifiedContract.View, 
                         titleId = titleListsBean.get(i).getTitleId();
                 }
                 tvTitle.setRightString(listData.get(options1))
-                        .setRightTextColor(getResources().getColor(R.color.black));
+                        .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation));
             }
         })
                 .setDividerColor(getResources().getColor(R.color.white))//设置分割线的颜色
@@ -169,18 +169,23 @@ public class AuthenticationActivity extends BaseActivity<VerifiedContract.View, 
         if (data != null) {
             switch (requestCode) {
                 case REQUEST_CODE_90:
+                    photo = data.getStringExtra("imgUrl");
                     tvPhoto.setRightString("已上传")
                             .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
                     break;
                 case REQUEST_CODE_91:
+                    positiveUrl = data.getStringExtra("positiveUrl");
+                    negativeUrl = data.getStringExtra("negativeUrl");
                     tvIdCard.setRightString("已上传")
                             .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
                     break;
                 case REQUEST_CODE_92:
+                    certificate = data.getStringExtra("imgUrl");
                     tvQualificationsCard.setRightString("已上传")
                             .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
                     break;
                 case REQUEST_CODE_93:
+                    chestCard = data.getStringExtra("imgUrl");
                     tvChestCard.setRightString("已上传")
                             .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
                     break;
@@ -198,7 +203,7 @@ public class AuthenticationActivity extends BaseActivity<VerifiedContract.View, 
                 startActivityForResult(new Intent(this, PhotoActivity.class).putExtra("title", "照片"), REQUEST_CODE_90);
                 break;
             case R.id.tv_id_card: //身份证
-                startActivityForResult(new Intent(this, PhotoActivity.class).putExtra("title", "身份证"), REQUEST_CODE_91);
+                startActivityForResult(new Intent(this, AgentCardActivity.class), REQUEST_CODE_91);
                 break;
             case R.id.tv_qualifications_card: //执业资格证/医师资格证
                 startActivityForResult(new Intent(this, PhotoActivity.class).putExtra("title", "执业资格证/医师资格证"), REQUEST_CODE_92);
@@ -207,7 +212,7 @@ public class AuthenticationActivity extends BaseActivity<VerifiedContract.View, 
                 startActivityForResult(new Intent(this, PhotoActivity.class).putExtra("title", "胸牌"), REQUEST_CODE_93);
                 break;
             case R.id.bt_confirm:
-                if (!isEmpty(etName.getText().toString().trim()) && !isEmpty(etDepartment.getText().toString().trim()) && titleId != 0 && !isEmpty(etInitialHospital.getText().toString().trim()) && !isEmpty(etPhone.getText().toString().trim()) && !isEmpty(photo) && !isEmpty(positiveCard) && !isEmpty(reverseCard) && !isEmpty(certificate) && !isEmpty(chestCard)) {
+                if (!isEmpty(etName.getText().toString().trim()) && !isEmpty(etDepartment.getText().toString().trim()) && titleId != 0 && !isEmpty(etInitialHospital.getText().toString().trim()) && !isEmpty(etPhone.getText().toString().trim()) && !isEmpty(photo) && !isEmpty(positiveUrl) && !isEmpty(negativeUrl) && !isEmpty(certificate) && !isEmpty(chestCard)) {
                     TreeMap<String, String> verifiedMap = new TreeMap<>();
                     verifiedMap.put("userId", SPUtil.get(this, USER_ID, "") + "");
                     verifiedMap.put("truename", etName.getText().toString().trim());
@@ -216,8 +221,8 @@ public class AuthenticationActivity extends BaseActivity<VerifiedContract.View, 
                     verifiedMap.put("hospital", etInitialHospital.getText().toString().trim());
                     verifiedMap.put("contactNumber", etPhone.getText().toString().trim());
                     verifiedMap.put("photo", photo);
-                    verifiedMap.put("positiveCard", positiveCard);
-                    verifiedMap.put("reverseCard", reverseCard);
+                    verifiedMap.put("positiveCard", positiveUrl);
+                    verifiedMap.put("reverseCard", negativeUrl);
                     verifiedMap.put("certificate", certificate);
                     verifiedMap.put("chestCard", chestCard);
                     verifiedMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(verifiedMap.toString().replaceAll(" ", "") + SIGN)));
@@ -251,8 +256,20 @@ public class AuthenticationActivity extends BaseActivity<VerifiedContract.View, 
 
     @Override
     public void resultVerified(VerifiedBean data) {
-        startActivity(new Intent(this, AuthenticationResultActivity.class).putExtra("result_type", 1));
-        finish();
+        switch (data.getCode()) {
+            case 200:
+                startActivity(new Intent(this, AuthenticationResultActivity.class).putExtra("result_type", 1));
+                finish();
+                break;
+            case 900:
+                ToastUtil.showLongToast(data.getMsg());
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(this, CaptchaLoginActivity.class));
+                finish();
+                break;
+        }
     }
 
     @Override

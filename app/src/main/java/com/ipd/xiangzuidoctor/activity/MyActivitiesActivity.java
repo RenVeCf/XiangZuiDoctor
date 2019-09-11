@@ -78,63 +78,63 @@ public class MyActivitiesActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        if (5 > 0) {//TODO 有接口后5更换总条数
-            if (pageNum == 1) {
-                str1.clear();
-                for (int i = 0; i < 5; i++) {//TODO 有接口后去掉
-                    TestMultiItemEntityBean testData = new TestMultiItemEntityBean();
-                    str1.add(testData);
-                }
-//                str1.addAll(data.getData().getMessageList());//TODO 有接口后打开
-                offlineActivitiesAdapter = new OfflineActivitiesAdapter(str1, 1);
-                rvMyActivities.setAdapter(offlineActivitiesAdapter);
-                offlineActivitiesAdapter.bindToRecyclerView(rvMyActivities);
-                offlineActivitiesAdapter.setEnableLoadMore(true);
-                offlineActivitiesAdapter.openLoadAnimation();
-                offlineActivitiesAdapter.disableLoadMoreIfNotFullPage();
-
-                offlineActivitiesAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                        startActivity(new Intent(MyActivitiesActivity.this, OfflineActivitiesDetailsActivity.class).putExtra("offline_activities_type", "1"));
-                    }
-                });
-
-                //上拉加载
-                offlineActivitiesAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
-                    @Override
-                    public void onLoadMoreRequested() {
-                        rvMyActivities.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                initData();
-                            }
-                        }, 1000);
-                    }
-                }, rvMyActivities);
-
-                if (5 > 10) {//TODO 有接口后5更换list.size
-                    pageNum += 1;
-                } else {
-                    offlineActivitiesAdapter.loadMoreEnd();
-                }
-            } else {
-                if ((5 - pageNum * 10) > 0) {//TODO 有接口后5更换list.size
-                    pageNum += 1;
-//                    offlineActivitiesAdapter.addData(data.getData().getMessageList());//TODO 有接口后打开
-                    offlineActivitiesAdapter.loadMoreComplete(); //完成本次
-                } else {
-//                    offlineActivitiesAdapter.addData(data.getData().getMessageList());//TODO 有接口后打开
-                    offlineActivitiesAdapter.loadMoreEnd(); //完成所有加载
-                }
-            }
-        } else {
-            str1.clear();
-            offlineActivitiesAdapter = new OfflineActivitiesAdapter(str1, 1);
-            rvMyActivities.setAdapter(offlineActivitiesAdapter);
-            offlineActivitiesAdapter.loadMoreEnd(); //完成所有加载
-            offlineActivitiesAdapter.setEmptyView(R.layout.null_data, rvMyActivities);
-        }
+//        if (5 > 0) {//TODO 有接口后5更换总条数
+//            if (pageNum == 1) {
+//                str1.clear();
+//                for (int i = 0; i < 5; i++) {//TODO 有接口后去掉
+//                    TestMultiItemEntityBean testData = new TestMultiItemEntityBean();
+//                    str1.add(testData);
+//                }
+////                str1.addAll(data.getData().getMessageList());//TODO 有接口后打开
+//                offlineActivitiesAdapter = new OfflineActivitiesAdapter(str1, 1);
+//                rvMyActivities.setAdapter(offlineActivitiesAdapter);
+//                offlineActivitiesAdapter.bindToRecyclerView(rvMyActivities);
+//                offlineActivitiesAdapter.setEnableLoadMore(true);
+//                offlineActivitiesAdapter.openLoadAnimation();
+//                offlineActivitiesAdapter.disableLoadMoreIfNotFullPage();
+//
+//                offlineActivitiesAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+//                        startActivity(new Intent(MyActivitiesActivity.this, OfflineActivitiesDetailsActivity.class).putExtra("offline_activities_type", "1"));
+//                    }
+//                });
+//
+//                //上拉加载
+//                offlineActivitiesAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+//                    @Override
+//                    public void onLoadMoreRequested() {
+//                        rvMyActivities.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                initData();
+//                            }
+//                        }, 1000);
+//                    }
+//                }, rvMyActivities);
+//
+//                if (5 > 10) {//TODO 有接口后5更换list.size
+//                    pageNum += 1;
+//                } else {
+//                    offlineActivitiesAdapter.loadMoreEnd();
+//                }
+//            } else {
+//                if ((5 - pageNum * 10) > 0) {//TODO 有接口后5更换list.size
+//                    pageNum += 1;
+////                    offlineActivitiesAdapter.addData(data.getData().getMessageList());//TODO 有接口后打开
+//                    offlineActivitiesAdapter.loadMoreComplete(); //完成本次
+//                } else {
+////                    offlineActivitiesAdapter.addData(data.getData().getMessageList());//TODO 有接口后打开
+//                    offlineActivitiesAdapter.loadMoreEnd(); //完成所有加载
+//                }
+//            }
+//        } else {
+//            str1.clear();
+//            offlineActivitiesAdapter = new OfflineActivitiesAdapter(str1, 1);
+//            rvMyActivities.setAdapter(offlineActivitiesAdapter);
+//            offlineActivitiesAdapter.loadMoreEnd(); //完成所有加载
+//            offlineActivitiesAdapter.setEmptyView(R.layout.null_data, rvMyActivities);
+//        }
     }
 
     @Override

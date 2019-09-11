@@ -1,8 +1,8 @@
 package com.ipd.xiangzuidoctor.bean;
 
-public class VerifiedBean {
+public class OfflineActivitiesCancelBean {
     /**
-     * msg : 您提交的信息后台正在审核中,请您耐心等待！
+     * msg : 操作成功
      * code : 200
      */
 

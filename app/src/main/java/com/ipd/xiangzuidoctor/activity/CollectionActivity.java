@@ -78,63 +78,63 @@ public class CollectionActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        if (5 > 0) {//TODO 有接口后5更换总条数
-            if (pageNum == 1) {
-                str1.clear();
-                for (int i = 0; i < 5; i++) {//TODO 有接口后去掉
-                    TestMultiItemEntityBean testData = new TestMultiItemEntityBean();
-                    str1.add(testData);
-                }
-//                str1.addAll(data.getData().getMessageList());//TODO 有接口后打开
-                specialColumnAdapter = new SpecialColumnAdapter(str1);
-                rvCollection.setAdapter(specialColumnAdapter);
-                specialColumnAdapter.bindToRecyclerView(rvCollection);
-                specialColumnAdapter.setEnableLoadMore(true);
-                specialColumnAdapter.openLoadAnimation();
-                specialColumnAdapter.disableLoadMoreIfNotFullPage();
-
-                specialColumnAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                        startActivity(new Intent(CollectionActivity.this, SpecialColumnDetailsActivity.class));
-                    }
-                });
-
-                //上拉加载
-                specialColumnAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
-                    @Override
-                    public void onLoadMoreRequested() {
-                        rvCollection.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                initData();
-                            }
-                        }, 1000);
-                    }
-                }, rvCollection);
-
-                if (5 > 10) {//TODO 有接口后5更换list.size
-                    pageNum += 1;
-                } else {
-                    specialColumnAdapter.loadMoreEnd();
-                }
-            } else {
-                if ((5 - pageNum * 10) > 0) {//TODO 有接口后5更换list.size
-                    pageNum += 1;
-//                    specialColumnAdapter.addData(data.getData().getMessageList());//TODO 有接口后打开
-                    specialColumnAdapter.loadMoreComplete(); //完成本次
-                } else {
-//                    specialColumnAdapter.addData(data.getData().getMessageList());//TODO 有接口后打开
-                    specialColumnAdapter.loadMoreEnd(); //完成所有加载
-                }
-            }
-        } else {
-            str1.clear();
-            specialColumnAdapter = new SpecialColumnAdapter(str1);
-            rvCollection.setAdapter(specialColumnAdapter);
-            specialColumnAdapter.loadMoreEnd(); //完成所有加载
-            specialColumnAdapter.setEmptyView(R.layout.null_data, rvCollection);
-        }
+//        if (5 > 0) {//TODO 有接口后5更换总条数
+//            if (pageNum == 1) {
+//                str1.clear();
+//                for (int i = 0; i < 5; i++) {//TODO 有接口后去掉
+//                    TestMultiItemEntityBean testData = new TestMultiItemEntityBean();
+//                    str1.add(testData);
+//                }
+////                str1.addAll(data.getData().getMessageList());//TODO 有接口后打开
+//                specialColumnAdapter = new SpecialColumnAdapter(str1);
+//                rvCollection.setAdapter(specialColumnAdapter);
+//                specialColumnAdapter.bindToRecyclerView(rvCollection);
+//                specialColumnAdapter.setEnableLoadMore(true);
+//                specialColumnAdapter.openLoadAnimation();
+//                specialColumnAdapter.disableLoadMoreIfNotFullPage();
+//
+//                specialColumnAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+//                        startActivity(new Intent(CollectionActivity.this, SpecialColumnDetailsActivity.class));
+//                    }
+//                });
+//
+//                //上拉加载
+//                specialColumnAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+//                    @Override
+//                    public void onLoadMoreRequested() {
+//                        rvCollection.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                initData();
+//                            }
+//                        }, 1000);
+//                    }
+//                }, rvCollection);
+//
+//                if (5 > 10) {//TODO 有接口后5更换list.size
+//                    pageNum += 1;
+//                } else {
+//                    specialColumnAdapter.loadMoreEnd();
+//                }
+//            } else {
+//                if ((5 - pageNum * 10) > 0) {//TODO 有接口后5更换list.size
+//                    pageNum += 1;
+////                    specialColumnAdapter.addData(data.getData().getMessageList());//TODO 有接口后打开
+//                    specialColumnAdapter.loadMoreComplete(); //完成本次
+//                } else {
+////                    specialColumnAdapter.addData(data.getData().getMessageList());//TODO 有接口后打开
+//                    specialColumnAdapter.loadMoreEnd(); //完成所有加载
+//                }
+//            }
+//        } else {
+//            str1.clear();
+//            specialColumnAdapter = new SpecialColumnAdapter(str1);
+//            rvCollection.setAdapter(specialColumnAdapter);
+//            specialColumnAdapter.loadMoreEnd(); //完成所有加载
+//            specialColumnAdapter.setEmptyView(R.layout.null_data, rvCollection);
+//        }
     }
 
     @Override

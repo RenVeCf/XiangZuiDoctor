@@ -10,20 +10,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.base.BaseActivity;
-import com.ipd.xiangzuidoctor.base.BasePresenter;
-import com.ipd.xiangzuidoctor.base.BaseView;
+import com.ipd.xiangzuidoctor.bean.OrderDetailsBean;
 import com.ipd.xiangzuidoctor.common.view.CallPhoneDialog;
 import com.ipd.xiangzuidoctor.common.view.TopView;
 import com.ipd.xiangzuidoctor.common.view.TwoBtDialog;
+import com.ipd.xiangzuidoctor.contract.OrderDetailsContract;
+import com.ipd.xiangzuidoctor.presenter.OrderDetailsPresenter;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
+import com.ipd.xiangzuidoctor.utils.MD5Utils;
 import com.ipd.xiangzuidoctor.utils.SPUtil;
+import com.ipd.xiangzuidoctor.utils.StringUtils;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
+
+import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.ObservableTransformer;
 
 import static com.ipd.xiangzuidoctor.common.config.IConstants.IS_SUPPLEMENT_INFO;
-import static com.ipd.xiangzuidoctor.utils.StringUtils.isEmpty;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
 import static com.ipd.xiangzuidoctor.utils.isClickUtil.isFastClick;
 
 /**
@@ -32,7 +39,7 @@ import static com.ipd.xiangzuidoctor.utils.isClickUtil.isFastClick;
  * Email ： 942685687@qq.com
  * Time ： 2019/7/16.
  */
-public class OrderDetailsActivity extends BaseActivity {
+public class OrderDetailsActivity extends BaseActivity<OrderDetailsContract.View, OrderDetailsContract.Presenter> implements OrderDetailsContract.View {
 
     @BindView(R.id.tv_order_details)
     TopView tvOrderDetails;
@@ -113,6 +120,7 @@ public class OrderDetailsActivity extends BaseActivity {
 
     private int surgeryType;//1: 单台，2: 连台
     private String orderType;//订单状态 0:待接单， 1:已接单， 2:进行中， 3:已完成
+    private int orderId;
     //    private SelectOrderAddPatientAdapter selectOrderAddPatientAdapter;
 //    private List<TestMultiItemEntityBean> str1 = new ArrayList<>();
 
@@ -122,13 +130,13 @@ public class OrderDetailsActivity extends BaseActivity {
     }
 
     @Override
-    public BasePresenter createPresenter() {
-        return null;
+    public OrderDetailsContract.Presenter createPresenter() {
+        return new OrderDetailsPresenter(this);
     }
 
     @Override
-    public BaseView createView() {
-        return null;
+    public OrderDetailsContract.View createView() {
+        return this;
     }
 
     @Override
@@ -140,6 +148,7 @@ public class OrderDetailsActivity extends BaseActivity {
 
         surgeryType = getIntent().getIntExtra("surgery_type", 0);
         orderType = getIntent().getStringExtra("order_type");
+        orderId = getIntent().getIntExtra("orderId", 0);
 
         switch (orderType) {
             case "0":
@@ -243,6 +252,18 @@ public class OrderDetailsActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        TreeMap<String, String> orderDetailsMap = new TreeMap<>();
+        orderDetailsMap.put("userId", SPUtil.get(this, USER_ID, "") + "");
+        orderDetailsMap.put("orderId", orderId +"");
+        orderDetailsMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(orderDetailsMap.toString().replaceAll(" ", "") + SIGN)));
+        getPresenter().getOrderDetails(orderDetailsMap, true, false);
+
+
+
+
+
+
+
         tvHospitalName.setRightString("上海市第一人民医院");
         tvHospitalAddress.setRightString("上海市虹口区海宁路100号");
         tvSurgeryType.setRightString(surgeryType == 1 ? "单台" : "连台");
@@ -331,5 +352,15 @@ public class OrderDetailsActivity extends BaseActivity {
                     startActivity(new Intent(this, EndOperationActivity.class));
                 break;
         }
+    }
+
+    @Override
+    public void resultOrderDetails(OrderDetailsBean data) {
+
+    }
+
+    @Override
+    public <T> ObservableTransformer<T, T> bindLifecycle() {
+        return this.bindToLifecycle();
     }
 }

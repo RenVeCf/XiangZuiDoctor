@@ -11,27 +11,42 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.ipd.xiangzuidoctor.R;
+import com.ipd.xiangzuidoctor.activity.CaptchaLoginActivity;
+import com.ipd.xiangzuidoctor.activity.MainActivity;
 import com.ipd.xiangzuidoctor.activity.SpecialColumnDetailsActivity;
 import com.ipd.xiangzuidoctor.adapter.SpecialColumnAdapter;
 import com.ipd.xiangzuidoctor.base.BaseFragment;
-import com.ipd.xiangzuidoctor.base.BasePresenter;
-import com.ipd.xiangzuidoctor.base.BaseView;
-import com.ipd.xiangzuidoctor.bean.TestMultiItemEntityBean;
+import com.ipd.xiangzuidoctor.bean.SpecialColumnBean;
+import com.ipd.xiangzuidoctor.bean.SpecialColumnCollectionBean;
+import com.ipd.xiangzuidoctor.bean.SpecialColumnDetailsBean;
 import com.ipd.xiangzuidoctor.common.view.SpacesItemDecoration;
+import com.ipd.xiangzuidoctor.contract.SpecialColumnContract;
+import com.ipd.xiangzuidoctor.presenter.SpecialColumnPresenter;
+import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
+import com.ipd.xiangzuidoctor.utils.MD5Utils;
+import com.ipd.xiangzuidoctor.utils.SPUtil;
+import com.ipd.xiangzuidoctor.utils.StringUtils;
+import com.ipd.xiangzuidoctor.utils.ToastUtil;
+import com.trello.rxlifecycle2.android.FragmentEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 import butterknife.BindView;
+import io.reactivex.ObservableTransformer;
 
-public class SpecialColumnFragment extends BaseFragment {
+import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
+
+public class SpecialColumnFragment extends BaseFragment<SpecialColumnContract.View, SpecialColumnContract.Presenter> implements SpecialColumnContract.View {
 
     @BindView(R.id.rv_special_column)
     RecyclerView rvSpecialColumn;
     @BindView(R.id.srl_special_column)
     SwipeRefreshLayout srlSpecialColumn;
 
-    private List<TestMultiItemEntityBean> str1 = new ArrayList<>();
+    private List<SpecialColumnBean.DataBean.MedicalListBean> medicalListBean = new ArrayList<>();
     private SpecialColumnAdapter specialColumnAdapter;
     private int pageNum = 1;//页数
     private String specialColumnType;//订单状态 0:最新文章， 1:新闻， 2:临床， 3:科研
@@ -42,13 +57,13 @@ public class SpecialColumnFragment extends BaseFragment {
     }
 
     @Override
-    public BasePresenter createPresenter() {
-        return null;
+    public SpecialColumnContract.Presenter createPresenter() {
+        return new SpecialColumnPresenter(mContext);
     }
 
     @Override
-    public BaseView createView() {
-        return null;
+    public SpecialColumnContract.View createView() {
+        return this;
     }
 
     @Override
@@ -83,62 +98,94 @@ public class SpecialColumnFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        if (5 > 0) {//TODO 有接口后5更换总条数
-            if (pageNum == 1) {
-                str1.clear();
-                for (int i = 0; i < 5; i++) {//TODO 有接口后去掉
-                    TestMultiItemEntityBean testData = new TestMultiItemEntityBean();
-                    str1.add(testData);
-                }
-//                str1.addAll(data.getData().getMessageList());//TODO 有接口后打开
-                specialColumnAdapter = new SpecialColumnAdapter(str1);
-                rvSpecialColumn.setAdapter(specialColumnAdapter);
-                specialColumnAdapter.bindToRecyclerView(rvSpecialColumn);
-                specialColumnAdapter.setEnableLoadMore(true);
-                specialColumnAdapter.openLoadAnimation();
-                specialColumnAdapter.disableLoadMoreIfNotFullPage();
+        TreeMap<String, String> homeMap = new TreeMap<>();
+        homeMap.put("userId", SPUtil.get(getContext(), USER_ID, "") + "");
+        homeMap.put("tag", specialColumnType);
+        homeMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(homeMap.toString().replaceAll(" ", "") + SIGN)));
+        getPresenter().getSpecialColumn(homeMap, false, false);
+    }
 
-                specialColumnAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                        startActivity(new Intent(getContext(), SpecialColumnDetailsActivity.class));
-                    }
-                });
+    @Override
+    public void resultSpecialColumn(SpecialColumnBean data) {
+        switch (data.getCode()) {
+            case 200:
+                if (data.getTotal() > 0) {
+                    if (pageNum == 1) {
+                        medicalListBean.clear();
+                        medicalListBean.addAll(data.getData().getMedicalList());
+                        specialColumnAdapter = new SpecialColumnAdapter(medicalListBean);
+                        rvSpecialColumn.setAdapter(specialColumnAdapter);
+                        specialColumnAdapter.bindToRecyclerView(rvSpecialColumn);
+                        specialColumnAdapter.setEnableLoadMore(true);
+                        specialColumnAdapter.openLoadAnimation();
+                        specialColumnAdapter.disableLoadMoreIfNotFullPage();
 
-                //上拉加载
-                specialColumnAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
-                    @Override
-                    public void onLoadMoreRequested() {
-                        rvSpecialColumn.postDelayed(new Runnable() {
+                        specialColumnAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                             @Override
-                            public void run() {
-                                initData();
+                            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                startActivity(new Intent(getContext(), SpecialColumnDetailsActivity.class).putExtra("medicalId", medicalListBean.get(position).getMedicalId()));
                             }
-                        }, 1000);
-                    }
-                }, rvSpecialColumn);
+                        });
 
-                if (5 > 10) {//TODO 有接口后5更换list.size
-                    pageNum += 1;
+                        //上拉加载
+                        specialColumnAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+                            @Override
+                            public void onLoadMoreRequested() {
+                                rvSpecialColumn.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        initData();
+                                    }
+                                }, 1000);
+                            }
+                        }, rvSpecialColumn);
+
+                        if (data.getTotal() > 10) {
+                            pageNum += 1;
+                        } else {
+                            specialColumnAdapter.loadMoreEnd();
+                        }
+                    } else {
+                        if ((data.getTotal() - pageNum * 10) > 0) {
+                            pageNum += 1;
+                            specialColumnAdapter.addData(data.getData().getMedicalList());
+                            specialColumnAdapter.loadMoreComplete(); //完成本次
+                        } else {
+                            specialColumnAdapter.addData(data.getData().getMedicalList());
+                            specialColumnAdapter.loadMoreEnd(); //完成所有加载
+                        }
+                    }
                 } else {
-                    specialColumnAdapter.loadMoreEnd();
-                }
-            } else {
-                if ((5 - pageNum * 10) > 0) {//TODO 有接口后5更换list.size
-                    pageNum += 1;
-//                    specialColumnAdapter.addData(data.getData().getMessageList());//TODO 有接口后打开
-                    specialColumnAdapter.loadMoreComplete(); //完成本次
-                } else {
-//                    specialColumnAdapter.addData(data.getData().getMessageList());//TODO 有接口后打开
+                    medicalListBean.clear();
+                    specialColumnAdapter = new SpecialColumnAdapter(medicalListBean);
+                    rvSpecialColumn.setAdapter(specialColumnAdapter);
                     specialColumnAdapter.loadMoreEnd(); //完成所有加载
+                    specialColumnAdapter.setEmptyView(R.layout.null_data, rvSpecialColumn);
                 }
-            }
-        } else {
-            str1.clear();
-            specialColumnAdapter = new SpecialColumnAdapter(str1);
-            rvSpecialColumn.setAdapter(specialColumnAdapter);
-            specialColumnAdapter.loadMoreEnd(); //完成所有加载
-            specialColumnAdapter.setEmptyView(R.layout.null_data, rvSpecialColumn);
+                break;
+            case 900:
+                ToastUtil.showLongToast(data.getMsg());
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(getActivity(), CaptchaLoginActivity.class));
+                getActivity().finish();
+                break;
         }
+    }
+
+    @Override
+    public void resultSpecialColumnDetails(SpecialColumnDetailsBean data) {
+
+    }
+
+    @Override
+    public void resultSpecialColumnCollection(SpecialColumnCollectionBean data) {
+
+    }
+
+    @Override
+    public <T> ObservableTransformer<T, T> bindLifecycle() {
+        return this.bindUntilEvent(FragmentEvent.PAUSE);
     }
 }

@@ -70,7 +70,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/y50"
-            android:text="¥178"
             android:textColor="@color/tx_fee"
             app:layout_constraintStart_toEndOf="@+id/tv"
             app:layout_constraintTop_toTopOf="parent" />
@@ -81,14 +80,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/x50"
             android:layout_marginBottom="@dimen/y50"
-            android:text="市场价：¥178"
             android:textColor="@color/tx_bottom_navigation"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv" />
 
         <View
-            android:layout_width="@dimen/y200"
+            android:layout_width="@dimen/y250"
             android:layout_height="1dp"
             android:layout_marginStart="@dimen/x50"
             android:layout_marginBottom="@dimen/y50"
