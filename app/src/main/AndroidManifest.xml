@@ -198,6 +198,28 @@
             android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
             android:exported="false"
             android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.MoveConsumerActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.SendOrderAddPatientDetailsActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:screenOrientation="sensorPortrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="wx2bed183f1f29ee2f" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="channel"
@@ -230,9 +252,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
-        tools:ignore="ProtectedPermissions" />
+        tools:ignore="ProtectedPermissions" /> <!-- 摄影机 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!-- 摄影机 -->
+
     <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>

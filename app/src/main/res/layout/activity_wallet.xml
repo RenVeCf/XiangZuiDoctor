@@ -25,6 +25,7 @@
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:fillViewport="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_wallet">
 
@@ -226,9 +227,11 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/stv_consumer_details" />
+                app:layout_constraintTop_toBottomOf="@+id/stv_consumer_details"
+                app:layout_constraintBottom_toTopOf="@+id/ll"/>
 
             <LinearLayout
+                android:id="@+id/ll"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/y150"
                 android:layout_marginTop="@dimen/y100"
@@ -237,8 +240,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_consumer_details">
+                app:layout_constraintStart_toStartOf="parent">
 
                 <LinearLayout
                     android:layout_width="0dp"

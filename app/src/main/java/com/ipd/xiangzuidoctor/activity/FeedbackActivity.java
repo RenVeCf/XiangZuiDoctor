@@ -1,5 +1,6 @@
 package com.ipd.xiangzuidoctor.activity;
 
+import android.content.Intent;
 import android.widget.RadioGroup;
 
 import androidx.appcompat.widget.AppCompatEditText;
@@ -7,13 +8,25 @@ import androidx.appcompat.widget.AppCompatEditText;
 import com.gyf.immersionbar.ImmersionBar;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.base.BaseActivity;
-import com.ipd.xiangzuidoctor.base.BasePresenter;
-import com.ipd.xiangzuidoctor.base.BaseView;
+import com.ipd.xiangzuidoctor.bean.FeedBackBean;
 import com.ipd.xiangzuidoctor.common.view.TopView;
+import com.ipd.xiangzuidoctor.contract.FeedBackContract;
+import com.ipd.xiangzuidoctor.presenter.FeedBackPresenter;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
+import com.ipd.xiangzuidoctor.utils.MD5Utils;
+import com.ipd.xiangzuidoctor.utils.SPUtil;
+import com.ipd.xiangzuidoctor.utils.StringUtils;
+import com.ipd.xiangzuidoctor.utils.ToastUtil;
+
+import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.ObservableTransformer;
+
+import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
+import static com.ipd.xiangzuidoctor.utils.StringUtils.isEmpty;
 
 /**
  * Description ：意见反馈
@@ -21,7 +34,7 @@ import butterknife.OnClick;
  * Email ： 942685687@qq.com
  * Time ： 2019/8/28.
  */
-public class FeedbackActivity extends BaseActivity {
+public class FeedbackActivity extends BaseActivity<FeedBackContract.View, FeedBackContract.Presenter> implements FeedBackContract.View {
 
     @BindView(R.id.rg_feedback)
     RadioGroup rgFeedback;
@@ -32,19 +45,21 @@ public class FeedbackActivity extends BaseActivity {
     @BindView(R.id.tv_feedback)
     TopView tvFeedback;
 
+    private int selectItem = 1;
+
     @Override
     public int getLayoutId() {
         return R.layout.activity_feedback;
     }
 
     @Override
-    public BasePresenter createPresenter() {
-        return null;
+    public FeedBackContract.Presenter createPresenter() {
+        return new FeedBackPresenter(this);
     }
 
     @Override
-    public BaseView createView() {
-        return null;
+    public FeedBackContract.View createView() {
+        return this;
     }
 
     @Override
@@ -65,13 +80,57 @@ public class FeedbackActivity extends BaseActivity {
         rgFeedback.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int btId) {
-
+                switch (btId) {
+                    case R.id.rb_product_suggestion:
+                        selectItem = 1;
+                        break;
+                    case R.id.rb_other_suggestion:
+                        selectItem = 2;
+                        break;
+                    case R.id.rb_abnormal_function:
+                        selectItem = 3;
+                        break;
+                    case R.id.rb_safe_question:
+                        selectItem = 4;
+                        break;
+                }
             }
         });
     }
 
     @OnClick(R.id.sb_confirm)
     public void onViewClicked() {
-        finish();
+        if (!isEmpty(acetDemandContent.getText().toString().trim()) && !isEmpty(acetContactInfo.getText().toString().trim())) {
+            TreeMap<String, String> feedBackMap = new TreeMap<>();
+            feedBackMap.put("userId", SPUtil.get(this, USER_ID, "") + "");
+            feedBackMap.put("opinionType", selectItem + "");
+            feedBackMap.put("content", acetDemandContent.getText().toString().trim());
+            feedBackMap.put("contactInfo", acetContactInfo.getText().toString().trim());
+            feedBackMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(feedBackMap.toString().replaceAll(" ", "") + SIGN)));
+            getPresenter().getFeedBack(feedBackMap, true, false);
+        } else
+            ToastUtil.showLongToast("请将信息填写完整!");
+    }
+
+    @Override
+    public void resultFeedBack(FeedBackBean data) {
+        switch (data.getCode()) {
+            case 900:
+                ToastUtil.showLongToast(data.getMsg());
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(this, CaptchaLoginActivity.class));
+                finish();
+                break;
+            default:
+                ToastUtil.showLongToast(data.getMsg());
+                break;
+        }
+    }
+
+    @Override
+    public <T> ObservableTransformer<T, T> bindLifecycle() {
+        return this.bindToLifecycle();
     }
 }

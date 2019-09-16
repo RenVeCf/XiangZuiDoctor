@@ -2,9 +2,9 @@ package com.ipd.xiangzuidoctor.presenter;
 
 import android.content.Context;
 
-import com.ipd.xiangzuidoctor.bean.OrderDetailsBean;
-import com.ipd.xiangzuidoctor.contract.OrderDetailsContract;
-import com.ipd.xiangzuidoctor.model.OrderDetailsModel;
+import com.ipd.xiangzuidoctor.bean.H5Bean;
+import com.ipd.xiangzuidoctor.contract.H5Contract;
+import com.ipd.xiangzuidoctor.model.H5Model;
 import com.ipd.xiangzuidoctor.progress.ObserverResponseListener;
 import com.ipd.xiangzuidoctor.utils.ExceptionHandle;
 import com.ipd.xiangzuidoctor.utils.ToastUtil;
@@ -17,24 +17,24 @@ import java.util.TreeMap;
  * Email ： 942685687@qq.com
  * Time ： 2018/8/26.
  */
-public class OrderDetailsPresenter extends OrderDetailsContract.Presenter {
+public class H5Presenter extends H5Contract.Presenter {
 
-    private OrderDetailsModel model;
+    private H5Model model;
     private Context context;
 
-    public OrderDetailsPresenter(Context context) {
-        this.model = new OrderDetailsModel();
+    public H5Presenter(Context context) {
+        this.model = new H5Model();
         this.context = context;
     }
 
     @Override
-    public void getOrderDetails(TreeMap<String, String> map, boolean isDialog, boolean cancelable) {
-        model.getOrderDetails(context, map, isDialog, cancelable, getView().bindLifecycle(), new ObserverResponseListener() {
+    public void getH5(TreeMap<String, String> map, boolean isDialog, boolean cancelable) {
+        model.getH5(context, map, isDialog, cancelable, getView().bindLifecycle(), new ObserverResponseListener() {
             @Override
             public void onNext(Object o) {
                 //这一步是必须的，判断view是否已经被销毁
                 if (getView() != null) {
-                    getView().resultOrderDetails((OrderDetailsBean) o);
+                    getView().resultH5((H5Bean) o);
                 }
             }
 

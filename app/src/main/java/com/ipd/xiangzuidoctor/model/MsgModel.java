@@ -16,14 +16,14 @@ import io.reactivex.ObservableTransformer;
  * Email ： 942685687@qq.com
  * Time ： 2018/8/26.
  */
-public class OrderDetailsModel<T> extends BaseModel {
+public class MsgModel<T> extends BaseModel {
 
-    public void getOrderDetails(Context context, TreeMap<String, String> map, boolean isDialog, boolean cancelable,
+    public void getMsgList(Context context, TreeMap<String, String> map, boolean isDialog, boolean cancelable,
                            ObservableTransformer<T, T> transformer, ObserverResponseListener observerListener) {
 
         //当不需要指定是否由dialog时，可以调用这个方法
         //        subscribe(context, Api.getApiService().login(map), observerListener);
-        paramSubscribe(context, Api.getApiService().getOrderDetails(map), observerListener, transformer, isDialog, cancelable);
+        paramSubscribe(context, Api.getApiService().getMsgList(map), observerListener, transformer, isDialog, cancelable);
     }
     //// TODO: 2017/12/27 其他需要请求、数据库等等的操作
 }

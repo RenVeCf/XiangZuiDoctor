@@ -5,7 +5,11 @@
     android:shape="rectangle"
     android:useLevel="true">
 
-    <solid android:color="@color/orange" />
+    <stroke
+        android:width="0.5dp"
+        android:color="@color/orange" />
+
+    <solid android:color="@color/white" />
 
     <!-- 圆角半径是高度的一般就是一个圆弧了 -->
     <corners android:radius="50dp" />

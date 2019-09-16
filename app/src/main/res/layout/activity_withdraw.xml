@@ -6,18 +6,27 @@
     android:layout_height="match_parent"
     tools:context="com.ipd.xiangzuidoctor.activity.WithdrawActivity">
 
-    <com.ipd.xiangzuidoctor.common.view.TopView
-        android:id="@+id/tv_withdraw"
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="@dimen/y150"
         android:background="@color/white"
-        android:gravity="bottom"
-        app:is_back="true"
-        app:is_withdrawals_record="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="提现" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+            android:id="@+id/sb_confirm"
+            style="@style/SuperButton.Blue"
+            android:layout_width="@dimen/x600"
+            android:layout_height="@dimen/y110"
+            android:text="预计24小时内到账，确认提现"
+            app:sGradientEndColor="#4088FE"
+            app:sGradientOrientation="LEFT_RIGHT"
+            app:sGradientStartColor="#6BB6FF"
+            app:sGradientType="linear" />
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_service_fee"
@@ -29,15 +38,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_withdraw">
-
-        <TextView
-            android:id="@+id/tv_service_fee"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:textColor="@color/tx_bottom_navigation"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_weight="1" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -67,83 +67,67 @@
                 android:textColor="@color/black"
                 android:textSize="22sp" />
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/y20"
-        android:background="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cl_service_fee">
 
         <TextView
-            android:id="@+id/tv_withdraw_type"
+            android:id="@+id/tv_service_fee"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/x50"
-            android:layout_marginTop="@dimen/y50"
-            android:text="选择提现方式"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:layout_height="0dp"
+            android:text="提现金额"
+            android:textColor="@color/tx_bottom_navigation"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-            android:id="@+id/stv_wechat_withdraw"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/y150"
-            android:paddingStart="@dimen/x30"
-            android:paddingEnd="@dimen/x30"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_withdraw_type"
-            app:sDividerLineType="none"
-            app:sIsChecked="true"
-            app:sLeftIconRes="@drawable/ic_wechat_pay"
-            app:sLeftTextColor="@color/black"
-            app:sLeftTextSize="16sp"
-            app:sLeftTextString="微信"
-            app:sRightIconRes="@drawable/select_radio_check" />
-
-        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-            android:id="@+id/stv_ali_withdraw"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/y150"
-            android:paddingStart="@dimen/x30"
-            android:paddingEnd="@dimen/x30"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/stv_wechat_withdraw"
-            app:sDividerLineType="none"
-            app:sLeftIconRes="@drawable/ic_ali_pay"
-            app:sLeftTextColor="@color/black"
-            app:sLeftTextSize="16sp"
-            app:sLeftTextString="支付宝"
-            app:sRightIconRes="@drawable/select_radio_check" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_weight="1" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <com.ipd.xiangzuidoctor.common.view.TopView
+        android:id="@+id/tv_withdraw"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:gravity="bottom"
+        app:is_back="true"
+        app:is_withdrawals_record="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="提现" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/stv_ali_withdraw"
         android:layout_width="0dp"
         android:layout_height="@dimen/y150"
-        android:background="@color/white"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingStart="@dimen/x30"
+        android:paddingEnd="@dimen/x30"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_service_fee"
+        app:sDividerLineType="none"
+        android:layout_marginTop="@dimen/y20"
+        android:layout_marginBottom="@dimen/y20"
+        app:sLeftIconRes="@drawable/ic_ali_pay"
+        app:sLeftTextColor="@color/black"
+        app:sLeftTextSize="16sp"
+        app:sLeftTextString="支付宝" />
 
-        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
-            android:id="@+id/sb_confirm"
-            style="@style/SuperButton.Blue"
-            android:layout_width="@dimen/x400"
-            android:layout_height="@dimen/y110"
-            app:sGradientType="linear"
-            app:sGradientStartColor="#6BB6FF"
-            app:sGradientEndColor="#4088FE"
-            app:sGradientOrientation="LEFT_RIGHT"
-            android:text="确认" />
-    </LinearLayout>
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_name"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:paddingStart="@dimen/x50"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:hint="请输入支付宝姓名"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stv_ali_withdraw"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_code"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:paddingStart="@dimen/x50"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:hint="请输入支付宝账号"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_name"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

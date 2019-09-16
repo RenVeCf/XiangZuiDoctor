@@ -2,7 +2,7 @@ package com.ipd.xiangzuidoctor.contract;
 
 import com.ipd.xiangzuidoctor.base.BasePresenter;
 import com.ipd.xiangzuidoctor.base.BaseView;
-import com.ipd.xiangzuidoctor.bean.OrderDetailsBean;
+import com.ipd.xiangzuidoctor.bean.FeedBackBean;
 
 import java.util.TreeMap;
 
@@ -14,16 +14,16 @@ import io.reactivex.ObservableTransformer;
  * Email ： 942685687@qq.com
  * Time ： 2019/4/2.
  */
-public interface OrderDetailsContract {
+public interface FeedBackContract {
 
     interface View extends BaseView {
         //不同的Bean单独处理
-        void resultOrderDetails(OrderDetailsBean data);
+        void resultFeedBack(FeedBackBean data);
 
         <T> ObservableTransformer<T, T> bindLifecycle();
     }
 
     abstract class Presenter extends BasePresenter<View> {
-        public abstract void getOrderDetails(TreeMap<String, String> map, boolean isDialog, boolean cancelable);
+        public abstract void getFeedBack(TreeMap<String, String> map, boolean isDialog, boolean cancelable);
     }
 }

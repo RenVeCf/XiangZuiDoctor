@@ -2,6 +2,7 @@ package com.ipd.xiangzuidoctor.api;
 
 import com.ipd.xiangzuidoctor.base.BaseApi;
 
+import static com.ipd.xiangzuidoctor.common.config.UrlConfig.BASE_LOCAL_URL;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.BASE_URL;
 
 /**

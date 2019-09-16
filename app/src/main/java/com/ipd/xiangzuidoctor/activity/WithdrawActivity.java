@@ -3,19 +3,31 @@ package com.ipd.xiangzuidoctor.activity;
 import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatEditText;
 
 import com.gyf.immersionbar.ImmersionBar;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.base.BaseActivity;
-import com.ipd.xiangzuidoctor.base.BasePresenter;
-import com.ipd.xiangzuidoctor.base.BaseView;
+import com.ipd.xiangzuidoctor.bean.WithdrawAliPayBean;
 import com.ipd.xiangzuidoctor.common.view.TopView;
+import com.ipd.xiangzuidoctor.contract.WithdrawAliPayContract;
+import com.ipd.xiangzuidoctor.presenter.WithdrawAliPayPresenter;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
-import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
+import com.ipd.xiangzuidoctor.utils.MD5Utils;
+import com.ipd.xiangzuidoctor.utils.SPUtil;
+import com.ipd.xiangzuidoctor.utils.StringUtils;
+import com.ipd.xiangzuidoctor.utils.ToastUtil;
+
+import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.ObservableTransformer;
+
+import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
+import static com.ipd.xiangzuidoctor.utils.StringUtils.isEmpty;
 
 /**
  * Description ：提现
@@ -23,18 +35,16 @@ import butterknife.OnClick;
  * Email ： 942685687@qq.com
  * Time ： 2019/7/12.
  */
-public class WithdrawActivity extends BaseActivity {
+public class WithdrawActivity extends BaseActivity<WithdrawAliPayContract.View, WithdrawAliPayContract.Presenter> implements WithdrawAliPayContract.View {
 
     @BindView(R.id.tv_withdraw)
     TopView tvWithdraw;
-    @BindView(R.id.tv_service_fee)
-    TextView tvServiceFee;
     @BindView(R.id.et_service_fee)
     EditText etServiceFee;
-    @BindView(R.id.stv_wechat_withdraw)
-    SuperTextView stvWechatWithdraw;
-    @BindView(R.id.stv_ali_withdraw)
-    SuperTextView stvAliWithdraw;
+    @BindView(R.id.et_name)
+    AppCompatEditText etName;
+    @BindView(R.id.et_code)
+    AppCompatEditText etCode;
 
     @Override
     public int getLayoutId() {
@@ -42,13 +52,13 @@ public class WithdrawActivity extends BaseActivity {
     }
 
     @Override
-    public BasePresenter createPresenter() {
-        return null;
+    public WithdrawAliPayContract.Presenter createPresenter() {
+        return new WithdrawAliPayPresenter(this);
     }
 
     @Override
-    public BaseView createView() {
-        return null;
+    public WithdrawAliPayContract.View createView() {
+        return this;
     }
 
     @Override
@@ -61,7 +71,7 @@ public class WithdrawActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        tvServiceFee.setText("提现金额（收取0.3%服务费）");
+
     }
 
     @Override
@@ -69,20 +79,45 @@ public class WithdrawActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.stv_wechat_withdraw, R.id.stv_ali_withdraw, R.id.sb_confirm})
+    @OnClick({R.id.sb_confirm})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.stv_wechat_withdraw:
-                stvWechatWithdraw.setRightIcon(R.drawable.ic_check_blue);
-                stvAliWithdraw.setRightIcon(R.drawable.ic_check_gray);
-                break;
-            case R.id.stv_ali_withdraw:
-                stvAliWithdraw.setRightIcon(R.drawable.ic_check_blue);
-                stvWechatWithdraw.setRightIcon(R.drawable.ic_check_gray);
-                break;
             case R.id.sb_confirm:
-                startActivity(new Intent(this, WithdrawSuccessActivity.class));
+                if (!isEmpty(etServiceFee.getText().toString().trim())) {
+                    TreeMap<String, String> withdrawAliPayMap = new TreeMap<>();
+                    withdrawAliPayMap.put("userId", SPUtil.get(this, USER_ID, "") + "");
+                    withdrawAliPayMap.put("withMoney", etServiceFee.getText().toString().trim());
+                    withdrawAliPayMap.put("payName", etName.getText().toString().trim());
+                    withdrawAliPayMap.put("payAccount", etCode.getText().toString().trim());
+                    withdrawAliPayMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(withdrawAliPayMap.toString().replaceAll(" ", "") + SIGN)));
+                    getPresenter().getWithdrawAliPay(withdrawAliPayMap, false, false);
+                } else
+                    ToastUtil.showLongToast("请填写提现金额！");
                 break;
         }
+    }
+
+    @Override
+    public void resultWithdrawAliPay(WithdrawAliPayBean data) {
+        switch (data.getCode()) {
+            case 200:
+                startActivity(new Intent(this, WithdrawSuccessActivity.class));
+                break;
+            case 900:
+                ToastUtil.showShortToast(data.getMsg());
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(this, CaptchaLoginActivity.class));
+                finish();
+                break;
+            default:
+                ToastUtil.showShortToast(data.getMsg());
+        }
+    }
+
+    @Override
+    public <T> ObservableTransformer<T, T> bindLifecycle() {
+        return this.bindToLifecycle();
     }
 }

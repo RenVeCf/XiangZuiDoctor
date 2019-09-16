@@ -100,6 +100,12 @@ public class AuthenticationResultActivity extends BaseActivity {
                 tvTitle.setText("充值成功");
                 tvContent.setText("您已充值成功，钱款已到账");
                 break;
+            case 6:
+                ivResult.setImageResource(R.drawable.ic_wait);
+                tvTopTitle.setText("充值失败");
+                tvTitle.setText("充值失败");
+                tvContent.setText("充值失败，请重新充值");
+                break;
         }
     }
 

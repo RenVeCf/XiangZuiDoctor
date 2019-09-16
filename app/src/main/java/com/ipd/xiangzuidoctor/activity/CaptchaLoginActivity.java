@@ -14,7 +14,6 @@ import com.ipd.xiangzuidoctor.bean.ResetPwdBean;
 import com.ipd.xiangzuidoctor.contract.LoginContract;
 import com.ipd.xiangzuidoctor.presenter.LoginPresenter;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
-import com.ipd.xiangzuidoctor.utils.L;
 import com.ipd.xiangzuidoctor.utils.MD5Utils;
 import com.ipd.xiangzuidoctor.utils.SPUtil;
 import com.ipd.xiangzuidoctor.utils.StringUtils;
@@ -29,6 +28,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.ObservableTransformer;
 
+import static com.ipd.xiangzuidoctor.common.config.IConstants.AVATAR;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.IS_SUPPLEMENT_INFO;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.NIKE_NAME;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.PHONE;
@@ -191,6 +191,7 @@ public class CaptchaLoginActivity extends BaseActivity<LoginContract.View, Login
             SPUtil.put(this, USER_ID, data.getData().getUser().getUserId() + "");
             SPUtil.put(this, PHONE, data.getData().getUser().getTelPhone());
             SPUtil.put(this, NIKE_NAME, data.getData().getUser().getNickname());
+            SPUtil.put(this, AVATAR, data.getData().getUser().getAvatar());
             SPUtil.put(this, IS_SUPPLEMENT_INFO, data.getData().getUser().getApproveStatus());
 
             startActivity(new Intent(this, MainActivity.class));

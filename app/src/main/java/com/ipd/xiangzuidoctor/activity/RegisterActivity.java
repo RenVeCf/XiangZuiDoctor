@@ -29,6 +29,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.ObservableTransformer;
 
+import static com.ipd.xiangzuidoctor.common.config.IConstants.AVATAR;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.NIKE_NAME;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.PHONE;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
@@ -115,6 +116,7 @@ public class RegisterActivity extends BaseActivity<LoginContract.View, LoginCont
                     ToastUtil.showShortToast("请填写号码!");
                 break;
             case R.id.tv_agreement:
+                startActivity(new Intent(this, WebViewActivity.class).putExtra("h5Type", 1));
                 break;
             case R.id.bt_now_login:
                 startActivity(new Intent(this, CaptchaLoginActivity.class));
@@ -149,6 +151,7 @@ public class RegisterActivity extends BaseActivity<LoginContract.View, LoginCont
             SPUtil.put(this, USER_ID, data.getData().getUser().getUserId() +"");
             SPUtil.put(this, PHONE, data.getData().getUser().getTelPhone());
             SPUtil.put(this, NIKE_NAME, data.getData().getUser().getNickname());
+            SPUtil.put(this, AVATAR, data.getData().getUser().getAvatar());
 
             startActivity(new Intent(this, MainActivity.class));
             finish();

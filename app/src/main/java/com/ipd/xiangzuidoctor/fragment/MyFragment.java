@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.gyf.immersionbar.ImmersionBar;
@@ -20,16 +21,24 @@ import com.ipd.xiangzuidoctor.activity.MsgActivity;
 import com.ipd.xiangzuidoctor.activity.MyActivitiesActivity;
 import com.ipd.xiangzuidoctor.activity.SettingActivity;
 import com.ipd.xiangzuidoctor.activity.WalletActivity;
+import com.ipd.xiangzuidoctor.activity.WebViewActivity;
 import com.ipd.xiangzuidoctor.base.BaseFragment;
 import com.ipd.xiangzuidoctor.base.BasePresenter;
 import com.ipd.xiangzuidoctor.base.BaseView;
 import com.ipd.xiangzuidoctor.common.view.TopView;
+import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
+import com.ipd.xiangzuidoctor.utils.SPUtil;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.ipd.xiangzuidoctor.common.config.IConstants.AVATAR;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.IS_SUPPLEMENT_INFO;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.NIKE_NAME;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.PHONE;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_95;
+import static com.ipd.xiangzuidoctor.common.config.UrlConfig.BASE_LOCAL_URL;
 
 /**
  * Description ：我的
@@ -79,7 +88,7 @@ public class MyFragment extends BaseFragment {
         ImmersionBar.with(this).statusBarDarkFont(false).init();
         ImmersionBar.setTitleBar(getActivity(), tvMy);
         ibTopCustomerService.setImageResource(R.drawable.ic_customer_service_white);
-}
+    }
 
     @Override
     public void initListener() {
@@ -88,10 +97,10 @@ public class MyFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        ivHospitalHead.setImageResource(R.mipmap.ic_test_head);
-        tvHospitalName.setText("上海东方医院");
-        tvIsCertification.setText("未认证");
-        tvPhone.setText("18321836625");
+        Glide.with(ApplicationUtil.getContext()).load(BASE_LOCAL_URL + SPUtil.get(getContext(), AVATAR, "")).apply(new RequestOptions().placeholder(R.mipmap.ic_test_head)).into(ivHospitalHead);
+        tvHospitalName.setText(SPUtil.get(getContext(), NIKE_NAME, "") + "");
+        tvIsCertification.setText("1".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + "") ? "未认证" : "认证了");
+        tvPhone.setText(SPUtil.get(getContext(), PHONE, "") + "");
     }
 
     @Override
@@ -101,7 +110,7 @@ public class MyFragment extends BaseFragment {
             switch (requestCode) {
                 case REQUEST_CODE_95:
                     Glide.with(this)
-                            .load(data.getStringExtra("modify_head"))
+                            .load(BASE_LOCAL_URL + data.getStringExtra("modify_head"))
                             .into(new SimpleTarget<Drawable>() {
                                 @Override
                                 public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
@@ -133,7 +142,8 @@ public class MyFragment extends BaseFragment {
                 startActivity(new Intent(getContext(), CollectionActivity.class));
                 break;
             case R.id.tv_about:
-                startActivity(new Intent(getContext(), AboutActivity.class));
+//                startActivity(new Intent(getContext(), AboutActivity.class));
+                startActivity(new Intent(getContext(), WebViewActivity.class).putExtra("h5Type", 3));
                 break;
             case R.id.tv_setting:
                 startActivity(new Intent(getContext(), SettingActivity.class));
