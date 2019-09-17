@@ -89,6 +89,12 @@ public class MainOrderAdapter<T> extends BaseQuickAdapter<T, BaseViewHolder> {
                         .setGone(R.id.bt_second, false)
                         .setText(R.id.bt_third, "结束手术");
                 break;
+            case "4":
+                orderStatus = "已结束";
+                helper.setText(R.id.bt_first, "查看详情")
+                        .setGone(R.id.bt_second, false)
+                        .setGone(R.id.bt_third, false);
+                break;
             case "5":
                 orderStatus = "未结算";
                 helper.setText(R.id.bt_first, "查看详情")

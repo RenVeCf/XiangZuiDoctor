@@ -9,7 +9,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.bean.OfflineActivitiesMyBean;
-import com.ipd.xiangzuidoctor.bean.TestMultiItemEntityBean;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
 
 import java.util.List;

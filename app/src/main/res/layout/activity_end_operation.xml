@@ -65,6 +65,96 @@
         app:sLeftTextString="病人交接"
         app:sRightIconRes="@drawable/ic_right_arrow" />
 
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/tv_estimated_time"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:paddingStart="@dimen/x30"
+        android:paddingEnd="@dimen/x30"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_patient_handover"
+        app:sDividerLineType="none"
+        app:sRightTextColor="@color/black"
+        app:sLeftTextColor="@color/black"
+        app:sLeftTextString="预计手术时间" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/tv_estimated_fee"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:paddingStart="@dimen/x30"
+        android:paddingEnd="@dimen/x30"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:sRightTextColor="@color/tx_fee"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_estimated_time"
+        app:sDividerLineType="none"
+        app:sLeftTextColor="@color/black"
+        app:sLeftTextString="预计手术费用" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/tv_waiting_time"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:paddingStart="@dimen/x30"
+        android:paddingEnd="@dimen/x30"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_estimated_fee"
+        app:sDividerLineType="none"
+        app:sRightTextColor="@color/black"
+        app:sLeftTextColor="@color/black"
+        app:sLeftTextString="等待时间" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/tv_overtime_fee"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:paddingStart="@dimen/x30"
+        android:paddingEnd="@dimen/x30"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_waiting_time"
+        app:sDividerLineType="none"
+        app:sRightTextColor="@color/tx_fee"
+        app:sLeftTextColor="@color/black"
+        app:sLeftTextString="超时费用" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/tv_actual_time"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:paddingStart="@dimen/x30"
+        android:paddingEnd="@dimen/x30"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_overtime_fee"
+        app:sDividerLineType="none"
+        app:sRightTextColor="@color/black"
+        app:sLeftTextColor="@color/black"
+        app:sLeftTextString="实际手术时间" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/tv_actual_fee"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:paddingStart="@dimen/x30"
+        android:paddingEnd="@dimen/x30"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_actual_time"
+        app:sDividerLineType="none"
+        app:sRightTextColor="@color/tx_fee"
+        app:sLeftTextColor="@color/black"
+        app:sLeftTextString="实际手术费用" />
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="@dimen/y150"

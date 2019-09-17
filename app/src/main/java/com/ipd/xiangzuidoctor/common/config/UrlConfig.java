@@ -42,6 +42,7 @@ public interface UrlConfig {
     String IS_ARRIVALS = "ad/order/arrivePlace"; //医生端订单-已接单-到达地点
     String ORDER_CANCEL = "ad/order/alreadyCancel"; //医生端订单-已接单-取消订单
     String GET_ORDER = "ad/order/receipt"; //医生端订单-接单
+    String ANESTHESIA_LIST = "ah/order/narcosisList"; //麻醉方式列表
 
     /**
      * 医学专栏
@@ -77,9 +78,4 @@ public interface UrlConfig {
     String MSG_LIST = "ah/user/userInfo"; //我的消息
     String FEED_BACK = "ah/setup/opinion"; //意见反馈
     String GET_USER_INFO = "ah/user/selectByUser"; //通过用户id查询用户信息--两个端通用
-
-    /**
-     * H5
-     */
-    String H5 = "ah/text/text"; //H5
 }

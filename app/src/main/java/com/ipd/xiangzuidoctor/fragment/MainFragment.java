@@ -23,12 +23,17 @@ import com.ipd.xiangzuidoctor.activity.OfflineActivitiesActivity;
 import com.ipd.xiangzuidoctor.activity.OrderActivity;
 import com.ipd.xiangzuidoctor.activity.OrderDetailsActivity;
 import com.ipd.xiangzuidoctor.activity.SpecialColumnActivity;
+import com.ipd.xiangzuidoctor.activity.StartOperationActivity;
+import com.ipd.xiangzuidoctor.activity.WebViewActivity;
 import com.ipd.xiangzuidoctor.adapter.MainGridAdapter;
 import com.ipd.xiangzuidoctor.adapter.MainOrderAdapter;
 import com.ipd.xiangzuidoctor.adapter.RecyclerViewBannerAdapter;
 import com.ipd.xiangzuidoctor.adapter.TodayRecommendationAdapter;
 import com.ipd.xiangzuidoctor.base.BaseFragment;
+import com.ipd.xiangzuidoctor.bean.GetOrderBean;
 import com.ipd.xiangzuidoctor.bean.HomeBean;
+import com.ipd.xiangzuidoctor.bean.IsArrivalsBean;
+import com.ipd.xiangzuidoctor.bean.OrderCancelBean;
 import com.ipd.xiangzuidoctor.common.view.CustomLinearLayoutManager;
 import com.ipd.xiangzuidoctor.common.view.GridSpacingItemDecoration;
 import com.ipd.xiangzuidoctor.common.view.OneBtDialog;
@@ -59,6 +64,8 @@ import io.reactivex.ObservableTransformer;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.IS_SUPPLEMENT_INFO;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
+import static com.ipd.xiangzuidoctor.utils.DateUtils.StartTimeToEndTime;
+import static com.ipd.xiangzuidoctor.utils.DateUtils.timedate;
 import static com.ipd.xiangzuidoctor.utils.isClickUtil.isFastClick;
 
 public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.Presenter> implements HomeContract.View {
@@ -197,6 +204,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                         break;
                     case 3:
                         //多点执业
+                        startActivity(new Intent(getContext(), WebViewActivity.class).putExtra("h5Type", 4));
                         break;
                 }
             }
@@ -241,10 +249,10 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                             case "1"://无链接
                                 break;
                             case "2"://有链接
-
+                                startActivity(new Intent(getContext(), WebViewActivity.class).putExtra("h5Type", 5).putExtra("h5Url", data.getData().getPictureList().get(position).getUrl()));
                                 break;
                             case "3"://文本内容
-
+                                startActivity(new Intent(getContext(), WebViewActivity.class).putExtra("h5Type", 6).putExtra("h5_url", data.getData().getPictureList().get(position).getContent()));
                                 break;
                         }
                     }
@@ -271,58 +279,118 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                         switch (view.getId()) {
                             case R.id.cv_order_item:
-                                if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
-                                else
-                                    ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
-                                break;
                             case R.id.stv_start_time:
-                                if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
-                                else
-                                    ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
-                                break;
                             case R.id.stv_fee:
-                                if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
-                                else
-                                    ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
-                                break;
                             case R.id.stv_name:
-                                if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
-                                else
-                                    ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
-                                break;
                             case R.id.stv_address:
                                 if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
+                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
                                 else
                                     ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
                                 break;
                             case R.id.bt_first:
-                                if (isFastClick())
-                                    if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
-                                    else
-                                        ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
+                                switch (data.getData().getAlreadyList().get(position).getStatus()) {
+                                    case "1":
+                                        if (isFastClick()) {
+                                            if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
+                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
+                                            else
+                                                ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
+                                        }
+                                        break;
+                                    case "2":
+                                        if (isFastClick())
+                                            new TwoBtDialog(getActivity(), "取消订单将扣除订单的20%作为违约金", "确认") {
+                                                @Override
+                                                public void confirm() {
+                                                    TreeMap<String, String> orderCancelMap = new TreeMap<>();
+                                                    orderCancelMap.put("userId", SPUtil.get(getContext(), USER_ID, "") + "");
+                                                    orderCancelMap.put("orderId", data.getData().getAlreadyList().get(position).getOrderId() + "");
+                                                    orderCancelMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(orderCancelMap.toString().replaceAll(" ", "") + SIGN)));
+                                                    getPresenter().getOrderCancel(orderCancelMap, false, false);
+                                                }
+                                            }.show();
+                                        break;
+                                    case "3":
+                                    case "4":
+                                    case "5":
+                                    case "6":
+                                    case "7":
+                                    case "8":
+                                        if (isFastClick()) {
+                                            if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
+                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
+                                            else
+                                                ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
+                                        }
+                                        break;
+                                }
                                 break;
                             case R.id.bt_second:
+                                switch (data.getData().getAlreadyList().get(position).getStatus()) {
+                                    case "2":
+                                    case "8":
+                                        if (isFastClick()) {
+                                            if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
+                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
+                                            else
+                                                ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
+                                        }
+                                        break;
+                                }
                                 break;
                             case R.id.bt_third:
-                                if (isFastClick() && "1".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
-                                    new TwoBtDialog(getActivity(), "请先实名认证后才可以接单", "去认证") {
-                                        @Override
-                                        public void confirm() {
-                                            startActivity(new Intent(getContext(), AuthenticationActivity.class));
+                                switch (data.getData().getAlreadyList().get(position).getStatus()) {
+                                    case "1":
+                                        if (isFastClick() && "1".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
+                                            new TwoBtDialog(getActivity(), "请先实名认证后才可以接单", "去认证") {
+                                                @Override
+                                                public void confirm() {
+                                                    startActivity(new Intent(getContext(), AuthenticationActivity.class));
+                                                }
+                                            }.show();
+                                        else if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
+                                            new OneBtDialog(getActivity(), "请提前做好多点执业备案") {
+                                                @Override
+                                                public void confirm() {
+                                                    TreeMap<String, String> getOrderMap = new TreeMap<>();
+                                                    getOrderMap.put("userId", SPUtil.get(getContext(), USER_ID, "") + "");
+                                                    getOrderMap.put("orderId", data.getData().getAlreadyList().get(position).getOrderId() + "");
+                                                    getOrderMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(getOrderMap.toString().replaceAll(" ", "") + SIGN)));
+                                                    getPresenter().getGetOrder(getOrderMap, false, false);
+                                                }
+                                            }.show();
+                                        else
+                                            ToastUtil.showShortToast("请稍后点击！");
+                                        break;
+                                    case "2":
+                                        if (isFastClick()) {
+                                            new TwoBtDialog(getActivity(), "是否确认已到达？", "温馨提示") {
+                                                @Override
+                                                public void confirm() {
+                                                    TreeMap<String, String> isArrivalsMap = new TreeMap<>();
+                                                    isArrivalsMap.put("userId", SPUtil.get(getContext(), USER_ID, "") + "");
+                                                    isArrivalsMap.put("orderId", data.getData().getAlreadyList().get(position).getOrderId() + "");
+                                                    isArrivalsMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(isArrivalsMap.toString().replaceAll(" ", "") + SIGN)));
+                                                    getPresenter().getIsArrivals(isArrivalsMap, false, false);
+                                                }
+                                            }.show();
                                         }
-                                    }.show();
-                                else if (isFastClick())
-                                    new OneBtDialog(getActivity(), "请提前做好多点执业备案") {
-                                        @Override
-                                        public void confirm() {
+                                        break;
+                                    case "3":
+                                        if (isFastClick()) {
+                                            if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
+                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
+                                            else
+                                                ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
                                         }
-                                    }.show();
+                                        break;
+                                    case "8":
+                                        int endTime = Integer.parseInt(String.format("%010d", System.currentTimeMillis() / 1000));
+                                        String useTime = StartTimeToEndTime(data.getData().getAlreadyList().get(position).getArriveTime(), timedate(endTime + ""), 1);
+                                        startActivity(new Intent(getContext(), StartOperationActivity.class).putExtra("title", "开始手术").putExtra("content", "麻醉器械、药品、急救设备及药品齐全").putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()).putExtra("waitTime", useTime));
+                                        break;
+                                }
                                 break;
                         }
                     }
@@ -339,58 +407,118 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                         switch (view.getId()) {
                             case R.id.cv_order_item:
-                                if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
-                                else
-                                    ToastUtil.showLongToast("您的身份尚未认证,请您先去认证！");
-                                break;
                             case R.id.stv_start_time:
-                                if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
-                                else
-                                    ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
-                                break;
                             case R.id.stv_fee:
-                                if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
-                                else
-                                    ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
-                                break;
                             case R.id.stv_name:
-                                if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
-                                else
-                                    ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
-                                break;
                             case R.id.stv_address:
                                 if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
+                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
                                 else
                                     ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
                                 break;
                             case R.id.bt_first:
-                                if (isFastClick())
-                                    if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("surgery_type", 1).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
-                                    else
-                                        ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
+                                switch (data.getData().getStayList().get(position).getStatus()) {
+                                    case "1":
+                                        if (isFastClick()) {
+                                            if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
+                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
+                                            else
+                                                ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
+                                        }
+                                        break;
+                                    case "2":
+                                        if (isFastClick())
+                                            new TwoBtDialog(getActivity(), "取消订单将扣除订单的20%作为违约金", "确认") {
+                                                @Override
+                                                public void confirm() {
+                                                    TreeMap<String, String> orderCancelMap = new TreeMap<>();
+                                                    orderCancelMap.put("userId", SPUtil.get(getContext(), USER_ID, "") + "");
+                                                    orderCancelMap.put("orderId", data.getData().getStayList().get(position).getOrderId() + "");
+                                                    orderCancelMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(orderCancelMap.toString().replaceAll(" ", "") + SIGN)));
+                                                    getPresenter().getOrderCancel(orderCancelMap, false, false);
+                                                }
+                                            }.show();
+                                        break;
+                                    case "3":
+                                    case "4":
+                                    case "5":
+                                    case "6":
+                                    case "7":
+                                    case "8":
+                                        if (isFastClick()) {
+                                            if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
+                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
+                                            else
+                                                ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
+                                        }
+                                        break;
+                                }
                                 break;
                             case R.id.bt_second:
+                                switch (data.getData().getStayList().get(position).getStatus()) {
+                                    case "2":
+                                    case "8":
+                                        if (isFastClick()) {
+                                            if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
+                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
+                                            else
+                                                ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
+                                        }
+                                        break;
+                                }
                                 break;
                             case R.id.bt_third:
-                                if (isFastClick() && "1".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
-                                    new TwoBtDialog(getActivity(), "请先实名认证后才可以接单", "去认证") {
-                                        @Override
-                                        public void confirm() {
-                                            startActivity(new Intent(getContext(), AuthenticationActivity.class));
+                                switch (data.getData().getStayList().get(position).getStatus()) {
+                                    case "1":
+                                        if (isFastClick() && "1".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
+                                            new TwoBtDialog(getActivity(), "请先实名认证后才可以接单", "去认证") {
+                                                @Override
+                                                public void confirm() {
+                                                    startActivity(new Intent(getContext(), AuthenticationActivity.class));
+                                                }
+                                            }.show();
+                                        else if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
+                                            new OneBtDialog(getActivity(), "请提前做好多点执业备案") {
+                                                @Override
+                                                public void confirm() {
+                                                    TreeMap<String, String> getOrderMap = new TreeMap<>();
+                                                    getOrderMap.put("userId", SPUtil.get(getContext(), USER_ID, "") + "");
+                                                    getOrderMap.put("orderId", data.getData().getStayList().get(position).getOrderId() + "");
+                                                    getOrderMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(getOrderMap.toString().replaceAll(" ", "") + SIGN)));
+                                                    getPresenter().getGetOrder(getOrderMap, false, false);
+                                                }
+                                            }.show();
+                                        else
+                                            ToastUtil.showShortToast("请稍后点击！");
+                                        break;
+                                    case "2":
+                                        if (isFastClick()) {
+                                            new TwoBtDialog(getActivity(), "是否确认已到达？", "温馨提示") {
+                                                @Override
+                                                public void confirm() {
+                                                    TreeMap<String, String> isArrivalsMap = new TreeMap<>();
+                                                    isArrivalsMap.put("userId", SPUtil.get(getContext(), USER_ID, "") + "");
+                                                    isArrivalsMap.put("orderId", data.getData().getStayList().get(position).getOrderId() + "");
+                                                    isArrivalsMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(isArrivalsMap.toString().replaceAll(" ", "") + SIGN)));
+                                                    getPresenter().getIsArrivals(isArrivalsMap, false, false);
+                                                }
+                                            }.show();
                                         }
-                                    }.show();
-                                else if (isFastClick())
-                                    new OneBtDialog(getActivity(), "请提前做好多点执业备案") {
-                                        @Override
-                                        public void confirm() {
+                                        break;
+                                    case "3":
+                                        if (isFastClick()) {
+                                            if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
+                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
+                                            else
+                                                ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
                                         }
-                                    }.show();
+                                        break;
+                                    case "8":
+                                        int endTime = Integer.parseInt(String.format("%010d", System.currentTimeMillis() / 1000));
+                                        String useTime = StartTimeToEndTime(data.getData().getStayList().get(position).getArriveTime(), timedate(endTime + ""), 1);
+                                        startActivity(new Intent(getContext(), StartOperationActivity.class).putExtra("title", "开始手术").putExtra("content", "麻醉器械、药品、急救设备及药品齐全").putExtra("orderId", data.getData().getStayList().get(position).getOrderId()).putExtra("waitTime", useTime));
+                                        break;
+                                }
                                 break;
                         }
                     }
@@ -414,6 +542,57 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                 SPUtil.clear(ApplicationUtil.getContext());
                 ApplicationUtil.getManager().finishActivity(MainActivity.class);
                 startActivity(new Intent(getActivity(), CaptchaLoginActivity.class));
+                getActivity().finish();
+                break;
+        }
+    }
+
+    @Override
+    public void resultIsArrivals(IsArrivalsBean data) {
+        ToastUtil.showLongToast(data.getMsg());
+        switch (data.getCode()) {
+            case 200:
+                initData();
+                break;
+            case 900:
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(getContext(), CaptchaLoginActivity.class));
+                getActivity().finish();
+                break;
+        }
+    }
+
+    @Override
+    public void resultOrderCancel(OrderCancelBean data) {
+        ToastUtil.showLongToast(data.getMsg());
+        switch (data.getCode()) {
+            case 200:
+                initData();
+                break;
+            case 900:
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(getContext(), CaptchaLoginActivity.class));
+                getActivity().finish();
+                break;
+        }
+    }
+
+    @Override
+    public void resultGetOrder(GetOrderBean data) {
+        ToastUtil.showLongToast(data.getMsg());
+        switch (data.getCode()) {
+            case 200:
+                initData();
+                break;
+            case 900:
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(getContext(), CaptchaLoginActivity.class));
                 getActivity().finish();
                 break;
         }

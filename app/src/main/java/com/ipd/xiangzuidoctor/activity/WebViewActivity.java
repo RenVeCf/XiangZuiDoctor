@@ -15,18 +15,16 @@ import android.widget.TextView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.base.BaseActivity;
-import com.ipd.xiangzuidoctor.bean.H5Bean;
+import com.ipd.xiangzuidoctor.base.BasePresenter;
+import com.ipd.xiangzuidoctor.base.BaseView;
 import com.ipd.xiangzuidoctor.common.view.TopView;
-import com.ipd.xiangzuidoctor.contract.H5Contract;
-import com.ipd.xiangzuidoctor.presenter.H5Presenter;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
 
-import java.util.TreeMap;
-
 import butterknife.BindView;
-import io.reactivex.ObservableTransformer;
 
-public class WebViewActivity extends BaseActivity<H5Contract.View, H5Contract.Presenter> implements H5Contract.View {
+import static com.ipd.xiangzuidoctor.common.config.UrlConfig.BASE_LOCAL_URL;
+
+public class WebViewActivity extends BaseActivity {
 
     @BindView(R.id.tv_webview_top)
     TopView tvWebviewTop;
@@ -38,12 +36,6 @@ public class WebViewActivity extends BaseActivity<H5Contract.View, H5Contract.Pr
     //    private CommonDialogUtils dialogUtils;
     String h5Url = "";
     int h5Type = 0;
-    // 长按查看图片
-//    private ItemLongClickedPopWindow itemLongClickedPopWindow;
-    // 手指触发屏幕的坐标
-    private int downX, downY;
-    // 需要保存图片的路径
-    private String saveImgUrl = "";
 
     @Override
     public int getLayoutId() {
@@ -51,13 +43,13 @@ public class WebViewActivity extends BaseActivity<H5Contract.View, H5Contract.Pr
     }
 
     @Override
-    public H5Contract.Presenter createPresenter() {
-        return new H5Presenter(this);
+    public BasePresenter createPresenter() {
+        return null;
     }
 
     @Override
-    public H5Contract.View createView() {
-        return this;
+    public BaseView createView() {
+        return null;
     }
 
     @Override
@@ -73,18 +65,26 @@ public class WebViewActivity extends BaseActivity<H5Contract.View, H5Contract.Pr
         h5Type = getIntent().getIntExtra("h5Type", 0);
         switch (h5Type) {
             case 1: //用户协议
-            case 2: //平台协议
-            case 3: //关于平台
-                TreeMap<String, String> h5Map = new TreeMap<>();
-                h5Map.put("textType", h5Type + "");
-                getPresenter().getH5(h5Map, true, false);
+                h5Url = BASE_LOCAL_URL + "H5/document/userNotice.html";
                 break;
-            case 4: //图文
+            case 2: //平台协议
+                h5Url = BASE_LOCAL_URL + "H5/document/platformProtocol.html";
+                break;
+            case 3: //关于平台
+//                h5Url = BASE_LOCAL_URL + "H5/document/userNotice.html";
+                break;
+            case 4: //多点执业
+                h5Url = BASE_LOCAL_URL + "H5/document/multipoint.html";
+                break;
+            case 5: //轮播
+                h5Url = getIntent().getStringExtra("h5Url");
+                break;
+            case 6: //图文
                 wvContent.loadData(getHtmlData(getIntent().getStringExtra("h5_url")), "text/html;charset=utf-8", "utf-8");
                 break;
         }
 
-        if (h5Type == 4) {
+        if (h5Type == 6) {
             WebSettings settings = wvContent.getSettings();
             settings.setJavaScriptEnabled(true);
             settings.setDomStorageEnabled(true);
@@ -201,15 +201,5 @@ public class WebViewActivity extends BaseActivity<H5Contract.View, H5Contract.Pr
                 "<style>html{padding:15px;} body{word-wrap:break-word;font-size:13px;padding:0px;margin:0px} p{padding:0px;margin:0px;font-size:13px;color:#222222;line-height:1.3;} img{padding:0px,margin:0px;max-width:100%; width:auto; height:auto;}</style>" +
                 "</head>";
         return "<html>" + head + "<body>" + bodyHTML + "</body></html>";
-    }
-
-    @Override
-    public void resultH5(H5Bean data) {
-
-    }
-
-    @Override
-    public <T> ObservableTransformer<T, T> bindLifecycle() {
-        return this.bindToLifecycle();
     }
 }

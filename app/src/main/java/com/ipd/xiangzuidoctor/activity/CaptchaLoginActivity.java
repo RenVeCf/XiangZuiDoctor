@@ -132,7 +132,6 @@ public class CaptchaLoginActivity extends BaseActivity<LoginContract.View, Login
             firstTime = secondTime;
         } else {
             ApplicationUtil.getManager().exitApp();
-
         }
     }
 

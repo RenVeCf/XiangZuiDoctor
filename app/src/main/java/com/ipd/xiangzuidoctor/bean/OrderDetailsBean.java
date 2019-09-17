@@ -205,7 +205,7 @@ public class OrderDetailsBean implements Parcelable {
             private String prompt;
             private String arriveTime;
             private String beginTime;
-            private Object waitTime;
+            private String waitTime;
             private String surgeryTime;
             private double waitMoney;
             private double surgeryMoney;
@@ -228,7 +228,11 @@ public class OrderDetailsBean implements Parcelable {
             private Object takeName;
             private Object takePhone;
 
-            protected OrderBean(Parcel in) {
+            public OrderBean() {
+                super();
+            }
+
+            public OrderBean(Parcel in) {
                 orderId = in.readInt();
                 userId = in.readInt();
                 orderType = in.readString();
@@ -527,11 +531,11 @@ public class OrderDetailsBean implements Parcelable {
                 this.beginTime = beginTime;
             }
 
-            public Object getWaitTime() {
+            public String getWaitTime() {
                 return waitTime;
             }
 
-            public void setWaitTime(Object waitTime) {
+            public void setWaitTime(String waitTime) {
                 this.waitTime = waitTime;
             }
 
@@ -865,9 +869,11 @@ public class OrderDetailsBean implements Parcelable {
             private Object endTime;
             private String surgeryName;
             private String anestxMode;
+            private boolean selectPatient;
 
             protected OrderDetailBean(Parcel in) {
                 createTime = in.readString();
+                params = in.readParcelable(ParamsBeanX.class.getClassLoader());
                 orderDetailId = in.readInt();
                 orderId = in.readInt();
                 patientName = in.readString();
@@ -902,6 +908,7 @@ public class OrderDetailsBean implements Parcelable {
                 status = in.readString();
                 surgeryName = in.readString();
                 anestxMode = in.readString();
+                selectPatient = in.readByte() != 0;
             }
 
             public static final Creator<OrderDetailBean> CREATOR = new Creator<OrderDetailBean>() {
@@ -915,6 +922,14 @@ public class OrderDetailsBean implements Parcelable {
                     return new OrderDetailBean[size];
                 }
             };
+
+            public boolean isSelectPatient() {
+                return selectPatient;
+            }
+
+            public void setSelectPatient(boolean selectPatient) {
+                this.selectPatient = selectPatient;
+            }
 
             public Object getSearchValue() {
                 return searchValue;
@@ -1268,6 +1283,7 @@ public class OrderDetailsBean implements Parcelable {
             @Override
             public void writeToParcel(Parcel parcel, int i) {
                 parcel.writeString(createTime);
+                parcel.writeParcelable(params, i);
                 parcel.writeInt(orderDetailId);
                 parcel.writeInt(orderId);
                 parcel.writeString(patientName);
@@ -1302,6 +1318,7 @@ public class OrderDetailsBean implements Parcelable {
                 parcel.writeString(status);
                 parcel.writeString(surgeryName);
                 parcel.writeString(anestxMode);
+                parcel.writeByte((byte) (selectPatient ? 1 : 0));
             }
 
             public static class ParamsBeanX implements Parcelable {

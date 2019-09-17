@@ -15,12 +15,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.activity.AuthenticationActivity;
 import com.ipd.xiangzuidoctor.activity.CaptchaLoginActivity;
-import com.ipd.xiangzuidoctor.activity.EndOperationActivity;
 import com.ipd.xiangzuidoctor.activity.MainActivity;
 import com.ipd.xiangzuidoctor.activity.OrderDetailsActivity;
 import com.ipd.xiangzuidoctor.activity.StartOperationActivity;
 import com.ipd.xiangzuidoctor.adapter.MainOrderAdapter;
 import com.ipd.xiangzuidoctor.base.BaseFragment;
+import com.ipd.xiangzuidoctor.bean.AnesthesiaListBean;
 import com.ipd.xiangzuidoctor.bean.GetOrderBean;
 import com.ipd.xiangzuidoctor.bean.IngOperationEndBean;
 import com.ipd.xiangzuidoctor.bean.IsArrivalsBean;
@@ -35,7 +35,6 @@ import com.ipd.xiangzuidoctor.common.view.TwoBtDialog;
 import com.ipd.xiangzuidoctor.contract.OrderContract;
 import com.ipd.xiangzuidoctor.presenter.OrderPresenter;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
-import com.ipd.xiangzuidoctor.utils.L;
 import com.ipd.xiangzuidoctor.utils.MD5Utils;
 import com.ipd.xiangzuidoctor.utils.SPUtil;
 import com.ipd.xiangzuidoctor.utils.StringUtils;
@@ -249,7 +248,7 @@ public class OrderFragment extends BaseFragment<OrderContract.View, OrderContrac
                                             case "1":
                                                 if (isFastClick()) {
                                                     switch (orderList.get(position).getStatus()) {
-                                                        case "1":
+                                                        case "2":
                                                             new TwoBtDialog(getActivity(), "是否确认已到达？", "温馨提示") {
                                                                 @Override
                                                                 public void confirm() {
@@ -398,6 +397,11 @@ public class OrderFragment extends BaseFragment<OrderContract.View, OrderContrac
                 getActivity().finish();
                 break;
         }
+    }
+
+    @Override
+    public void resultAnesthesiaList(AnesthesiaListBean data) {
+
     }
 
     @OnClick({R.id.stv_order_time, R.id.stv_order_region, R.id.stv_order_money})

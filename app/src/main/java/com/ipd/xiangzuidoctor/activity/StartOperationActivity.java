@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.base.BaseActivity;
+import com.ipd.xiangzuidoctor.bean.AnesthesiaListBean;
 import com.ipd.xiangzuidoctor.bean.GetOrderBean;
 import com.ipd.xiangzuidoctor.bean.IngOperationEndBean;
 import com.ipd.xiangzuidoctor.bean.IsArrivalsBean;
@@ -149,6 +150,11 @@ public class StartOperationActivity extends BaseActivity<OrderContract.View, Ord
 
     @Override
     public void resultGetOrder(GetOrderBean data) {
+
+    }
+
+    @Override
+    public void resultAnesthesiaList(AnesthesiaListBean data) {
 
     }
 

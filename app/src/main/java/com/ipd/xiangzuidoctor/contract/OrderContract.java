@@ -2,6 +2,7 @@ package com.ipd.xiangzuidoctor.contract;
 
 import com.ipd.xiangzuidoctor.base.BasePresenter;
 import com.ipd.xiangzuidoctor.base.BaseView;
+import com.ipd.xiangzuidoctor.bean.AnesthesiaListBean;
 import com.ipd.xiangzuidoctor.bean.GetOrderBean;
 import com.ipd.xiangzuidoctor.bean.IngOperationEndBean;
 import com.ipd.xiangzuidoctor.bean.IsArrivalsBean;
@@ -41,6 +42,8 @@ public interface OrderContract {
 
         void resultGetOrder(GetOrderBean data);
 
+        void resultAnesthesiaList(AnesthesiaListBean data);
+
         <T> ObservableTransformer<T, T> bindLifecycle();
     }
 
@@ -60,5 +63,7 @@ public interface OrderContract {
         public abstract void getOrderCancel(TreeMap<String, String> map, boolean isDialog, boolean cancelable);
 
         public abstract void getGetOrder(TreeMap<String, String> map, boolean isDialog, boolean cancelable);
+
+        public abstract void getAnesthesiaList(TreeMap<String, String> map, boolean isDialog, boolean cancelable);
     }
 }

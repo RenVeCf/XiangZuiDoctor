@@ -142,8 +142,8 @@ public class MyFragment extends BaseFragment {
                 startActivity(new Intent(getContext(), CollectionActivity.class));
                 break;
             case R.id.tv_about:
-//                startActivity(new Intent(getContext(), AboutActivity.class));
-                startActivity(new Intent(getContext(), WebViewActivity.class).putExtra("h5Type", 3));
+                startActivity(new Intent(getContext(), AboutActivity.class));
+//                startActivity(new Intent(getContext(), WebViewActivity.class).putExtra("h5Type", 3));
                 break;
             case R.id.tv_setting:
                 startActivity(new Intent(getContext(), SettingActivity.class));

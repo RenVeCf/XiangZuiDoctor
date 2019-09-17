@@ -2,6 +2,7 @@ package com.ipd.xiangzuidoctor.presenter;
 
 import android.content.Context;
 
+import com.ipd.xiangzuidoctor.bean.AnesthesiaListBean;
 import com.ipd.xiangzuidoctor.bean.GetOrderBean;
 import com.ipd.xiangzuidoctor.bean.IngOperationEndBean;
 import com.ipd.xiangzuidoctor.bean.IsArrivalsBean;
@@ -189,6 +190,27 @@ public class OrderPresenter extends OrderContract.Presenter {
                 //这一步是必须的，判断view是否已经被销毁
                 if (getView() != null) {
                     getView().resultGetOrder((GetOrderBean) o);
+                }
+            }
+
+            @Override
+            public void onError(ExceptionHandle.ResponeThrowable e) {
+                if (getView() != null) {
+                    //// TODO: 2017/12/28 自定义处理异常
+                    ToastUtil.showShortToast(ExceptionHandle.handleException(e).message);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void getAnesthesiaList(TreeMap<String, String> map, boolean isDialog, boolean cancelable) {
+        model.getAnesthesiaList(context, map, isDialog, cancelable, getView().bindLifecycle(), new ObserverResponseListener() {
+            @Override
+            public void onNext(Object o) {
+                //这一步是必须的，判断view是否已经被销毁
+                if (getView() != null) {
+                    getView().resultAnesthesiaList((AnesthesiaListBean) o);
                 }
             }
 

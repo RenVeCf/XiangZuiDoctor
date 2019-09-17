@@ -16,20 +16,38 @@ import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.base.BaseActivity;
-import com.ipd.xiangzuidoctor.base.BasePresenter;
-import com.ipd.xiangzuidoctor.base.BaseView;
+import com.ipd.xiangzuidoctor.bean.AnesthesiaListBean;
+import com.ipd.xiangzuidoctor.bean.GetOrderBean;
+import com.ipd.xiangzuidoctor.bean.IngOperationEndBean;
+import com.ipd.xiangzuidoctor.bean.IsArrivalsBean;
+import com.ipd.xiangzuidoctor.bean.IsOrderOperationEndBean;
+import com.ipd.xiangzuidoctor.bean.OperationStartBean;
+import com.ipd.xiangzuidoctor.bean.OrderCancelBean;
+import com.ipd.xiangzuidoctor.bean.OrderDetailsBean;
+import com.ipd.xiangzuidoctor.bean.OrderListBean;
 import com.ipd.xiangzuidoctor.common.view.TopView;
 import com.ipd.xiangzuidoctor.common.view.TwoBtDialog;
+import com.ipd.xiangzuidoctor.contract.OrderContract;
+import com.ipd.xiangzuidoctor.presenter.OrderPresenter;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
+import com.ipd.xiangzuidoctor.utils.MD5Utils;
+import com.ipd.xiangzuidoctor.utils.SPUtil;
+import com.ipd.xiangzuidoctor.utils.StringUtils;
+import com.ipd.xiangzuidoctor.utils.ToastUtil;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.ObservableTransformer;
 
 import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_94;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
+import static com.ipd.xiangzuidoctor.utils.isClickUtil.isFastClick;
 
 /**
  * Description ：结束手术
@@ -37,7 +55,7 @@ import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_94;
  * Email ： 942685687@qq.com
  * Time ： 2019/8/31.
  */
-public class EndOperationActivity extends BaseActivity {
+public class EndOperationActivity extends BaseActivity<OrderContract.View, OrderContract.Presenter> implements OrderContract.View {
 
     @BindView(R.id.tv_end_operation)
     TopView tvEndOperation;
@@ -45,9 +63,23 @@ public class EndOperationActivity extends BaseActivity {
     SuperTextView tvAnesthesiaType;
     @BindView(R.id.tv_anesthesia_sheet)
     SuperTextView tvAnesthesiaSheet;
+    @BindView(R.id.tv_estimated_time)
+    SuperTextView tvEstimatedTime;
+    @BindView(R.id.tv_estimated_fee)
+    SuperTextView tvEstimatedFee;
+    @BindView(R.id.tv_waiting_time)
+    SuperTextView tvWaitingTime;
+    @BindView(R.id.tv_overtime_fee)
+    SuperTextView tvOvertimeFee;
+    @BindView(R.id.tv_actual_time)
+    SuperTextView tvActualTime;
+    @BindView(R.id.tv_actual_fee)
+    SuperTextView tvActualFee;
 
     private List<String> listData;
+    private List<String> anesthesiaDataList = new ArrayList<>();//麻醉方式
     private OptionsPickerView pvOptions; //条件选择器
+    private int orderDetailId, orderId, lastPatient;
 
     @Override
     public int getLayoutId() {
@@ -55,13 +87,13 @@ public class EndOperationActivity extends BaseActivity {
     }
 
     @Override
-    public BasePresenter createPresenter() {
-        return null;
+    public OrderContract.Presenter createPresenter() {
+        return new OrderPresenter(this);
     }
 
     @Override
-    public BaseView createView() {
-        return null;
+    public OrderContract.View createView() {
+        return this;
     }
 
     @Override
@@ -70,11 +102,34 @@ public class EndOperationActivity extends BaseActivity {
         ApplicationUtil.getManager().addActivity(this);
         //防止状态栏和标题重叠
         ImmersionBar.setTitleBar(this, tvEndOperation);
+
+        orderDetailId = getIntent().getIntExtra("orderDetailId", 0);
+        orderId = getIntent().getIntExtra("orderId", 0);
+        lastPatient = getIntent().getIntExtra("lastPatient", 0);
+        if (lastPatient == 1) {
+            tvEstimatedTime.setVisibility(View.VISIBLE);
+            tvEstimatedFee.setVisibility(View.VISIBLE);
+            tvWaitingTime.setVisibility(View.VISIBLE);
+            tvOvertimeFee.setVisibility(View.VISIBLE);
+            tvActualTime.setVisibility(View.VISIBLE);
+            tvActualFee.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void initData() {
+        TreeMap<String, String> anesthesiaListMap = new TreeMap<>();
+        anesthesiaListMap.put("userId", SPUtil.get(EndOperationActivity.this, USER_ID, "") + "");
+        anesthesiaListMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(anesthesiaListMap.toString().replaceAll(" ", "") + SIGN)));
+        getPresenter().getAnesthesiaList(anesthesiaListMap, false, false);
 
+        if (lastPatient == 1) {
+            TreeMap<String, String> orderDetailsMap = new TreeMap<>();
+            orderDetailsMap.put("userId", SPUtil.get(this, USER_ID, "") + "");
+            orderDetailsMap.put("orderId", orderId + "");
+            orderDetailsMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(orderDetailsMap.toString().replaceAll(" ", "") + SIGN)));
+            getPresenter().getOrderDetails(orderDetailsMap, true, false);
+        }
     }
 
     @Override
@@ -121,10 +176,7 @@ public class EndOperationActivity extends BaseActivity {
     }
 
     private List<String> getTitleData() {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < 5; i++)
-            list.add("...麻醉");
-        return list;
+        return anesthesiaDataList;
     }
 
     @Override
@@ -140,9 +192,19 @@ public class EndOperationActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.tv_anesthesia_type, R.id.tv_anesthesia_sheet, R.id.tv_patient_handover, R.id.bt_confirm})
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK, new Intent().putExtra("refresh", 1));
+        finish();
+    }
+
+    @OnClick({R.id.ll_top_back, R.id.tv_anesthesia_type, R.id.tv_anesthesia_sheet, R.id.tv_patient_handover, R.id.bt_confirm})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.ll_top_back:
+                setResult(RESULT_OK, new Intent().putExtra("refresh", 1));
+                finish();
+                break;
             case R.id.tv_anesthesia_type:
                 showPickerView();
                 break;
@@ -158,8 +220,115 @@ public class EndOperationActivity extends BaseActivity {
                 }.show();
                 break;
             case R.id.bt_confirm:
+                if (isFastClick()) {
+                    TreeMap<String, String> isOrderOperationEndMap = new TreeMap<>();
+                    isOrderOperationEndMap.put("userId", SPUtil.get(EndOperationActivity.this, USER_ID, "") + "");
+                    isOrderOperationEndMap.put("orderDetailId", orderDetailId + "");
+                    isOrderOperationEndMap.put("orderId", orderId + "");
+                    isOrderOperationEndMap.put("anestxMode", tvAnesthesiaType.getRightString());
+                    isOrderOperationEndMap.put("narcosisForm", "");
+                    isOrderOperationEndMap.put("handover", "");
+                    isOrderOperationEndMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(isOrderOperationEndMap.toString().replaceAll(" ", "") + SIGN)));
+                    getPresenter().getIsOrderOperationEnd(isOrderOperationEndMap, false, false);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void resultOrderList(OrderListBean data) {
+
+    }
+
+    @Override
+    public void resultOrderDetails(OrderDetailsBean data) {
+        switch (data.getCode()) {
+            case 200:
+                tvEstimatedTime.setRightString(data.getData().getOrder().getDuration() + "小时");
+                tvEstimatedFee.setRightString("¥" + data.getData().getOrder().getExpectMoney());
+                tvWaitingTime.setRightString(data.getData().getOrder().getWaitTime());
+                tvOvertimeFee.setRightString("¥" + data.getData().getOrder().getOvertimeMoney());
+                tvActualTime.setRightString(data.getData().getOrder().getSurgeryTime() + "小时");
+                tvActualFee.setRightString("¥" + data.getData().getOrder().getSurgeryMoney());
+                break;
+            case 900:
+                ToastUtil.showLongToast(data.getMsg());
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(this, CaptchaLoginActivity.class));
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void resultIsOrderOperationEnd(IsOrderOperationEndBean data) {
+        ToastUtil.showLongToast(data.getMsg());
+        switch (data.getCode()) {
+            case 200:
+                setResult(RESULT_OK, new Intent().putExtra("refresh", 1));
+                finish();
+                break;
+            case 900:
+                ToastUtil.showLongToast(data.getMsg());
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(this, CaptchaLoginActivity.class));
+                finish();
+                break;
+        }
+    }
+
+    @Override
+    public void resultIngOperationEnd(IngOperationEndBean data) {
+
+    }
+
+    @Override
+    public void resultOperationStart(OperationStartBean data) {
+
+    }
+
+    @Override
+    public void resultIsArrivals(IsArrivalsBean data) {
+
+    }
+
+    @Override
+    public void resultOrderCancel(OrderCancelBean data) {
+
+    }
+
+    @Override
+    public void resultGetOrder(GetOrderBean data) {
+
+    }
+
+    @Override
+    public void resultAnesthesiaList(AnesthesiaListBean data) {
+//        switch (data.getCode()) {
+//            case 200:
+//                titleListsBean.clear();
+//                titleListsBean.addAll(data.getData().getTitleList());
+//                for (TitleListBean.DataBean.TitleListsBean datas : data.getData().getTitleList()) {
+//                    titleDataList.add(datas.getTitleName());
+//                }
+//                break;
+//            case 900:
+//                ToastUtil.showLongToast(data.getMsg());
+//                //清除所有临时储存
+//                SPUtil.clear(ApplicationUtil.getContext());
+//                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+//                startActivity(new Intent(this, CaptchaLoginActivity.class));
+//                finish();
+//                break;
+//        }
+    }
+
+    @Override
+    public <T> ObservableTransformer<T, T> bindLifecycle() {
+        return this.bindToLifecycle();
     }
 }

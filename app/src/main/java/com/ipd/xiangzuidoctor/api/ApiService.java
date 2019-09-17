@@ -1,5 +1,6 @@
 package com.ipd.xiangzuidoctor.api;
 
+import com.ipd.xiangzuidoctor.bean.AnesthesiaListBean;
 import com.ipd.xiangzuidoctor.bean.CaptchaBean;
 import com.ipd.xiangzuidoctor.bean.CaptchaLoginBean;
 import com.ipd.xiangzuidoctor.bean.CollectionListBean;
@@ -40,7 +41,6 @@ import com.ipd.xiangzuidoctor.bean.UploadImgBean;
 import com.ipd.xiangzuidoctor.bean.VerifiedBean;
 import com.ipd.xiangzuidoctor.bean.WalletBean;
 import com.ipd.xiangzuidoctor.bean.WithdrawAliPayBean;
-import com.ipd.xiangzuidoctor.bean.H5Bean;
 
 import java.util.Map;
 
@@ -53,6 +53,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 
+import static com.ipd.xiangzuidoctor.common.config.UrlConfig.ANESTHESIA_LIST;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.CAPTCHA;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.CAPTCHA_LOGIN;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.COLLECTION_LIST;
@@ -60,7 +61,6 @@ import static com.ipd.xiangzuidoctor.common.config.UrlConfig.FEED_BACK;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.FEE_RECORD;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.GET_ORDER;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.GET_USER_INFO;
-import static com.ipd.xiangzuidoctor.common.config.UrlConfig.H5;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.HOME;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.ING_OPERATION_END;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.IS_ARRIVALS;
@@ -293,11 +293,6 @@ public interface ApiService {
     @POST(MSG_LIST)
     Observable<MsgListBean> getMsgList(@FieldMap Map<String, String> map);
 
-    //H5
-    @FormUrlEncoded
-    @POST(H5)
-    Observable<H5Bean> getH5(@FieldMap Map<String, String> map);
-
     //意见反馈
     @FormUrlEncoded
     @POST(FEED_BACK)
@@ -307,4 +302,9 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(GET_USER_INFO)
     Observable<GetUserInfoBean> getGetUserInfo(@FieldMap Map<String, String> map);
+
+    //麻醉方式列表
+    @FormUrlEncoded
+    @POST(ANESTHESIA_LIST)
+    Observable<AnesthesiaListBean> getAnesthesiaList(@FieldMap Map<String, String> map);
 }

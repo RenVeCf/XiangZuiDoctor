@@ -25,5 +25,29 @@ public class HomeModel<T> extends BaseModel {
         //        subscribe(context, Api.getApiService().login(map), observerListener);
         paramSubscribe(context, Api.getApiService().getHome(map), observerListener, transformer, isDialog, cancelable);
     }
+
+    public void getIsArrivals(Context context, TreeMap<String, String> map, boolean isDialog, boolean cancelable,
+                              ObservableTransformer<T, T> transformer, ObserverResponseListener observerListener) {
+
+        //当不需要指定是否由dialog时，可以调用这个方法
+        //        subscribe(context, Api.getApiService().login(map), observerListener);
+        paramSubscribe(context, Api.getApiService().getIsArrivals(map), observerListener, transformer, isDialog, cancelable);
+    }
+
+    public void getOrderCancel(Context context, TreeMap<String, String> map, boolean isDialog, boolean cancelable,
+                               ObservableTransformer<T, T> transformer, ObserverResponseListener observerListener) {
+
+        //当不需要指定是否由dialog时，可以调用这个方法
+        //        subscribe(context, Api.getApiService().login(map), observerListener);
+        paramSubscribe(context, Api.getApiService().getOrderCancel(map), observerListener, transformer, isDialog, cancelable);
+    }
+
+    public void getGetOrder(Context context, TreeMap<String, String> map, boolean isDialog, boolean cancelable,
+                            ObservableTransformer<T, T> transformer, ObserverResponseListener observerListener) {
+
+        //当不需要指定是否由dialog时，可以调用这个方法
+        //        subscribe(context, Api.getApiService().login(map), observerListener);
+        paramSubscribe(context, Api.getApiService().getGetOrder(map), observerListener, transformer, isDialog, cancelable);
+    }
     //// TODO: 2017/12/27 其他需要请求、数据库等等的操作
 }

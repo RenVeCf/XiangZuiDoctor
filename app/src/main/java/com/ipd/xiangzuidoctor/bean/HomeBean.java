@@ -157,7 +157,7 @@ public class HomeBean {
             private Object takeOrderTime;
             private Object cancelTime;
             private Object prompt;
-            private Object arriveTime;
+            private String arriveTime;
             private String beginTime;
             private Object waitTime;
             private Object surgeryTime;
@@ -400,11 +400,11 @@ public class HomeBean {
                 this.prompt = prompt;
             }
 
-            public Object getArriveTime() {
+            public String getArriveTime() {
                 return arriveTime;
             }
 
-            public void setArriveTime(Object arriveTime) {
+            public void setArriveTime(String arriveTime) {
                 this.arriveTime = arriveTime;
             }
 
@@ -568,7 +568,7 @@ public class HomeBean {
             private Object takeOrderTime;
             private Object cancelTime;
             private String prompt;
-            private Object arriveTime;
+            private String arriveTime;
             private String beginTime;
             private Object waitTime;
             private Object surgeryTime;
@@ -823,11 +823,11 @@ public class HomeBean {
                 this.prompt = prompt;
             }
 
-            public Object getArriveTime() {
+            public String getArriveTime() {
                 return arriveTime;
             }
 
-            public void setArriveTime(Object arriveTime) {
+            public void setArriveTime(String arriveTime) {
                 this.arriveTime = arriveTime;
             }
 
@@ -1432,7 +1432,7 @@ public class HomeBean {
             private String content;
             private String type;
             private String pictureType;
-            private Object url;
+            private String url;
             private String createTime;
             private Object updateTime;
 
@@ -1492,11 +1492,11 @@ public class HomeBean {
                 this.pictureType = pictureType;
             }
 
-            public Object getUrl() {
+            public String getUrl() {
                 return url;
             }
 
-            public void setUrl(Object url) {
+            public void setUrl(String url) {
                 this.url = url;
             }
 

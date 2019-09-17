@@ -18,6 +18,7 @@ import com.gyf.immersionbar.ImmersionBar;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.adapter.PatientAdapter;
 import com.ipd.xiangzuidoctor.base.BaseActivity;
+import com.ipd.xiangzuidoctor.bean.AnesthesiaListBean;
 import com.ipd.xiangzuidoctor.bean.GetOrderBean;
 import com.ipd.xiangzuidoctor.bean.IngOperationEndBean;
 import com.ipd.xiangzuidoctor.bean.IsArrivalsBean;
@@ -50,6 +51,7 @@ import io.reactivex.ObservableTransformer;
 
 import static com.ipd.xiangzuidoctor.common.config.IConstants.IS_SUPPLEMENT_INFO;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_96;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_97;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
 import static com.ipd.xiangzuidoctor.utils.DateUtils.StartTimeToEndTime;
@@ -84,34 +86,8 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
     SuperTextView tvContinuedFee;
     @BindView(R.id.tv_ps)
     SuperTextView tvPs;
-    //    @BindView(R.id.tv_patient_name)
-//    SuperTextView tvPatientName;
-//    @BindView(R.id.tv_patient_sex)
-//    SuperTextView tvPatientSex;
-//    @BindView(R.id.tv_patient_age)
-//    SuperTextView tvPatientAge;
-//    @BindView(R.id.tv_patient_height)
-//    SuperTextView tvPatientHeight;
-//    @BindView(R.id.tv_patient_body_weight)
-//    SuperTextView tvPatientBodyWeight;
-//    @BindView(R.id.tv_patient_simulated_anesthesia)
-//    SuperTextView tvPatientSimulatedAnesthesia;
-//    @BindView(R.id.tv_patient_id_card)
-//    SuperTextView tvPatientIdCard;
     @BindView(R.id.tv_waiting_time)
     SuperTextView tvWaitingTime;
-    //    @BindView(R.id.tv_patient_insurance_consent)
-//    SuperTextView tvPatientInsuranceConsent;
-//    @BindView(R.id.tv_patient_surgery_medical_record)
-//    SuperTextView tvPatientSurgeryMedicalRecord;
-//    @BindView(R.id.tv_patient_blood_routine)
-//    SuperTextView tvPatientBloodRoutine;
-//    @BindView(R.id.tv_patient_electrocardiogram)
-//    SuperTextView tvPatientElectrocardiogram;
-//    @BindView(R.id.tv_patient_coagulation)
-//    SuperTextView tvPatientCoagulation;
-//    @BindView(R.id.tv_patient_infectious_disease)
-//    SuperTextView tvPatientInfectiousDisease;
     @BindView(R.id.ll_waiting_order)
     LinearLayoutCompat llWaitingOrder;
     @BindView(R.id.ll_end_operation)
@@ -154,7 +130,9 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
     private Handler handler;//等待时间计数
     private PatientAdapter patientAdapter;
     private List<OrderDetailsBean.DataBean.OrderDetailBean> orderDetail = new ArrayList<>();
-    private SuperTextView selectPatient;
+    private SuperTextView selectPatient; //选中的患者
+    private int orderDetailId = 0;
+    private OrderDetailsBean.DataBean.OrderBean orderBean = new OrderDetailsBean.DataBean.OrderBean();
 
     @Override
     public int getLayoutId() {
@@ -330,6 +308,9 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                 case REQUEST_CODE_96:
                     finish();
                     break;
+                case REQUEST_CODE_97:
+                    initData();
+                    break;
             }
         }
     }
@@ -381,8 +362,23 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                 }
                 break;
             case R.id.bt_end_operation:
-                if (isFastClick())
-                    startActivity(new Intent(this, EndOperationActivity.class));
+                if (isFastClick()) {
+                    if (orderDetailId != 0) {
+                        new TwoBtDialog(this, "确认结束手术？", "温馨提示") {
+                            @Override
+                            public void confirm() {
+                                TreeMap<String, String> ingOperationEndMap = new TreeMap<>();
+                                ingOperationEndMap.put("userId", SPUtil.get(OrderDetailsActivity.this, USER_ID, "") + "");
+                                ingOperationEndMap.put("orderDetailId", orderDetailId + "");
+                                ingOperationEndMap.put("orderId", orderId + "");
+                                ingOperationEndMap.put("surgeryTime", tvWaitingTime.getLeftString().replaceAll("手术时间: ", ""));
+                                ingOperationEndMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(ingOperationEndMap.toString().replaceAll(" ", "") + SIGN)));
+                                getPresenter().getIngOperationEnd(ingOperationEndMap, false, false);
+                            }
+                        }.show();
+                    } else
+                        ToastUtil.showShortToast("请选择患者！");
+                }
                 break;
         }
     }
@@ -450,7 +446,21 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                             selectPatient.setCheckBoxCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                 @Override
                                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
+                                    if ("1".equals(orderDetail.get(position).getStatus())) {
+                                        for (int i = 0; i < orderDetail.size(); i++) {
+                                            if ("1".equals(orderDetail.get(position).getStatus()))
+                                                orderDetail.get(i).setSelectPatient(false);
+                                            else
+                                                orderDetail.get(i).setSelectPatient(true);
+                                        }
+                                        orderDetail.get(position).setSelectPatient(true);
+                                        orderDetailId = orderDetail.get(position).getOrderDetailId();
+                                        patientAdapter.notifyDataSetChanged();
+                                    } else {
+                                        orderDetail.get(position).setSelectPatient(true);
+                                        patientAdapter.notifyDataSetChanged();
+                                        ToastUtil.showShortToast("该手术已结束！");
+                                    }
                                 }
                             });
                         }
@@ -490,7 +500,24 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
 
     @Override
     public void resultIngOperationEnd(IngOperationEndBean data) {
-
+        ToastUtil.showLongToast(data.getMsg());
+        switch (data.getCode()) {
+            case 200:
+                int lastPatient = 0;
+                for (int i = 0; i < orderDetail.size(); i++) {
+                    if ("1".equals(orderDetail.get(i).getStatus()))
+                        lastPatient++;
+                }
+                startActivityForResult(new Intent(this, EndOperationActivity.class).putExtra("orderDetailId", orderDetailId).putExtra("orderId", orderId).putExtra("lastPatient", lastPatient), REQUEST_CODE_97);
+                break;
+            case 900:
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(this, CaptchaLoginActivity.class));
+                finish();
+                break;
+        }
     }
 
     @Override
@@ -522,6 +549,11 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
 
     @Override
     public void resultGetOrder(GetOrderBean data) {
+
+    }
+
+    @Override
+    public void resultAnesthesiaList(AnesthesiaListBean data) {
 
     }
 
