@@ -125,6 +125,7 @@ public class FeedbackActivity extends BaseActivity<FeedBackContract.View, FeedBa
                 break;
             default:
                 ToastUtil.showLongToast(data.getMsg());
+                finish();
                 break;
         }
     }

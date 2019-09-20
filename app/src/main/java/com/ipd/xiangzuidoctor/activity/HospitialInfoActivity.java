@@ -54,7 +54,7 @@ import static com.ipd.xiangzuidoctor.common.config.UrlConfig.BASE_LOCAL_URL;
 import static com.ipd.xiangzuidoctor.utils.StringUtils.isEmpty;
 
 /**
- * Description ：医院信息
+ * Description ：医生信息
  * Author ： rmy
  * Email ： 942685687@qq.com
  * Time ： 2019/8/28.
