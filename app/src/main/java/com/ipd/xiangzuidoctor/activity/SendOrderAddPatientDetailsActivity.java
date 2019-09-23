@@ -1,5 +1,6 @@
 package com.ipd.xiangzuidoctor.activity;
 
+import android.view.View;
 import android.widget.TextView;
 
 import com.gyf.immersionbar.ImmersionBar;
@@ -10,13 +11,12 @@ import com.ipd.xiangzuidoctor.base.BaseView;
 import com.ipd.xiangzuidoctor.bean.OrderDetailsBean;
 import com.ipd.xiangzuidoctor.common.view.TopView;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
-import com.ipd.xiangzuidoctor.utils.L;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
+import butterknife.OnClick;
+
+import static com.ipd.xiangzuidoctor.utils.StringUtils.isEmpty;
 
 /**
  * Description ：发单-添加患者信息详情
@@ -96,24 +96,51 @@ public class SendOrderAddPatientDetailsActivity extends BaseActivity {
         stvBodyWeight.setRightString(orderDetailList.getWeight() + "kg");
         stvAnesthesiaType.setRightString(orderDetailList.getNarcosisType());
 
-        stvIdCard.setRightString("已上传")
-                .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
-        stvInsuranceConsent.setRightString("已上传")
-                .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
-        stvSurgeryAboutMedicalRecord.setRightString("已上传")
-                .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
-        stvBloodRoutine.setRightString("已上传")
-                .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
-        stvElectrocardiogram.setRightString("已上传")
-                .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
-        stvCoagulation.setRightString("已上传")
-                .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
-        stvInfectiousDiseaseIndex.setRightString("已上传")
-                .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+        if (!isEmpty(orderDetailList.getPositiveCard()) && !isEmpty(orderDetailList.getReverseCard()))
+            stvIdCard.setRightString("已上传")
+                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+        if (!isEmpty(orderDetailList.getInsurance()))
+            stvInsuranceConsent.setRightString("已上传")
+                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+        if (!isEmpty(orderDetailList.getSurgeryRelated()))
+            stvSurgeryAboutMedicalRecord.setRightString("已上传")
+                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+        if (!isEmpty(orderDetailList.getRoutineBlood()))
+            stvBloodRoutine.setRightString("已上传")
+                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+        if (!isEmpty(orderDetailList.getEcg()))
+            stvElectrocardiogram.setRightString("已上传")
+                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+        if (!isEmpty(orderDetailList.getCruor()))
+            stvCoagulation.setRightString("已上传")
+                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+        if (!isEmpty(orderDetailList.getContagion()))
+            stvInfectiousDiseaseIndex.setRightString("已上传")
+                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
     }
 
     @Override
     public void initListener() {
 
+    }
+
+    @OnClick({R.id.stv_id_card, R.id.stv_insurance_consent, R.id.stv_surgery_about_medical_record, R.id.stv_blood_routine, R.id.stv_electrocardiogram, R.id.stv_coagulation, R.id.stv_infectious_disease_index})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.stv_id_card:
+                break;
+            case R.id.stv_insurance_consent:
+                break;
+            case R.id.stv_surgery_about_medical_record:
+                break;
+            case R.id.stv_blood_routine:
+                break;
+            case R.id.stv_electrocardiogram:
+                break;
+            case R.id.stv_coagulation:
+                break;
+            case R.id.stv_infectious_disease_index:
+                break;
+        }
     }
 }
