@@ -1,5 +1,7 @@
 package com.ipd.xiangzuidoctor.adapter;
 
+import android.view.View;
+
 import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -28,10 +30,12 @@ public class MainOrderAdapter<T> extends BaseQuickAdapter<T, BaseViewHolder> {
     private String surgeryName; //手术名称
     private String orderType; //1：单台  2：连台
     private String urgent; //1：无 2：加急
+    private String premium; //1：不加价 2：加价
     private String hospitalName; //医院名称
     private String address; //医院地址
     private String beginTime; //开始时间
     private double expectMoney; //预计费用
+    private double adpremiumMoney; //加价费用
 
     public MainOrderAdapter(@Nullable List<T> data) {
         super(R.layout.adapter_main_order, data);
@@ -43,30 +47,36 @@ public class MainOrderAdapter<T> extends BaseQuickAdapter<T, BaseViewHolder> {
         if (item instanceof HomeBean.DataBean.AlreadyListBean) {
             status = ((HomeBean.DataBean.AlreadyListBean) item).getStatus();
             urgent = ((HomeBean.DataBean.AlreadyListBean) item).getUrgent();
+            premium = ((HomeBean.DataBean.AlreadyListBean) item).getPremium();
             surgeryName = ((HomeBean.DataBean.AlreadyListBean) item).getSurgeryName();
             orderType = ((HomeBean.DataBean.AlreadyListBean) item).getOrderType();
             hospitalName = ((HomeBean.DataBean.AlreadyListBean) item).getHospitalName();
             address = ((HomeBean.DataBean.AlreadyListBean) item).getAddress();
             beginTime = ((HomeBean.DataBean.AlreadyListBean) item).getBeginTime();
             expectMoney = ((HomeBean.DataBean.AlreadyListBean) item).getExpectMoney();
+//            adpremiumMoney = ((HomeBean.DataBean.AlreadyListBean) item).getAdpremiumMoney();
         } else if (item instanceof HomeBean.DataBean.StayListBean) {
             status = ((HomeBean.DataBean.StayListBean) item).getStatus();
             urgent = ((HomeBean.DataBean.StayListBean) item).getUrgent();
+            premium = ((HomeBean.DataBean.StayListBean) item).getPremium();
             orderType = ((HomeBean.DataBean.StayListBean) item).getOrderType();
             surgeryName = ((HomeBean.DataBean.StayListBean) item).getSurgeryName();
             hospitalName = ((HomeBean.DataBean.StayListBean) item).getHospitalName();
             address = ((HomeBean.DataBean.StayListBean) item).getAddress();
             beginTime = ((HomeBean.DataBean.StayListBean) item).getBeginTime();
-            expectMoney = ((HomeBean.DataBean.StayListBean) item).getExpectMoney();
+            expectMoney = ((HomeBean.DataBean.StayListBean) item).getAdMoney();
+            adpremiumMoney = ((HomeBean.DataBean.StayListBean) item).getAdpremiumMoney();
         } else if (item instanceof OrderListBean.DataBean.OrderListsBean) {
             status = ((OrderListBean.DataBean.OrderListsBean) item).getStatus();
             urgent = ((OrderListBean.DataBean.OrderListsBean) item).getUrgent();
+            premium = ((OrderListBean.DataBean.OrderListsBean) item).getPremium();
             orderType = ((OrderListBean.DataBean.OrderListsBean) item).getOrderType();
             surgeryName = ((OrderListBean.DataBean.OrderListsBean) item).getSurgeryName();
             hospitalName = ((OrderListBean.DataBean.OrderListsBean) item).getHospitalName();
             address = ((OrderListBean.DataBean.OrderListsBean) item).getAddress();
             beginTime = ((OrderListBean.DataBean.OrderListsBean) item).getBeginTime();
-            expectMoney = ((OrderListBean.DataBean.OrderListsBean) item).getExpectMoney();
+            expectMoney = ((OrderListBean.DataBean.OrderListsBean) item).getAdMoney();
+            adpremiumMoney = ((OrderListBean.DataBean.OrderListsBean) item).getAdpremiumMoney();
         }
         String orderStatus = "";
 
@@ -123,6 +133,8 @@ public class MainOrderAdapter<T> extends BaseQuickAdapter<T, BaseViewHolder> {
         helper.setText(R.id.tv_lavlel1, "    " + ("1".equals(orderType) ? "单台" : "连台") + "   ")
                 .setGone(R.id.tv_lavlel2, "1".equals(urgent) ? false : true)
                 .setText(R.id.tv_lavlel2, "    " + "加急" + "   ")
+                .setGone(R.id.tv_lavlel3, "1".equals(premium) ? false : true)
+                .setText(R.id.tv_lavlel3, "    " + "加价" + "   ")
                 .setText(R.id.tv_type, orderStatus)
                 .addOnClickListener(R.id.cv_order_item)
                 .addOnClickListener(R.id.stv_start_time)
@@ -139,15 +151,24 @@ public class MainOrderAdapter<T> extends BaseQuickAdapter<T, BaseViewHolder> {
         stvStartTime = helper.getView(R.id.stv_start_time);
         stvFee = helper.getView(R.id.stv_fee);
 
-        tvName.setLeftString("手术名称:")
-                .setCenterString(surgeryName);
+        if ("1".equals(orderType)){
+            tvName.setLeftString("手术名称:")
+                    .setCenterString(surgeryName);
+            tvName.setVisibility(View.VISIBLE);
+        } else {
+            tvName.setVisibility(View.GONE);
+        }
         stvName.setLeftString("医院名称:")
                 .setCenterString(hospitalName);
         stvAddress.setLeftString("医院地址:")
                 .setCenterString(address);
         stvStartTime.setLeftString("开始时间:")
                 .setCenterString(beginTime);
-        stvFee.setLeftString("预计费用:")
-                .setCenterString("¥ " + expectMoney + "元");
+        if ("1".equals(premium))
+            stvFee.setLeftString("预计费用:")
+                    .setCenterString("¥ " + expectMoney + "元");
+        else
+            stvFee.setLeftString("预计费用:")
+                    .setCenterString("¥ " + (expectMoney + adpremiumMoney) + "元(含加价费用¥ " + adpremiumMoney + ")");
     }
 }

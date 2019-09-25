@@ -105,12 +105,12 @@ public class OfflineActivitiesDetailsActivity extends BaseActivity<OfflineActivi
             case "0":
                 llEnroll.setVisibility(View.VISIBLE);
                 tvLabel.setText("进行中");
-                tvLabel.setBackgroundResource(R.drawable.bg_label2);
+                tvLabel.setBackgroundResource(R.drawable.bg_label3);
                 break;
             case "1":
                 llCancel.setVisibility(View.VISIBLE);
                 tvLabel.setText("进行中");
-                tvLabel.setBackgroundResource(R.drawable.bg_label2);
+                tvLabel.setBackgroundResource(R.drawable.bg_label3);
                 break;
         }
 

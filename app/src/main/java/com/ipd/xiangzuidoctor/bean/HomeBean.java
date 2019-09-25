@@ -147,7 +147,7 @@ public class HomeBean {
             private int duration;
             private String urgent;
             private int urgentMoney;
-            private Object premium;
+            private String premium;
             private Object premiumMoney;
             private Object evenNum;
             private double expectMoney;
@@ -320,11 +320,11 @@ public class HomeBean {
                 this.urgentMoney = urgentMoney;
             }
 
-            public Object getPremium() {
+            public String getPremium() {
                 return premium;
             }
 
-            public void setPremium(Object premium) {
+            public void setPremium(String premium) {
                 this.premium = premium;
             }
 

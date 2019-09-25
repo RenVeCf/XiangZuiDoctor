@@ -12,6 +12,7 @@
         android:fillViewport="true"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/y200"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_order_details">
@@ -68,22 +69,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_ps" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_anesthesia_info"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/y150"
-                android:layout_marginTop="@dimen/y20"
-                android:background="@color/white"
-                android:gravity="start|center_vertical"
-                android:paddingStart="@dimen/x50"
-                android:text="麻醉信息"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_patient_list" />
+<!--            <androidx.appcompat.widget.AppCompatTextView-->
+<!--                android:id="@+id/tv_anesthesia_info"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="@dimen/y150"-->
+<!--                android:layout_marginTop="@dimen/y20"-->
+<!--                android:background="@color/white"-->
+<!--                android:gravity="start|center_vertical"-->
+<!--                android:paddingStart="@dimen/x50"-->
+<!--                android:text="麻醉信息"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="15sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:visibility="gone"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/rv_patient_list" />-->
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_fee_info"
@@ -102,114 +103,465 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_anesthesia_sheet" />
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/ll_end_operation"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/y150"
-                android:layout_marginTop="@dimen/y50"
-                android:background="@color/white"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
+<!--            <androidx.appcompat.widget.LinearLayoutCompat-->
+<!--                android:id="@+id/ll_end_operation"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="@dimen/y150"-->
+<!--                android:layout_marginTop="@dimen/y50"-->
+<!--                android:background="@color/white"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:visibility="gone"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent">-->
 
-                <com.xuexiang.xui.widget.textview.supertextview.SuperButton
-                    android:id="@+id/bt_end_operation"
-                    style="@style/SuperButton.Blue"
-                    android:layout_width="@dimen/x400"
-                    android:layout_height="@dimen/y110"
-                    android:text="结束手术"
-                    app:sGradientEndColor="#4088FE"
-                    app:sGradientOrientation="LEFT_RIGHT"
-                    app:sGradientStartColor="#6BB6FF"
-                    app:sGradientType="linear" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
+<!--                <com.xuexiang.xui.widget.textview.supertextview.SuperButton-->
+<!--                    android:id="@+id/bt_end_operation"-->
+<!--                    style="@style/SuperButton.Blue"-->
+<!--                    android:layout_width="@dimen/x400"-->
+<!--                    android:layout_height="@dimen/y110"-->
+<!--                    android:text="结束手术"-->
+<!--                    app:sGradientEndColor="#4088FE"-->
+<!--                    app:sGradientOrientation="LEFT_RIGHT"-->
+<!--                    app:sGradientStartColor="#6BB6FF"-->
+<!--                    app:sGradientType="linear" />-->
+<!--            </androidx.appcompat.widget.LinearLayoutCompat>-->
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/ll_is_order"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/y150"
-                android:layout_marginTop="@dimen/y100"
-                android:background="@color/white"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+<!--            <androidx.appcompat.widget.LinearLayoutCompat-->
+<!--                android:id="@+id/ll_is_order"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="@dimen/y150"-->
+<!--                android:layout_marginTop="@dimen/y100"-->
+<!--                android:background="@color/white"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:visibility="gone"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent">-->
 
-                <com.xuexiang.xui.widget.textview.supertextview.SuperButton
-                    android:id="@+id/bt_cancel_1"
-                    style="@style/SuperButton.Blue"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/y90"
-                    android:layout_marginStart="@dimen/x50"
-                    android:layout_marginEnd="@dimen/x25"
-                    android:layout_weight="1"
-                    android:text="取消订单"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    app:sSelectorNormalColor="@color/white"
-                    app:sSelectorPressedColor="@color/input_color"
-                    app:sStrokeColor="@color/tx_bottom_navigation"
-                    app:sStrokeWidth="0.5dp" />
+<!--                <com.xuexiang.xui.widget.textview.supertextview.SuperButton-->
+<!--                    android:id="@+id/bt_cancel_1"-->
+<!--                    style="@style/SuperButton.Blue"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="@dimen/y90"-->
+<!--                    android:layout_marginStart="@dimen/x50"-->
+<!--                    android:layout_marginEnd="@dimen/x25"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:text="取消订单"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="12sp"-->
+<!--                    app:sSelectorNormalColor="@color/white"-->
+<!--                    app:sSelectorPressedColor="@color/input_color"-->
+<!--                    app:sStrokeColor="@color/tx_bottom_navigation"-->
+<!--                    app:sStrokeWidth="0.5dp" />-->
 
-                <com.xuexiang.xui.widget.textview.supertextview.SuperButton
-                    android:id="@+id/bt_medical_record"
-                    style="@style/SuperButton.Blue"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/y90"
-                    android:layout_marginStart="@dimen/x25"
-                    android:layout_marginEnd="@dimen/x25"
-                    android:layout_weight="1"
-                    android:text="联系医院"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    app:sSelectorNormalColor="@color/white"
-                    app:sSelectorPressedColor="@color/input_color"
-                    app:sStrokeColor="@color/tx_bottom_navigation"
-                    app:sStrokeWidth="0.5dp" />
+<!--                <com.xuexiang.xui.widget.textview.supertextview.SuperButton-->
+<!--                    android:id="@+id/bt_medical_record"-->
+<!--                    style="@style/SuperButton.Blue"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="@dimen/y90"-->
+<!--                    android:layout_marginStart="@dimen/x25"-->
+<!--                    android:layout_marginEnd="@dimen/x25"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:text="联系医院"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="12sp"-->
+<!--                    app:sSelectorNormalColor="@color/white"-->
+<!--                    app:sSelectorPressedColor="@color/input_color"-->
+<!--                    app:sStrokeColor="@color/tx_bottom_navigation"-->
+<!--                    app:sStrokeWidth="0.5dp" />-->
 
-                <com.xuexiang.xui.widget.textview.supertextview.SuperButton
-                    android:id="@+id/bt_call_doctor"
-                    style="@style/SuperButton.Blue"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/y90"
-                    android:layout_marginStart="@dimen/x25"
-                    android:layout_marginEnd="@dimen/x50"
-                    android:layout_weight="1"
-                    android:textSize="12sp"
-                    app:sGradientEndColor="#4088FE"
-                    app:sGradientOrientation="LEFT_RIGHT"
-                    app:sGradientStartColor="#6BB6FF"
-                    app:sGradientType="linear" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
+<!--                <com.xuexiang.xui.widget.textview.supertextview.SuperButton-->
+<!--                    android:id="@+id/bt_call_doctor"-->
+<!--                    style="@style/SuperButton.Blue"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="@dimen/y90"-->
+<!--                    android:layout_marginStart="@dimen/x25"-->
+<!--                    android:layout_marginEnd="@dimen/x50"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:textSize="12sp"-->
+<!--                    app:sGradientEndColor="#4088FE"-->
+<!--                    app:sGradientOrientation="LEFT_RIGHT"-->
+<!--                    app:sGradientStartColor="#6BB6FF"-->
+<!--                    app:sGradientType="linear" />-->
+<!--            </androidx.appcompat.widget.LinearLayoutCompat>-->
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/ll_waiting_order"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/y150"
-                android:background="@color/white"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+<!--            <androidx.appcompat.widget.LinearLayoutCompat-->
+<!--                android:id="@+id/ll_waiting_order"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="@dimen/y150"-->
+<!--                android:background="@color/white"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:visibility="gone"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent">-->
 
-                <com.xuexiang.xui.widget.textview.supertextview.SuperButton
-                    android:id="@+id/bt_get_order"
-                    style="@style/SuperButton.Blue"
-                    android:layout_width="@dimen/x400"
-                    android:layout_height="@dimen/y110"
-                    android:text="接单"
-                    app:sGradientEndColor="#4088FE"
-                    app:sGradientOrientation="LEFT_RIGHT"
-                    app:sGradientStartColor="#6BB6FF"
-                    app:sGradientType="linear" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
+<!--                <com.xuexiang.xui.widget.textview.supertextview.SuperButton-->
+<!--                    android:id="@+id/bt_get_order"-->
+<!--                    style="@style/SuperButton.Blue"-->
+<!--                    android:layout_width="@dimen/x400"-->
+<!--                    android:layout_height="@dimen/y110"-->
+<!--                    android:text="接单"-->
+<!--                    app:sGradientEndColor="#4088FE"-->
+<!--                    app:sGradientOrientation="LEFT_RIGHT"-->
+<!--                    app:sGradientStartColor="#6BB6FF"-->
+<!--                    app:sGradientType="linear" />-->
+<!--            </androidx.appcompat.widget.LinearLayoutCompat>-->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/cl_one_patient"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:visibility="gone"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/tv_patient_info">
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/stv_name"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y100"
+        android:paddingEnd="@dimen/x30"
+        android:paddingStart="@dimen/x30"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_add_patient_details"
+        app:sDividerLineType="none"
+        app:sLeftTextColor="@color/tx_bottom_navigation"
+        app:sLeftTextString="患者姓名"
+        app:sRightTextColor="@color/black" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/stv_sex"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y100"
+        android:paddingEnd="@dimen/x30"
+        android:paddingStart="@dimen/x30"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stv_name"
+        app:sDividerLineType="none"
+        app:sLeftTextColor="@color/tx_bottom_navigation"
+        app:sLeftTextString="性别"
+        app:sRightTextColor="@color/black" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/stv_age"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y100"
+        android:paddingEnd="@dimen/x30"
+        android:paddingStart="@dimen/x30"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stv_sex"
+        app:sDividerLineType="none"
+        app:sLeftTextColor="@color/tx_bottom_navigation"
+        app:sLeftTextString="年龄"
+        app:sRightTextColor="@color/black" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/stv_height"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y100"
+        android:paddingEnd="@dimen/x30"
+        android:paddingStart="@dimen/x30"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stv_age"
+        app:sDividerLineType="none"
+        app:sLeftTextColor="@color/tx_bottom_navigation"
+        app:sLeftTextString="身高"
+        app:sRightTextColor="@color/black" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/stv_body_weight"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y100"
+        android:paddingEnd="@dimen/x30"
+        android:paddingStart="@dimen/x30"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stv_height"
+        app:sDividerLineType="none"
+        app:sLeftTextColor="@color/tx_bottom_navigation"
+        app:sLeftTextString="体重"
+        app:sRightTextColor="@color/black" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/stv_anesthesia_type"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y100"
+        android:paddingEnd="@dimen/x30"
+        android:paddingStart="@dimen/x30"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stv_body_weight"
+        app:sDividerLineType="none"
+        app:sLeftTextColor="@color/tx_bottom_navigation"
+        app:sLeftTextString="拟麻醉方式"
+        app:sRightTextColor="@color/black" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/stv_id_card"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y100"
+        android:paddingEnd="@dimen/x30"
+        android:paddingStart="@dimen/x30"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stv_anesthesia_type"
+        app:sDividerLineType="none"
+        app:sLeftTextColor="@color/tx_bottom_navigation"
+        app:sLeftTextString="身份证"
+        app:sRightTextColor="@color/tx_bottom_navigation"
+        app:sRightTextString="未上传" />
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+        android:id="@+id/stv_insurance_consent"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y100"
+        android:paddingEnd="@dimen/x30"
+        android:paddingStart="@dimen/x30"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stv_id_card"
+        app:sDividerLineType="none"
+        app:sLeftTextColor="@color/tx_bottom_navigation"
+        app:sLeftTextString="保险同意书"
+        app:sRightTextColor="@color/tx_bottom_navigation"
+        app:sRightTextString="未上传" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_img_upload"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stv_insurance_consent">
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_surgery_about_medical_record"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y100"
+            android:paddingEnd="@dimen/x30"
+            android:paddingStart="@dimen/x30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:sDividerLineType="none"
+            app:sLeftTextColor="@color/tx_bottom_navigation"
+            app:sLeftTextString="手术相关病历"
+            app:sRightTextColor="@color/tx_bottom_navigation"
+            app:sRightTextString="未上传" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_blood_routine"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y100"
+            android:paddingEnd="@dimen/x30"
+            android:paddingStart="@dimen/x30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stv_surgery_about_medical_record"
+            app:sDividerLineType="none"
+            app:sLeftTextColor="@color/tx_bottom_navigation"
+            app:sLeftTextString="血常规"
+            app:sRightTextColor="@color/tx_bottom_navigation"
+            app:sRightTextString="未上传" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_electrocardiogram"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y100"
+            android:paddingEnd="@dimen/x30"
+            android:paddingStart="@dimen/x30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stv_blood_routine"
+            app:sDividerLineType="none"
+            app:sLeftTextColor="@color/tx_bottom_navigation"
+            app:sLeftTextString="心电图"
+            app:sRightTextColor="@color/tx_bottom_navigation"
+            app:sRightTextString="未上传" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_coagulation"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y100"
+            android:paddingEnd="@dimen/x30"
+            android:paddingStart="@dimen/x30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stv_electrocardiogram"
+            app:sDividerLineType="none"
+            app:sLeftTextColor="@color/tx_bottom_navigation"
+            app:sLeftTextString="凝血功能"
+            app:sRightTextColor="@color/tx_bottom_navigation"
+            app:sRightTextString="未上传" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_infectious_disease_index"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y100"
+            android:paddingEnd="@dimen/x30"
+            android:paddingStart="@dimen/x30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stv_coagulation"
+            app:sDividerLineType="none"
+            app:sLeftTextColor="@color/tx_bottom_navigation"
+            app:sLeftTextString="传染病指标"
+            app:sRightTextColor="@color/tx_bottom_navigation"
+            app:sRightTextString="未上传" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_tx_upload"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_img_upload">
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_blood_pressure"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y100"
+            android:paddingEnd="@dimen/x30"
+            android:paddingStart="@dimen/x30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:sDividerLineType="none"
+            app:sLeftTextColor="@color/tx_bottom_navigation"
+            app:sLeftTextString="血压"
+            app:sRightTextColor="@color/black" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_pulse"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y100"
+            android:paddingEnd="@dimen/x30"
+            android:paddingStart="@dimen/x30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stv_blood_pressure"
+            app:sDividerLineType="none"
+            app:sLeftTextColor="@color/tx_bottom_navigation"
+            app:sLeftTextString="脉搏"
+            app:sRightTextColor="@color/black" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_breathe"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y100"
+            android:paddingEnd="@dimen/x30"
+            android:paddingStart="@dimen/x30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stv_pulse"
+            app:sDividerLineType="none"
+            app:sLeftTextColor="@color/tx_bottom_navigation"
+            app:sLeftTextString="呼吸"
+            app:sRightTextColor="@color/black" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_body_temperature"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y100"
+            android:paddingEnd="@dimen/x30"
+            android:paddingStart="@dimen/x30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stv_breathe"
+            app:sDividerLineType="none"
+            app:sLeftTextColor="@color/tx_bottom_navigation"
+            app:sLeftTextString="体温"
+            app:sRightTextColor="@color/black" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_diabetes"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y100"
+            android:paddingEnd="@dimen/x30"
+            android:paddingStart="@dimen/x30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stv_body_temperature"
+            app:sDividerLineType="none"
+            app:sLeftTextColor="@color/tx_bottom_navigation"
+            app:sLeftTextString="糖尿病"
+            app:sRightTextString="无"
+            app:sRightTextColor="@color/tx_bottom_navigation" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_brain_stalk"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y100"
+            android:paddingEnd="@dimen/x30"
+            android:paddingStart="@dimen/x30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stv_diabetes"
+            app:sDividerLineType="none"
+            app:sLeftTextColor="@color/tx_bottom_navigation"
+            app:sLeftTextString="脑梗"
+            app:sRightTextString="无"
+            app:sRightTextColor="@color/tx_bottom_navigation" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_heart_disease"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y100"
+            android:paddingEnd="@dimen/x30"
+            android:paddingStart="@dimen/x30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stv_brain_stalk"
+            app:sDividerLineType="none"
+            app:sLeftTextColor="@color/tx_bottom_navigation"
+            app:sLeftTextString="心脏疾病"
+            app:sRightTextString="无"
+            app:sRightTextColor="@color/tx_bottom_navigation" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_infectious_disease"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y100"
+            android:paddingEnd="@dimen/x30"
+            android:paddingStart="@dimen/x30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stv_heart_disease"
+            app:sDividerLineType="none"
+            app:sLeftTextColor="@color/tx_bottom_navigation"
+            app:sLeftTextString="传染性疾病"
+            app:sRightTextString="无"
+            app:sRightTextColor="@color/tx_bottom_navigation" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/stv_respiratory_dysfunction"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y100"
+            android:paddingEnd="@dimen/x30"
+            android:paddingStart="@dimen/x30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stv_infectious_disease"
+            app:sDividerLineType="none"
+            app:sLeftTextColor="@color/tx_bottom_navigation"
+            app:sLeftTextString="呼吸功能障碍"
+            app:sRightTextString="无"
+            app:sRightTextColor="@color/tx_bottom_navigation" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_patient_list"
@@ -219,7 +571,7 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_patient_info" />
+                app:layout_constraintTop_toBottomOf="@+id/cl_one_patient" />
 
             <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
                 android:id="@+id/tv_anesthesia_tool"
@@ -533,6 +885,7 @@
                 app:sLeftTextColor="@color/tx_bottom_navigation"
                 app:sLeftTextSize="12sp"
                 app:sLeftTextString="预计金额"
+                app:sRightMaxEms="30"
                 app:sLeftViewGravity="left_center"
                 app:sRightTextColor="@color/tx_fee"
                 app:sRightTextSize="12sp"
@@ -556,8 +909,134 @@
                 app:sRightTextSize="12sp"
                 app:sRightViewGravity="right_center"
                 app:sUseShape="true" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_anesthesia_info"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/y150"
+                android:layout_marginTop="@dimen/y20"
+                android:background="@color/white"
+                android:gravity="start|center_vertical"
+                android:paddingStart="@dimen/x50"
+                android:text="麻醉信息"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rv_patient_list" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.ipd.xiangzuidoctor.common.view.BounceScrollView>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_end_operation"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:layout_marginTop="@dimen/y50"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+            android:id="@+id/bt_end_operation"
+            style="@style/SuperButton.Blue"
+            android:layout_width="@dimen/x400"
+            android:layout_height="@dimen/y110"
+            android:text="结束手术"
+            app:sGradientEndColor="#4088FE"
+            app:sGradientOrientation="LEFT_RIGHT"
+            app:sGradientStartColor="#6BB6FF"
+            app:sGradientType="linear" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_is_order"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:layout_marginTop="@dimen/y100"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+            android:id="@+id/bt_cancel_1"
+            style="@style/SuperButton.Blue"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y90"
+            android:layout_marginStart="@dimen/x50"
+            android:layout_marginEnd="@dimen/x25"
+            android:layout_weight="1"
+            android:text="取消订单"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:sSelectorNormalColor="@color/white"
+            app:sSelectorPressedColor="@color/input_color"
+            app:sStrokeColor="@color/tx_bottom_navigation"
+            app:sStrokeWidth="0.5dp" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+            android:id="@+id/bt_medical_record"
+            style="@style/SuperButton.Blue"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y90"
+            android:layout_marginStart="@dimen/x25"
+            android:layout_marginEnd="@dimen/x25"
+            android:layout_weight="1"
+            android:text="联系医院"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:sSelectorNormalColor="@color/white"
+            app:sSelectorPressedColor="@color/input_color"
+            app:sStrokeColor="@color/tx_bottom_navigation"
+            app:sStrokeWidth="0.5dp" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+            android:id="@+id/bt_call_doctor"
+            style="@style/SuperButton.Blue"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y90"
+            android:layout_marginStart="@dimen/x25"
+            android:layout_marginEnd="@dimen/x50"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            app:sGradientEndColor="#4088FE"
+            app:sGradientOrientation="LEFT_RIGHT"
+            app:sGradientStartColor="#6BB6FF"
+            app:sGradientType="linear" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_waiting_order"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+            android:id="@+id/bt_get_order"
+            style="@style/SuperButton.Blue"
+            android:layout_width="@dimen/x400"
+            android:layout_height="@dimen/y110"
+            android:text="接单"
+            app:sGradientEndColor="#4088FE"
+            app:sGradientOrientation="LEFT_RIGHT"
+            app:sGradientStartColor="#6BB6FF"
+            app:sGradientType="linear" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.ipd.xiangzuidoctor.common.view.TopView
         android:id="@+id/tv_order_details"

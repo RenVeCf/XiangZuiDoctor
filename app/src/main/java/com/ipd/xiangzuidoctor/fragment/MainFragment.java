@@ -20,6 +20,7 @@ import com.ipd.xiangzuidoctor.activity.AuthenticationActivity;
 import com.ipd.xiangzuidoctor.activity.CaptchaLoginActivity;
 import com.ipd.xiangzuidoctor.activity.MainActivity;
 import com.ipd.xiangzuidoctor.activity.OfflineActivitiesActivity;
+import com.ipd.xiangzuidoctor.activity.OfflineActivitiesDetailsActivity;
 import com.ipd.xiangzuidoctor.activity.OrderActivity;
 import com.ipd.xiangzuidoctor.activity.OrderDetailsActivity;
 import com.ipd.xiangzuidoctor.activity.SpecialColumnActivity;
@@ -532,7 +533,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                 todayRecommendationAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+                        startActivity(new Intent(getContext(), OfflineActivitiesDetailsActivity.class).putExtra("offline_activities_type", "0").putExtra("activityId", data.getData().getActivityList().get(position).getActivityId()));
                     }
                 });
                 break;

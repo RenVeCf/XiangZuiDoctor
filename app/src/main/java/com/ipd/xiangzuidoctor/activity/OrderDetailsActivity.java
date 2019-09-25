@@ -9,6 +9,7 @@ import android.widget.CompoundButton;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,6 +57,7 @@ import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
 import static com.ipd.xiangzuidoctor.utils.DateUtils.StartTimeToEndTime;
 import static com.ipd.xiangzuidoctor.utils.DateUtils.timedate;
+import static com.ipd.xiangzuidoctor.utils.StringUtils.isEmpty;
 import static com.ipd.xiangzuidoctor.utils.isClickUtil.isFastClick;
 
 /**
@@ -124,6 +126,56 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
     SuperButton btCancel1;
     @BindView(R.id.bt_call_doctor)
     SuperButton btCallDoctor;
+    @BindView(R.id.cl_one_patient)
+    ConstraintLayout clOnePatient;
+    @BindView(R.id.cl_img_upload)
+    ConstraintLayout clImgUpload;
+    @BindView(R.id.cl_tx_upload)
+    ConstraintLayout clTxUpload;
+    @BindView(R.id.stv_name)
+    SuperTextView stvName;
+    @BindView(R.id.stv_sex)
+    SuperTextView stvSex;
+    @BindView(R.id.stv_age)
+    SuperTextView stvAge;
+    @BindView(R.id.stv_height)
+    SuperTextView stvHeight;
+    @BindView(R.id.stv_body_weight)
+    SuperTextView stvBodyWeight;
+    @BindView(R.id.stv_anesthesia_type)
+    SuperTextView stvAnesthesiaType;
+    @BindView(R.id.stv_id_card)
+    SuperTextView stvIdCard;
+    @BindView(R.id.stv_insurance_consent)
+    SuperTextView stvInsuranceConsent;
+    @BindView(R.id.stv_surgery_about_medical_record)
+    SuperTextView stvSurgeryAboutMedicalRecord;
+    @BindView(R.id.stv_blood_routine)
+    SuperTextView stvBloodRoutine;
+    @BindView(R.id.stv_electrocardiogram)
+    SuperTextView stvElectrocardiogram;
+    @BindView(R.id.stv_coagulation)
+    SuperTextView stvCoagulation;
+    @BindView(R.id.stv_infectious_disease_index)
+    SuperTextView stvInfectiousDiseaseIndex;
+    @BindView(R.id.stv_blood_pressure)
+    SuperTextView stvBloodPressure;
+    @BindView(R.id.stv_pulse)
+    SuperTextView stvPulse;
+    @BindView(R.id.stv_breathe)
+    SuperTextView stvBreathe;
+    @BindView(R.id.stv_body_temperature)
+    SuperTextView stvBodyTemperature;
+    @BindView(R.id.stv_diabetes)
+    SuperTextView stvDiabetes;
+    @BindView(R.id.stv_brain_stalk)
+    SuperTextView stvBrainStalk;
+    @BindView(R.id.stv_heart_disease)
+    SuperTextView stvHeartDisease;
+    @BindView(R.id.stv_infectious_disease)
+    SuperTextView stvInfectiousDisease;
+    @BindView(R.id.stv_respiratory_dysfunction)
+    SuperTextView stvRespiratoryDysfunction;
 
     private String orderStatus;//1：待接单 2：待开始  3：进行中 4：已结束 5：待结算 6：已结算' 7：已取消 8.等待中
     private int orderId;
@@ -398,8 +450,11 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                 tvSurgeryType.setRightString("1".equals(data.getData().getOrder().getOrderType()) ? "单台" : "连台");
                 tvSimulatedSurgeryName.setRightString(data.getData().getOrder().getSurgeryName());
                 tvStartTime.setRightString(data.getData().getOrder().getBeginTime());
-                tvContinuedTime.setRightString(data.getData().getOrder().getDuration() + "h");
-                tvContinuedFee.setRightString("¥ " + data.getData().getOrder().getExpectMoney() + "元");
+                tvContinuedTime.setRightString(data.getData().getOrder().getDuration() + "小时");
+                if ("1".equals(data.getData().getOrder().getPremium()))
+                    tvContinuedFee.setRightString("¥ " + data.getData().getOrder().getAdMoney() + "元");
+                else
+                    tvContinuedFee.setRightString("¥ " + (data.getData().getOrder().getAdMoney() + data.getData().getOrder().getAdpremiumMoney()) + "元(含加价费用¥ " + data.getData().getOrder().getAdpremiumMoney() + ")");
                 tvPs.setRightString(data.getData().getOrder().getPrompt());
 
                 if ("8".equals(orderStatus)) {
@@ -465,6 +520,72 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                             });
                         }
                     });
+
+                    if ("1".equals(data.getData().getOrder().getOrderType())) {
+                        rvPatientList.setVisibility(View.GONE);
+                        clOnePatient.setVisibility(View.VISIBLE);
+                        clImgUpload.setVisibility(View.VISIBLE);
+                        clTxUpload.setVisibility(View.VISIBLE);
+                        tvAnesthesiaInfo.setVisibility(View.VISIBLE);
+                        tvAnesthesiaTool.setVisibility(View.VISIBLE);
+                        tvAnesthesiaType.setVisibility(View.VISIBLE);
+
+                        if (data.getData().getOrderDetail().size() > 0) {
+                            orderDetailId = data.getData().getOrderDetail().get(0).getOrderDetailId();
+                            stvName.setRightString(data.getData().getOrderDetail().get(0).getPatientName());
+                            stvSex.setRightString("1".equals(data.getData().getOrderDetail().get(0).getSex()) ? "男" : "女");
+                            stvAge.setRightString(data.getData().getOrderDetail().get(0).getAge() + "岁");
+                            stvHeight.setRightString(data.getData().getOrderDetail().get(0).getHeight() + "cm");
+                            stvBodyWeight.setRightString(data.getData().getOrderDetail().get(0).getWeight() + "kg");
+                            stvAnesthesiaType.setRightString(data.getData().getOrderDetail().get(0).getNarcosisType());
+                            if (!isEmpty(data.getData().getOrderDetail().get(0).getPositiveCard()) && !isEmpty(data.getData().getOrderDetail().get(0).getReverseCard())) {
+                                stvIdCard.setRightString("已上传")
+                                        .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            }
+                            if (!isEmpty(data.getData().getOrderDetail().get(0).getInsurance()))
+                                stvInsuranceConsent.setRightString("已上传")
+                                        .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+
+                            if (!isEmpty(data.getData().getOrderDetail().get(0).getSurgeryRelated()))
+                                stvSurgeryAboutMedicalRecord.setRightString("已上传")
+                                        .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            if (!isEmpty(data.getData().getOrderDetail().get(0).getRoutineBlood()))
+                                stvBloodRoutine.setRightString("已上传")
+                                        .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            if (!isEmpty(data.getData().getOrderDetail().get(0).getEcg()))
+                                stvElectrocardiogram.setRightString("已上传")
+                                        .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            if (!isEmpty(data.getData().getOrderDetail().get(0).getCruor()))
+                                stvCoagulation.setRightString("已上传")
+                                        .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            if (!isEmpty(data.getData().getOrderDetail().get(0).getContagion()))
+                                stvInfectiousDiseaseIndex.setRightString("已上传")
+                                        .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+
+                            stvBloodPressure.setRightString(data.getData().getOrderDetail().get(0).getMinBloodPressure() + "/" + data.getData().getOrderDetail().get(0).getMaxBloodPressure() + "mmHg");
+                            stvPulse.setRightString(data.getData().getOrderDetail().get(0).getPulse() + "次/分钟");
+                            stvBreathe.setRightString(data.getData().getOrderDetail().get(0).getBreathe() + "次/分钟");
+                            stvBodyTemperature.setRightString(data.getData().getOrderDetail().get(0).getAnimalHeat() + "℃");
+                            if ("2".equals(data.getData().getOrderDetail().get(0).getDiabetes()))
+                                stvDiabetes.setRightString("有")
+                                        .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            if ("2".equals(data.getData().getOrderDetail().get(0).getCerebralInfarction()))
+                                stvBrainStalk.setRightString("有")
+                                        .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            if ("2".equals(data.getData().getOrderDetail().get(0).getHeartDisease()))
+                                stvHeartDisease.setRightString("有")
+                                        .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            if ("2".equals(data.getData().getOrderDetail().get(0).getInfectDisease()))
+                                stvInfectiousDisease.setRightString("有")
+                                        .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            if ("2".equals(data.getData().getOrderDetail().get(0).getBreatheFunction()))
+                                stvRespiratoryDysfunction.setRightString("有")
+                                        .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+
+                            tvAnesthesiaTool.setRightString("已确认");
+                            tvAnesthesiaType.setRightString(data.getData().getOrderDetail().get(0).getNarcosisType());
+                        }
+                    }
                 }
 
                 break;
