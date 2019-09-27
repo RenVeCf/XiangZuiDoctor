@@ -53,8 +53,8 @@ public class MainOrderAdapter<T> extends BaseQuickAdapter<T, BaseViewHolder> {
             hospitalName = ((HomeBean.DataBean.AlreadyListBean) item).getHospitalName();
             address = ((HomeBean.DataBean.AlreadyListBean) item).getAddress();
             beginTime = ((HomeBean.DataBean.AlreadyListBean) item).getBeginTime();
-            expectMoney = ((HomeBean.DataBean.AlreadyListBean) item).getExpectMoney();
-//            adpremiumMoney = ((HomeBean.DataBean.AlreadyListBean) item).getAdpremiumMoney();
+            expectMoney = ((HomeBean.DataBean.AlreadyListBean) item).getAdMoney();
+            adpremiumMoney = ((HomeBean.DataBean.AlreadyListBean) item).getAdpremiumMoney();
         } else if (item instanceof HomeBean.DataBean.StayListBean) {
             status = ((HomeBean.DataBean.StayListBean) item).getStatus();
             urgent = ((HomeBean.DataBean.StayListBean) item).getUrgent();

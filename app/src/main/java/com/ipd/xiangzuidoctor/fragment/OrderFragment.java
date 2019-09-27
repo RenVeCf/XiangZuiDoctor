@@ -235,6 +235,8 @@ public class OrderFragment extends BaseFragment<OrderContract.View, OrderContrac
                                                     new OneBtDialog(getActivity(), "请提前做好多点执业备案") {
                                                         @Override
                                                         public void confirm() {
+                                                            removePosition = position;
+
                                                             TreeMap<String, String> getOrderMap = new TreeMap<>();
                                                             getOrderMap.put("userId", SPUtil.get(getContext(), USER_ID, "") + "");
                                                             getOrderMap.put("orderId", orderList.get(position).getOrderId() + "");
@@ -249,7 +251,7 @@ public class OrderFragment extends BaseFragment<OrderContract.View, OrderContrac
                                                 if (isFastClick()) {
                                                     switch (orderList.get(position).getStatus()) {
                                                         case "2":
-                                                            new TwoBtDialog(getActivity(), "是否确认已到达？", "温馨提示") {
+                                                            new TwoBtDialog(getActivity(), "是否确认已到达？", "确认") {
                                                                 @Override
                                                                 public void confirm() {
                                                                     TreeMap<String, String> isArrivalsMap = new TreeMap<>();
@@ -387,7 +389,9 @@ public class OrderFragment extends BaseFragment<OrderContract.View, OrderContrac
         ToastUtil.showLongToast(data.getMsg());
         switch (data.getCode()) {
             case 200:
-                orderList("", "", "");
+                orderList.remove(removePosition);
+                mainOrderAdapter.notifyDataSetChanged();
+                mainOrderAdapter.setEmptyView(R.layout.null_data, rvOrder);
                 break;
             case 900:
                 //清除所有临时储存

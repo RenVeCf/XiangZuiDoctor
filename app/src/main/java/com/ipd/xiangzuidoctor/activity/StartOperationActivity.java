@@ -96,7 +96,7 @@ public class StartOperationActivity extends BaseActivity<OrderContract.View, Ord
         TreeMap<String, String> operationStartMap = new TreeMap<>();
         operationStartMap.put("userId", SPUtil.get(this, USER_ID, "") + "");
         operationStartMap.put("orderId", orderId + "");
-        operationStartMap.put("waitTime", "");
+        operationStartMap.put("waitTime", waitTime);
         operationStartMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(operationStartMap.toString().replaceAll(" ", "") + SIGN)));
         getPresenter().getOperationStart(operationStartMap, false, false);
     }

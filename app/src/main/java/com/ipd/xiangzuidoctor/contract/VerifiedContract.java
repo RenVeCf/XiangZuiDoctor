@@ -23,6 +23,8 @@ public interface VerifiedContract {
 
         void resultVerified(VerifiedBean data);
 
+
+
         <T> ObservableTransformer<T, T> bindLifecycle();
     }
 

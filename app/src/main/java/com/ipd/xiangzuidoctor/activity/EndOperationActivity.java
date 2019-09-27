@@ -30,6 +30,7 @@ import com.ipd.xiangzuidoctor.common.view.TwoBtDialog;
 import com.ipd.xiangzuidoctor.contract.OrderContract;
 import com.ipd.xiangzuidoctor.presenter.OrderPresenter;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
+import com.ipd.xiangzuidoctor.utils.L;
 import com.ipd.xiangzuidoctor.utils.MD5Utils;
 import com.ipd.xiangzuidoctor.utils.SPUtil;
 import com.ipd.xiangzuidoctor.utils.StringUtils;
@@ -47,6 +48,7 @@ import io.reactivex.ObservableTransformer;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_94;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
+import static com.ipd.xiangzuidoctor.utils.StringUtils.isEmpty;
 import static com.ipd.xiangzuidoctor.utils.isClickUtil.isFastClick;
 
 /**
@@ -75,11 +77,16 @@ public class EndOperationActivity extends BaseActivity<OrderContract.View, Order
     SuperTextView tvActualTime;
     @BindView(R.id.tv_actual_fee)
     SuperTextView tvActualFee;
+    @BindView(R.id.tv_patient_handover)
+    SuperTextView tvPatientHandover;
 
     private List<String> listData;
-    private List<String> anesthesiaDataList = new ArrayList<>();//麻醉方式
+    private List<String> narcosisDataList = new ArrayList<>();//麻醉方式
+    private List<AnesthesiaListBean.DataBean.NarcosisListBean> narcosisLists = new ArrayList<>();//选择麻醉(取ID用)
+    private int narcosisId = 0; //麻醉ID
     private OptionsPickerView pvOptions; //条件选择器
     private int orderDetailId, orderId, lastPatient;
+    private String imgUrl;//麻醉单地址
 
     @Override
     public int getLayoutId() {
@@ -146,6 +153,10 @@ public class EndOperationActivity extends BaseActivity<OrderContract.View, Order
         pvOptions = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
+                for (int i = 0; i < narcosisLists.size(); i++) {
+                    if (narcosisLists.get(i).getNarcosisTypeName().equals(listData.get(options1)))
+                        narcosisId = narcosisLists.get(i).getNarcosisTypeId();
+                }
                 tvAnesthesiaType.setRightString(listData.get(options1))
                         .setRightTextColor(getResources().getColor(R.color.black));
             }
@@ -176,7 +187,7 @@ public class EndOperationActivity extends BaseActivity<OrderContract.View, Order
     }
 
     private List<String> getTitleData() {
-        return anesthesiaDataList;
+        return narcosisDataList;
     }
 
     @Override
@@ -185,6 +196,7 @@ public class EndOperationActivity extends BaseActivity<OrderContract.View, Order
         if (data != null) {
             switch (requestCode) {
                 case REQUEST_CODE_94:
+                    imgUrl = data.getStringExtra("imgUrl");
                     tvAnesthesiaSheet.setRightString("已上传")
                             .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
                     break;
@@ -215,21 +227,26 @@ public class EndOperationActivity extends BaseActivity<OrderContract.View, Order
                 new TwoBtDialog(this, "请完成病人交接", "确认") {
                     @Override
                     public void confirm() {
-                        startActivity(new Intent(getContext(), StartOperationActivity.class).putExtra("title", "病人交接").putExtra("content", "病人已完成交接"));
+                        tvPatientHandover.setRightString("已完成")
+                                .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+//                        startActivity(new Intent(getContext(), StartOperationActivity.class).putExtra("title", "病人交接").putExtra("content", "病人已完成交接"));
                     }
                 }.show();
                 break;
             case R.id.bt_confirm:
                 if (isFastClick()) {
-                    TreeMap<String, String> isOrderOperationEndMap = new TreeMap<>();
-                    isOrderOperationEndMap.put("userId", SPUtil.get(EndOperationActivity.this, USER_ID, "") + "");
-                    isOrderOperationEndMap.put("orderDetailId", orderDetailId + "");
-                    isOrderOperationEndMap.put("orderId", orderId + "");
-                    isOrderOperationEndMap.put("anestxMode", tvAnesthesiaType.getRightString());
-                    isOrderOperationEndMap.put("narcosisForm", "");
-                    isOrderOperationEndMap.put("handover", "");
-                    isOrderOperationEndMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(isOrderOperationEndMap.toString().replaceAll(" ", "") + SIGN)));
-                    getPresenter().getIsOrderOperationEnd(isOrderOperationEndMap, false, false);
+                    if (!"请选择".equals(tvAnesthesiaType.getRightString()) && !isEmpty(imgUrl)) {
+                        TreeMap<String, String> isOrderOperationEndMap = new TreeMap<>();
+                        isOrderOperationEndMap.put("userId", SPUtil.get(EndOperationActivity.this, USER_ID, "") + "");
+                        isOrderOperationEndMap.put("orderDetailId", orderDetailId + "");
+                        isOrderOperationEndMap.put("orderId", orderId + "");
+                        isOrderOperationEndMap.put("anestxMode", tvAnesthesiaType.getRightString());
+                        isOrderOperationEndMap.put("narcosisForm", imgUrl);
+                        isOrderOperationEndMap.put("handover", "未完成".equals(tvPatientHandover.getRightString()) ? "1" : "2");
+                        isOrderOperationEndMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(isOrderOperationEndMap.toString().replaceAll(" ", "") + SIGN)));
+                        getPresenter().getIsOrderOperationEnd(isOrderOperationEndMap, false, false);
+                    } else
+                        ToastUtil.showShortToast("请将信息填写完整！");
                 }
                 break;
         }
@@ -308,23 +325,23 @@ public class EndOperationActivity extends BaseActivity<OrderContract.View, Order
 
     @Override
     public void resultAnesthesiaList(AnesthesiaListBean data) {
-//        switch (data.getCode()) {
-//            case 200:
-//                titleListsBean.clear();
-//                titleListsBean.addAll(data.getData().getTitleList());
-//                for (TitleListBean.DataBean.TitleListsBean datas : data.getData().getTitleList()) {
-//                    titleDataList.add(datas.getTitleName());
-//                }
-//                break;
-//            case 900:
-//                ToastUtil.showLongToast(data.getMsg());
-//                //清除所有临时储存
-//                SPUtil.clear(ApplicationUtil.getContext());
-//                ApplicationUtil.getManager().finishActivity(MainActivity.class);
-//                startActivity(new Intent(this, CaptchaLoginActivity.class));
-//                finish();
-//                break;
-//        }
+        switch (data.getCode()) {
+            case 200:
+                narcosisLists.clear();
+                narcosisLists.addAll(data.getData().getNarcosisList());
+                for (AnesthesiaListBean.DataBean.NarcosisListBean datas : narcosisLists) {
+                    narcosisDataList.add(datas.getNarcosisTypeName());
+                }
+                break;
+            case 900:
+                ToastUtil.showLongToast(data.getMsg());
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(this, CaptchaLoginActivity.class));
+                finish();
+                break;
+        }
     }
 
     @Override

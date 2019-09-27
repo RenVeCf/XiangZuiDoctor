@@ -35,6 +35,7 @@ import com.ipd.xiangzuidoctor.common.view.TwoBtDialog;
 import com.ipd.xiangzuidoctor.contract.OrderContract;
 import com.ipd.xiangzuidoctor.presenter.OrderPresenter;
 import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
+import com.ipd.xiangzuidoctor.utils.L;
 import com.ipd.xiangzuidoctor.utils.MD5Utils;
 import com.ipd.xiangzuidoctor.utils.SPUtil;
 import com.ipd.xiangzuidoctor.utils.StringUtils;
@@ -184,6 +185,7 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
     private List<OrderDetailsBean.DataBean.OrderDetailBean> orderDetail = new ArrayList<>();
     private SuperTextView selectPatient; //选中的患者
     private int orderDetailId = 0;
+    private String orderType; //1:单台，2：多台
     private OrderDetailsBean.DataBean.OrderBean orderBean = new OrderDetailsBean.DataBean.OrderBean();
 
     @Override
@@ -268,14 +270,14 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                 tvSumFee.setVisibility(View.VISIBLE);
                 tvPayType.setVisibility(View.VISIBLE);
 
-                tvAnesthesiaTool.setRightString("已确认");
-                tvAnesthesiaType.setRightString("椎管内麻醉");
-                tvWaitingTimeFee.setRightString("¥ 20元");
-                tvSurgeryFee.setRightString("¥ 200元");
-                tvQuickenFee.setRightString("¥ 30元");
-                tvAddFeeFee.setRightString("¥ 50元");
-                tvSumFee.setRightString("¥ 303元");
-                tvPayType.setRightString("已结算");
+//                tvAnesthesiaTool.setRightString("已确认");
+//                tvAnesthesiaType.setRightString("椎管内麻醉");
+//                tvWaitingTimeFee.setRightString("¥ 20元");
+//                tvSurgeryFee.setRightString("¥ 200元");
+//                tvQuickenFee.setRightString("¥ 30元");
+//                tvAddFeeFee.setRightString("¥ 50元");
+//                tvSumFee.setRightString("¥ 303元");
+//                tvPayType.setRightString("已结算");
                 break;
             case "6":
                 tvAnesthesiaInfo.setVisibility(View.VISIBLE);
@@ -290,14 +292,14 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                 tvSumFee.setVisibility(View.VISIBLE);
                 tvPayType.setVisibility(View.VISIBLE);
 
-                tvAnesthesiaTool.setRightString("已确认");
-                tvAnesthesiaType.setRightString("椎管内麻醉");
-                tvWaitingTimeFee.setRightString("¥ 20元");
-                tvSurgeryFee.setRightString("¥ 200元");
-                tvQuickenFee.setRightString("¥ 30元");
-                tvAddFeeFee.setRightString("¥ 50元");
-                tvSumFee.setRightString("¥ 303元");
-                tvPayType.setRightString("已结算");
+//                tvAnesthesiaTool.setRightString("已确认");
+//                tvAnesthesiaType.setRightString("椎管内麻醉");
+//                tvWaitingTimeFee.setRightString("¥ 20元");
+//                tvSurgeryFee.setRightString("¥ 200元");
+//                tvQuickenFee.setRightString("¥ 30元");
+//                tvAddFeeFee.setRightString("¥ 50元");
+//                tvSumFee.setRightString("¥ 303元");
+//                tvPayType.setRightString("已结算");
                 break;
             case "7":
                 tvAnesthesiaInfo.setVisibility(View.VISIBLE);
@@ -312,14 +314,14 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                 tvSumFee.setVisibility(View.VISIBLE);
                 tvPayType.setVisibility(View.VISIBLE);
 
-                tvAnesthesiaTool.setRightString("已确认");
-                tvAnesthesiaType.setRightString("椎管内麻醉");
-                tvWaitingTimeFee.setRightString("¥ 20元");
-                tvSurgeryFee.setRightString("¥ 200元");
-                tvQuickenFee.setRightString("¥ 30元");
-                tvAddFeeFee.setRightString("¥ 50元");
-                tvSumFee.setRightString("¥ 303元");
-                tvPayType.setRightString("已结算");
+//                tvAnesthesiaTool.setRightString("已确认");
+//                tvAnesthesiaType.setRightString("椎管内麻醉");
+//                tvWaitingTimeFee.setRightString("¥ 20元");
+//                tvSurgeryFee.setRightString("¥ 200元");
+//                tvQuickenFee.setRightString("¥ 30元");
+//                tvAddFeeFee.setRightString("¥ 50元");
+//                tvSumFee.setRightString("¥ 303元");
+//                tvPayType.setRightString("已结算");
                 break;
             case "8":
                 llIsOrder.setVisibility(View.VISIBLE);
@@ -416,7 +418,7 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
             case R.id.bt_end_operation:
                 if (isFastClick()) {
                     if (orderDetailId != 0) {
-                        new TwoBtDialog(this, "确认结束手术？", "温馨提示") {
+                        new TwoBtDialog(this, "确认结束手术？", "确认") {
                             @Override
                             public void confirm() {
                                 TreeMap<String, String> ingOperationEndMap = new TreeMap<>();
@@ -447,6 +449,7 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                 tvOrderCode.setRightString(data.getData().getOrder().getOrderNo());
                 tvHospitalName.setRightString(data.getData().getOrder().getHospitalName());
                 tvHospitalAddress.setRightString(data.getData().getOrder().getAddress());
+                orderType = data.getData().getOrder().getOrderType();
                 tvSurgeryType.setRightString("1".equals(data.getData().getOrder().getOrderType()) ? "单台" : "连台");
                 tvSimulatedSurgeryName.setRightString(data.getData().getOrder().getSurgeryName());
                 tvStartTime.setRightString(data.getData().getOrder().getBeginTime());
@@ -481,7 +484,7 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                     thread.start();
                 }
 
-                if ("2".equals(orderStatus) || "3".equals(orderStatus) || "8".equals(orderStatus)) {
+                if ("2".equals(orderStatus) || "3".equals(orderStatus) || "8".equals(orderStatus) || "5".equals(orderStatus) || "6".equals(orderStatus) || "7".equals(orderStatus)) {
                     rvPatientList.setVisibility(View.VISIBLE);
                     orderDetail.clear();
                     orderDetail.addAll(data.getData().getOrderDetail());
@@ -526,9 +529,11 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                         clOnePatient.setVisibility(View.VISIBLE);
                         clImgUpload.setVisibility(View.VISIBLE);
                         clTxUpload.setVisibility(View.VISIBLE);
-                        tvAnesthesiaInfo.setVisibility(View.VISIBLE);
-                        tvAnesthesiaTool.setVisibility(View.VISIBLE);
-                        tvAnesthesiaType.setVisibility(View.VISIBLE);
+                        if ("3".equals(orderStatus)) {
+                            tvAnesthesiaInfo.setVisibility(View.VISIBLE);
+                            tvAnesthesiaTool.setVisibility(View.VISIBLE);
+                            tvAnesthesiaType.setVisibility(View.VISIBLE);
+                        }
 
                         if (data.getData().getOrderDetail().size() > 0) {
                             orderDetailId = data.getData().getOrderDetail().get(0).getOrderDetailId();
@@ -584,6 +589,16 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
 
                             tvAnesthesiaTool.setRightString("已确认");
                             tvAnesthesiaType.setRightString(data.getData().getOrderDetail().get(0).getNarcosisType());
+
+                            tvWaitingTimeFee.setRightString("¥ " + data.getData().getOrder().getWaitMoney() + "元");
+                            tvSurgeryFee.setRightString("¥ " + data.getData().getOrder().getAdMoney() + "元");
+                            tvQuickenFee.setRightString("¥ " + data.getData().getOrder().getUrgentMoney() + "元");
+                            tvAddFeeFee.setRightString("¥ " + data.getData().getOrder().getPremiumMoney() + "元");
+                            tvSumFee.setRightString("¥ " + data.getData().getOrder().getTotalMoney() + "元");
+                            if ("5".equals(orderStatus))
+                                tvPayType.setRightString("未入账");
+                            if ("6".equals(orderStatus))
+                                tvPayType.setRightString("已入账");
                         }
                     }
                 }
@@ -625,11 +640,19 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
         switch (data.getCode()) {
             case 200:
                 int lastPatient = 0;
+                L.i("orderDetail.size() = " + orderDetail.size());
                 for (int i = 0; i < orderDetail.size(); i++) {
+                    L.i("orderDetail.get(i).getStatus() = " + orderDetail.get(i).getStatus());
                     if ("1".equals(orderDetail.get(i).getStatus()))
                         lastPatient++;
                 }
+                L.i("lastPatient = " + lastPatient);
+                L.i("orderDetailId = " + orderDetailId);
+                L.i("orderId = " + orderId);
+                if ("1".equals(orderType))
+                    lastPatient = 1;
                 startActivityForResult(new Intent(this, EndOperationActivity.class).putExtra("orderDetailId", orderDetailId).putExtra("orderId", orderId).putExtra("lastPatient", lastPatient), REQUEST_CODE_97);
+                finish();
                 break;
             case 900:
                 //清除所有临时储存

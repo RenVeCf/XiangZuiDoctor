@@ -126,6 +126,8 @@ public class HomeBean {
              * taxMoney : null
              * version : 1
              * orderNo : null
+             * adMoney : 1700.0
+             * adactualMoney : 0.0
              */
 
             private Object searchValue;
@@ -167,6 +169,24 @@ public class HomeBean {
             private Object taxMoney;
             private int version;
             private Object orderNo;
+            private double adMoney;
+            private double adpremiumMoney;
+
+            public double getAdpremiumMoney() {
+                return adpremiumMoney;
+            }
+
+            public void setAdpremiumMoney(double adpremiumMoney) {
+                this.adpremiumMoney = adpremiumMoney;
+            }
+
+            public double getAdMoney() {
+                return adMoney;
+            }
+
+            public void setAdMoney(double adMoney) {
+                this.adMoney = adMoney;
+            }
 
             public Object getSearchValue() {
                 return searchValue;

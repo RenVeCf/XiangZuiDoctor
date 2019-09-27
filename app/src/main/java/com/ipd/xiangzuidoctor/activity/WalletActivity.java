@@ -158,6 +158,8 @@ public class WalletActivity extends BaseActivity<WalletContract.View, WalletCont
                 tvSumIncome.setText(data.getData().getIncome() + "");
                 tvSumExpenditure.setText(data.getData().getExpend() + "");
 
+                balaList.clear();
+                balaList.addAll(data.getData().getBalaList());
                 rvConsumerDetails.setAdapter(consumerDetailsAdapter = new ConsumerDetailsAdapter(balaList));
                 consumerDetailsAdapter.bindToRecyclerView(rvConsumerDetails);
                 consumerDetailsAdapter.openLoadAnimation();

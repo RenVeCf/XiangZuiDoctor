@@ -49,7 +49,7 @@
         app:sLeftTextString="麻醉单"
         app:sRightIconRes="@drawable/ic_right_arrow"
         app:sRightTextColor="@color/tx_bottom_navigation"
-        app:sRightTextString="请上传" />
+        app:sRightTextString="未上传" />
 
     <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
         android:id="@+id/tv_patient_handover"
@@ -63,6 +63,8 @@
         app:sDividerLineType="none"
         app:sLeftTextColor="@color/black"
         app:sLeftTextString="病人交接"
+        app:sRightTextString="未完成"
+        app:sRightTextColor="@color/tx_bottom_navigation"
         app:sRightIconRes="@drawable/ic_right_arrow" />
 
     <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
