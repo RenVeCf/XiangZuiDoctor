@@ -2,6 +2,7 @@ package com.ipd.xiangzuidoctor.contract;
 
 import com.ipd.xiangzuidoctor.base.BasePresenter;
 import com.ipd.xiangzuidoctor.base.BaseView;
+import com.ipd.xiangzuidoctor.bean.GetUserInfoBean;
 import com.ipd.xiangzuidoctor.bean.TitleListBean;
 import com.ipd.xiangzuidoctor.bean.VerifiedBean;
 
@@ -23,7 +24,7 @@ public interface VerifiedContract {
 
         void resultVerified(VerifiedBean data);
 
-
+        void resultGetUserInfo(GetUserInfoBean data);
 
         <T> ObservableTransformer<T, T> bindLifecycle();
     }
@@ -32,5 +33,7 @@ public interface VerifiedContract {
         public abstract void getTitleList(TreeMap<String, String> map, boolean isDialog, boolean cancelable);
 
         public abstract void getVerified(TreeMap<String, String> map, boolean isDialog, boolean cancelable);
+
+        public abstract void getGetUserInfo(TreeMap<String, String> map, boolean isDialog, boolean cancelable);
     }
 }

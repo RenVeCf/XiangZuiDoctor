@@ -131,7 +131,7 @@ public class GetUserInfoBean {
             private Object runAddress;
             private Object hospitalAgent;
             private String status;
-            private Object auditContent;
+            private String auditContent;
             private String auditTime;
             private String isNew;
             private int titleId;
@@ -333,11 +333,11 @@ public class GetUserInfoBean {
                 this.status = status;
             }
 
-            public Object getAuditContent() {
+            public String getAuditContent() {
                 return auditContent;
             }
 
-            public void setAuditContent(Object auditContent) {
+            public void setAuditContent(String auditContent) {
                 this.auditContent = auditContent;
             }
 

@@ -17,6 +17,7 @@ import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.base.BaseActivity;
+import com.ipd.xiangzuidoctor.bean.GetUserInfoBean;
 import com.ipd.xiangzuidoctor.bean.TitleListBean;
 import com.ipd.xiangzuidoctor.bean.VerifiedBean;
 import com.ipd.xiangzuidoctor.common.view.TopView;
@@ -27,6 +28,7 @@ import com.ipd.xiangzuidoctor.utils.MD5Utils;
 import com.ipd.xiangzuidoctor.utils.SPUtil;
 import com.ipd.xiangzuidoctor.utils.StringUtils;
 import com.ipd.xiangzuidoctor.utils.ToastUtil;
+import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 
 import java.util.ArrayList;
@@ -73,6 +75,8 @@ public class AuthenticationActivity extends BaseActivity<VerifiedContract.View, 
     SuperTextView tvQualificationsCard;
     @BindView(R.id.tv_chest_card)
     SuperTextView tvChestCard;
+    @BindView(R.id.bt_confirm)
+    SuperButton btConfirm;
 
     private List<String> listData;
     private List<String> titleDataList = new ArrayList<>();//职位
@@ -106,6 +110,11 @@ public class AuthenticationActivity extends BaseActivity<VerifiedContract.View, 
 
     @Override
     public void initData() {
+        TreeMap<String, String> getUserInfoMap = new TreeMap<>();
+        getUserInfoMap.put("userId", SPUtil.get(this, USER_ID, "") + "");
+        getUserInfoMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(getUserInfoMap.toString().replaceAll(" ", "") + SIGN)));
+        getPresenter().getGetUserInfo(getUserInfoMap, false, false);
+
         TreeMap<String, String> titleListMap = new TreeMap<>();
         titleListMap.put("userId", SPUtil.get(this, USER_ID, "") + "");
         titleListMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(titleListMap.toString().replaceAll(" ", "") + SIGN)));
@@ -200,16 +209,16 @@ public class AuthenticationActivity extends BaseActivity<VerifiedContract.View, 
                 showPickerView();
                 break;
             case R.id.tv_photo: //照片
-                startActivityForResult(new Intent(this, PhotoActivity.class).putExtra("title", "照片"), REQUEST_CODE_90);
+                startActivityForResult(new Intent(this, PhotoActivity.class).putExtra("title", "照片").putExtra("imgUrl", photo), REQUEST_CODE_90);
                 break;
             case R.id.tv_id_card: //身份证
-                startActivityForResult(new Intent(this, AgentCardActivity.class), REQUEST_CODE_91);
+                startActivityForResult(new Intent(this, AgentCardActivity.class).putExtra("positiveUrl", positiveUrl).putExtra("negativeUrl", negativeUrl), REQUEST_CODE_91);
                 break;
             case R.id.tv_qualifications_card: //执业资格证/医师资格证
-                startActivityForResult(new Intent(this, PhotoActivity.class).putExtra("title", "执业资格证/医师资格证"), REQUEST_CODE_92);
+                startActivityForResult(new Intent(this, PhotoActivity.class).putExtra("title", "执业资格证/医师资格证").putExtra("imgUrl", certificate), REQUEST_CODE_92);
                 break;
             case R.id.tv_chest_card: //胸牌
-                startActivityForResult(new Intent(this, PhotoActivity.class).putExtra("title", "胸牌"), REQUEST_CODE_93);
+                startActivityForResult(new Intent(this, PhotoActivity.class).putExtra("title", "胸牌").putExtra("imgUrl", chestCard), REQUEST_CODE_93);
                 break;
             case R.id.bt_confirm:
                 if (!isEmpty(etName.getText().toString().trim()) && !isEmpty(etDepartment.getText().toString().trim()) && titleId != 0 && !isEmpty(etInitialHospital.getText().toString().trim()) && !isEmpty(etPhone.getText().toString().trim()) && !isEmpty(photo) && !isEmpty(positiveUrl) && !isEmpty(negativeUrl) && !isEmpty(certificate) && !isEmpty(chestCard)) {
@@ -260,6 +269,84 @@ public class AuthenticationActivity extends BaseActivity<VerifiedContract.View, 
             case 200:
                 startActivity(new Intent(this, AuthenticationResultActivity.class).putExtra("result_type", 1));
                 finish();
+                break;
+            case 900:
+                ToastUtil.showLongToast(data.getMsg());
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(this, CaptchaLoginActivity.class));
+                finish();
+                break;
+        }
+    }
+
+    @Override
+    public void resultGetUserInfo(GetUserInfoBean data) {
+        switch (data.getCode()) {
+            case 200:
+                if (data.getData().getApproveStatus() == 2) {
+                    switch (data.getData().getApprove().getStatus()){
+                        case "1":
+                            btConfirm.setText("待审核");
+                            btConfirm.setEnabled(false);
+                            etName.setText(data.getData().getUser().getNickname());
+                            etName.setFocusable(false);
+                            etDepartment.setText(data.getData().getApprove().getDepart());
+                            etDepartment.setFocusable(false);
+                            tvTitle.setRightString(data.getData().getApprove().getTitleName());
+                            tvTitle.setEnabled(false);
+                            etInitialHospital.setText(data.getData().getApprove().getHospital());
+                            etInitialHospital.setFocusable(false);
+                            etPhone.setText(data.getData().getApprove().getContactNumber());
+                            etPhone.setFocusable(false);
+                            photo = data.getData().getApprove().getPhoto();
+                            tvPhoto.setRightString("已上传")
+                                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            positiveUrl = data.getData().getApprove().getPositiveCard();
+                            negativeUrl = data.getData().getApprove().getReverseCard();
+                            tvIdCard.setRightString("已上传")
+                                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            certificate = data.getData().getApprove().getCertificate();
+                            tvQualificationsCard.setRightString("已上传")
+                                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            chestCard = data.getData().getApprove().getChestCard();
+                            tvChestCard.setRightString("已上传")
+                                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            break;
+                        case "2":
+                            btConfirm.setText("审核通过");
+                            btConfirm.setEnabled(false);
+                            etName.setText(data.getData().getUser().getNickname());
+                            etName.setFocusable(false);
+                            etDepartment.setText(data.getData().getApprove().getDepart());
+                            etDepartment.setFocusable(false);
+                            tvTitle.setRightString(data.getData().getApprove().getTitleName());
+                            tvTitle.setEnabled(false);
+                            etInitialHospital.setText(data.getData().getApprove().getHospital());
+                            etInitialHospital.setFocusable(false);
+                            etPhone.setText(data.getData().getApprove().getContactNumber());
+                            etPhone.setFocusable(false);
+                            photo = data.getData().getApprove().getPhoto();
+                            tvPhoto.setRightString("已上传")
+                                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            positiveUrl = data.getData().getApprove().getPositiveCard();
+                            negativeUrl = data.getData().getApprove().getReverseCard();
+                            tvIdCard.setRightString("已上传")
+                                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            certificate = data.getData().getApprove().getCertificate();
+                            tvQualificationsCard.setRightString("已上传")
+                                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            chestCard = data.getData().getApprove().getChestCard();
+                            tvChestCard.setRightString("已上传")
+                                    .setRightTextColor(getResources().getColor(R.color.tx_bottom_navigation_select));
+                            break;
+                        case "3":
+                            ToastUtil.showShortToast(data.getData().getApprove().getAuditContent());
+                            btConfirm.setText("重新审核");
+                            break;
+                    }
+                }
                 break;
             case 900:
                 ToastUtil.showLongToast(data.getMsg());

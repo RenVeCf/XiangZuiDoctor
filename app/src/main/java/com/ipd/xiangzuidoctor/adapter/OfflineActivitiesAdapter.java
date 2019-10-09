@@ -28,8 +28,8 @@ public class OfflineActivitiesAdapter extends BaseQuickAdapter<OfflineActivities
 
         helper.setText(R.id.tv_title, item.getTitle())
                 .setText(R.id.tv_content, item.getStartTime())
-                .setText(R.id.tv_label, "进行中")
                 .setBackgroundRes(R.id.tv_label, R.drawable.bg_label2)
+                .setText(R.id.tv_label, "进行中")
                 .setGone(R.id.bt_enroll, true)
                 .setGone(R.id.bt_cancel, false)
                 .addOnClickListener(R.id.bt_enroll)

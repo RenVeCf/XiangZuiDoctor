@@ -221,7 +221,7 @@ public class EndOperationActivity extends BaseActivity<OrderContract.View, Order
                 showPickerView();
                 break;
             case R.id.tv_anesthesia_sheet:
-                startActivityForResult(new Intent(this, PhotoActivity.class).putExtra("title", "麻醉单"), REQUEST_CODE_94);
+                startActivityForResult(new Intent(this, PhotoActivity.class).putExtra("title", "麻醉单").putExtra("imgUrl", imgUrl), REQUEST_CODE_94);
                 break;
             case R.id.tv_patient_handover:
                 new TwoBtDialog(this, "请完成病人交接", "确认") {

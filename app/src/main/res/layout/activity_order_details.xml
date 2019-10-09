@@ -708,7 +708,7 @@
                 app:sUseShape="true" />
 
             <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
-                android:id="@+id/tv_sum_fee"
+                android:id="@+id/tv_tax_payment_fee"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/y100"
                 android:paddingStart="@dimen/x30"
@@ -719,7 +719,45 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_add_fee_fee"
                 app:sLeftTextColor="@color/tx_bottom_navigation"
                 app:sLeftTextSize="12sp"
-                app:sLeftTextString="合计金额"
+                app:sLeftTextString="个税代缴"
+                app:sLeftViewGravity="left_center"
+                app:sRightTextColor="@color/tx_fee"
+                app:sRightTextSize="12sp"
+                app:sRightViewGravity="right_center"
+                app:sUseShape="true" />
+
+            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                android:id="@+id/tv_platform_fee"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/y100"
+                android:paddingStart="@dimen/x30"
+                android:paddingEnd="@dimen/x30"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_tax_payment_fee"
+                app:sLeftTextColor="@color/tx_bottom_navigation"
+                app:sLeftTextSize="12sp"
+                app:sLeftTextString="平台费"
+                app:sLeftViewGravity="left_center"
+                app:sRightTextColor="@color/tx_fee"
+                app:sRightTextSize="12sp"
+                app:sRightViewGravity="right_center"
+                app:sUseShape="true" />
+
+            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                android:id="@+id/tv_sum_fee"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/y100"
+                android:paddingStart="@dimen/x30"
+                android:paddingEnd="@dimen/x30"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_platform_fee"
+                app:sLeftTextColor="@color/tx_bottom_navigation"
+                app:sLeftTextSize="12sp"
+                app:sLeftTextString="实际金额总和"
                 app:sLeftViewGravity="left_center"
                 app:sRightTextColor="@color/tx_fee"
                 app:sRightTextSize="12sp"
@@ -1032,6 +1070,34 @@
             android:layout_width="@dimen/x400"
             android:layout_height="@dimen/y110"
             android:text="接单"
+            app:sGradientEndColor="#4088FE"
+            app:sGradientOrientation="LEFT_RIGHT"
+            app:sGradientStartColor="#6BB6FF"
+            app:sGradientType="linear" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_customer_service"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/y150"
+        android:layout_marginTop="@dimen/y100"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+            android:id="@+id/bt_customer_service"
+            style="@style/SuperButton.Blue"
+            android:layout_width="@dimen/x320"
+            android:layout_height="@dimen/y90"
+            android:layout_marginStart="@dimen/x25"
+            android:layout_marginEnd="@dimen/x50"
+            android:text="客服处理"
+            android:textSize="12sp"
             app:sGradientEndColor="#4088FE"
             app:sGradientOrientation="LEFT_RIGHT"
             app:sGradientStartColor="#6BB6FF"

@@ -101,6 +101,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
     private MainOrderAdapter mainOrderAdapter;
     private MainOrderAdapter mainNoOrderAdapter;
     private TodayRecommendationAdapter todayRecommendationAdapter;
+    private List<HomeBean.DataBean.PictureListBean> listsss = new ArrayList<>();
 
     @Override
     public int getLayoutId() {
@@ -171,6 +172,9 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
         rvTodayRecommendation.addItemDecoration(new SpacesItemDecoration(1, 50));
         rvTodayRecommendation.setHasFixedSize(true);// 如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
         rvTodayRecommendation.setItemAnimator(new DefaultItemAnimator());//加载动画
+
+        recyclerViewBannerAdapter = new RecyclerViewBannerAdapter(listsss);
+        blBanner.setAdapter(recyclerViewBannerAdapter);
     }
 
     @Override
@@ -240,7 +244,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
         switch (data.getCode()) {
             case 200:
                 //轮播
-                recyclerViewBannerAdapter = new RecyclerViewBannerAdapter(data.getData().getPictureList());
+                recyclerViewBannerAdapter.addData(data.getData().getPictureList());
                 blBanner.setAdapter(recyclerViewBannerAdapter);
 
                 recyclerViewBannerAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {

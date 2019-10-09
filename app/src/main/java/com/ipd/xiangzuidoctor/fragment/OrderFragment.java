@@ -1,9 +1,15 @@
 package com.ipd.xiangzuidoctor.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -11,7 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
+import com.bigkoo.pickerview.listener.CustomListener;
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
+import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.gson.Gson;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.activity.AuthenticationActivity;
 import com.ipd.xiangzuidoctor.activity.CaptchaLoginActivity;
@@ -21,6 +32,7 @@ import com.ipd.xiangzuidoctor.activity.StartOperationActivity;
 import com.ipd.xiangzuidoctor.adapter.MainOrderAdapter;
 import com.ipd.xiangzuidoctor.base.BaseFragment;
 import com.ipd.xiangzuidoctor.bean.AnesthesiaListBean;
+import com.ipd.xiangzuidoctor.bean.CityAddressBean;
 import com.ipd.xiangzuidoctor.bean.GetOrderBean;
 import com.ipd.xiangzuidoctor.bean.IngOperationEndBean;
 import com.ipd.xiangzuidoctor.bean.IsArrivalsBean;
@@ -41,6 +53,11 @@ import com.ipd.xiangzuidoctor.utils.StringUtils;
 import com.ipd.xiangzuidoctor.utils.ToastUtil;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 
+import org.json.JSONArray;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -76,6 +93,12 @@ public class OrderFragment extends BaseFragment<OrderContract.View, OrderContrac
     private int pageNum = 1;//页数
     private String orderType;//订单状态 0:待接单， 1:已接单， 2:进行中， 3:已完成
     private int removePosition;
+    private boolean isAsc = true; //升序降序
+    private String dist = ""; //区
+    private OptionsPickerView pvOptions; //条件选择器
+    private ArrayList<CityAddressBean> options1Items = new ArrayList<>();
+    private ArrayList<ArrayList<String>> options2Items = new ArrayList<>();
+    private ArrayList<ArrayList<ArrayList<String>>> options3Items = new ArrayList<>();
 
     @Override
     public int getLayoutId() {
@@ -99,6 +122,9 @@ public class OrderFragment extends BaseFragment<OrderContract.View, OrderContrac
         if (args != null) {
             orderType = args.getString("order_type");
         }
+
+        initJsonData(); //加载地区选择器数据源
+
         if ("0".equals(orderType))
             llOrder.setVisibility(View.VISIBLE);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -162,17 +188,9 @@ public class OrderFragment extends BaseFragment<OrderContract.View, OrderContrac
                             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                                 switch (view.getId()) {
                                     case R.id.cv_order_item:
-                                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()));
-                                        break;
                                     case R.id.stv_start_time:
-                                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()));
-                                        break;
                                     case R.id.stv_fee:
-                                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()));
-                                        break;
                                     case R.id.stv_name:
-                                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()));
-                                        break;
                                     case R.id.stv_address:
                                         startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()));
                                         break;
@@ -408,14 +426,144 @@ public class OrderFragment extends BaseFragment<OrderContract.View, OrderContrac
 
     }
 
+    // 选择城市
+    private void pickCity() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        // 隐藏软键盘
+        imm.hideSoftInputFromWindow(getActivity().getWindow().getDecorView().getWindowToken(), 0);
+
+        pvOptions = new OptionsPickerBuilder(getActivity(), new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                //返回的分别是三个级别的选中位置
+                dist = options3Items.get(options1).get(options2).get(options3);
+                orderList("", isAsc ? "asc" : "desc", dist);
+            }
+        })
+                .setLayoutRes(R.layout.pickerview_custom_options, new CustomListener() {
+                    @Override
+                    public void customLayout(View v) {
+                        final TextView tvTitle = (TextView) v.findViewById(R.id.tv_title);
+                        tvTitle.setText("选择所在区域");
+                        final Button tvSubmit = (Button) v.findViewById(R.id.bt_pickview_confirm);
+                        tvSubmit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (isFastClick()) {
+                                    pvOptions.returnData();
+                                    pvOptions.dismiss();
+                                }
+                            }
+                        });
+                    }
+                })
+                .setTitleText("")
+                .setCancelText(getResources().getString(R.string.cancel))
+                .setSubmitText(getResources().getString(R.string.sure))
+                .setOutSideCancelable(true)
+                .setTextColorCenter(Color.BLACK)
+                .setDividerColor(getResources().getColor(R.color.transparent))
+                .setContentTextSize(16)
+                .setDecorView(getActivity().getWindow().getDecorView().findViewById(android.R.id.content))
+                .build();
+        pvOptions.setPicker(options1Items, options2Items, options3Items);//三级联动城市选择器
+        pvOptions.show();
+    }
+
+    private void initJsonData() {//解析数据
+        /**
+         * 注意：assets 目录下的Json文件仅供参考，实际使用可自行替换文件
+         * 关键逻辑在于循环体
+         *
+         * */
+        String JsonData = getJson(getActivity(), "province.json");//获取assets目录下的json文件数据
+
+        ArrayList<CityAddressBean> jsonBean = parseData(JsonData);//用Gson 转成实体
+
+        /**
+         * 添加省份数据
+         *
+         * 注意：如果是添加的JavaBean实体，则实体类需要实现 IPickerViewData 接口，
+         * PickerView会通过getPickerViewText方法获取字符串显示出来。
+         */
+        options1Items = jsonBean;
+
+        for (int i = 0; i < jsonBean.size(); i++) {//遍历省份
+            ArrayList<String> CityList = new ArrayList<>();//该省的城市列表（第二级）
+            ArrayList<ArrayList<String>> Province_AreaList = new ArrayList<>();//该省的所有地区列表（第三极）
+
+            for (int c = 0; c < jsonBean.get(i).getCityList().size(); c++) {//遍历该省份的所有城市
+                String CityName = jsonBean.get(i).getCityList().get(c).getName();
+                CityList.add(CityName);//添加城市
+                ArrayList<String> City_AreaList = new ArrayList<>();//该城市的所有地区列表
+
+                //如果无地区数据，建议添加空字符串，防止数据为null 导致三个选项长度不匹配造成崩溃
+                if (jsonBean.get(i).getCityList().get(c).getArea() == null
+                        || jsonBean.get(i).getCityList().get(c).getArea().size() == 0) {
+                    City_AreaList.add("");
+                } else {
+                    City_AreaList.addAll(jsonBean.get(i).getCityList().get(c).getArea());
+                }
+                Province_AreaList.add(City_AreaList);//添加该省所有地区数据
+            }
+
+            /**
+             * 添加城市数据
+             */
+            options2Items.add(CityList);
+
+            /**
+             * 添加地区数据
+             */
+            options3Items.add(Province_AreaList);
+        }
+    }
+
+    public String getJson(Context context, String fileName) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            AssetManager assetManager = context.getAssets();
+            BufferedReader bf = new BufferedReader(new InputStreamReader(
+                    assetManager.open(fileName)));
+            String line;
+            while ((line = bf.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stringBuilder.toString();
+    }
+
+    public ArrayList<CityAddressBean> parseData(String result) {//Gson 解析
+        ArrayList<CityAddressBean> detail = new ArrayList<>();
+        try {
+            JSONArray data = new JSONArray(result);
+            Gson gson = new Gson();
+            for (int i = 0; i < data.length(); i++) {
+                CityAddressBean entity = gson.fromJson(data.optJSONObject(i).toString(), CityAddressBean.class);
+                detail.add(entity);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return detail;
+    }
+
     @OnClick({R.id.stv_order_time, R.id.stv_order_region, R.id.stv_order_money})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.stv_order_time:
+                isAsc = !isAsc;
+                orderList("createTime", isAsc ? "asc" : "desc", dist);
                 break;
             case R.id.stv_order_region:
+                pickCity();
                 break;
             case R.id.stv_order_money:
+                isAsc = !isAsc;
+                orderList("expectMoney", isAsc ? "asc" : "desc", dist);
                 break;
         }
     }
