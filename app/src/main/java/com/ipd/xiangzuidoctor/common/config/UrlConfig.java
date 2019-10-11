@@ -78,4 +78,5 @@ public interface UrlConfig {
     String MSG_LIST = "ah/user/userInfo"; //我的消息
     String FEED_BACK = "ah/setup/opinion"; //意见反馈
     String GET_USER_INFO = "ah/user/selectByUser"; //通过用户id查询用户信息--两个端通用
+    String REFUND_DEPOSIT = "ah/wallet/rePayMargin"; //支付宝-退还保证金
 }

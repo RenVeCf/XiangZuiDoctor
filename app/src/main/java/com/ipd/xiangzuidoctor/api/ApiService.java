@@ -31,6 +31,7 @@ import com.ipd.xiangzuidoctor.bean.OrderListBean;
 import com.ipd.xiangzuidoctor.bean.PwdLoginBean;
 import com.ipd.xiangzuidoctor.bean.RechargeAliPayBean;
 import com.ipd.xiangzuidoctor.bean.RechargeWechatPayBean;
+import com.ipd.xiangzuidoctor.bean.RefundDepositBean;
 import com.ipd.xiangzuidoctor.bean.RegistsBean;
 import com.ipd.xiangzuidoctor.bean.ResetPwdBean;
 import com.ipd.xiangzuidoctor.bean.SpecialColumnBean;
@@ -84,6 +85,7 @@ import static com.ipd.xiangzuidoctor.common.config.UrlConfig.ORDER_LIST;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.PWD_LOGIN;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.RECHARGE_ALI_PAY;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.RECHARGE_WECHAT_PAY;
+import static com.ipd.xiangzuidoctor.common.config.UrlConfig.REFUND_DEPOSIT;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.REGISTER;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.RESET_PWD;
 import static com.ipd.xiangzuidoctor.common.config.UrlConfig.SPECIAL_COLUMN;
@@ -307,4 +309,9 @@ public interface ApiService {
     @FormUrlEncoded
     @POST(ANESTHESIA_LIST)
     Observable<AnesthesiaListBean> getAnesthesiaList(@FieldMap Map<String, String> map);
+
+    //对公-退还保证金
+    @FormUrlEncoded
+    @POST(REFUND_DEPOSIT)
+    Observable<RefundDepositBean> getRefundDeposit(@FieldMap Map<String, String> map);
 }

@@ -1,7 +1,7 @@
 package com.ipd.xiangzuidoctor.adapter;
 
 import android.view.View;
-import android.widget.CompoundButton;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
@@ -9,7 +9,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.ipd.xiangzuidoctor.R;
 import com.ipd.xiangzuidoctor.bean.OrderDetailsBean;
-import com.ipd.xiangzuidoctor.utils.L;
+import com.ipd.xiangzuidoctor.utils.ApplicationUtil;
 import com.ipd.xiangzuidoctor.utils.ToastUtil;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 
@@ -39,21 +39,31 @@ public class PatientAdapter extends BaseQuickAdapter<OrderDetailsBean.DataBean.O
         if (type == 2) {
             tvPatient1.setVisibility(View.VISIBLE);
             if (item.isSelectPatient() || "2".equals(item.getStatus()))
-                tvPatient1.setCheckBoxChecked(true, true);
+                tvPatient1.setRightIcon(ApplicationUtil.getContext().getResources().getDrawable(R.drawable.ic_check_blue));
             else
-                tvPatient1.setCheckBoxChecked(false, true);
+                tvPatient1.setRightIcon(ApplicationUtil.getContext().getResources().getDrawable(R.drawable.ic_check_gray));
         } else
             tvPatient.setVisibility(View.VISIBLE);
 
-        tvPatient1.setCheckBoxCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if ("2".equals(item.getStatus())) {
-                    tvPatient1.setCheckBoxChecked(true, true);
-                    ToastUtil.showShortToast("该手术已结束！");
-                }
-            }
-        });
+//        tvPatient1.setRightImageViewClickListener(new SuperTextView.OnRightImageViewClickListener() {
+//            @Override
+//            public void onClickListener(ImageView imageView) {
+//                if ("2".equals(item.getStatus())) {
+//                    tvPatient1.setRightIcon(ApplicationUtil.getContext().getResources().getDrawable(R.drawable.ic_check_blue));
+//                    ToastUtil.showShortToast("该手术已结束！");
+//                }
+//            }
+//        });
+
+//        tvPatient1.setCheckBoxCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                if ("2".equals(item.getStatus())) {
+//                    tvPatient1.setRightIcon(ApplicationUtil.getContext().getResources().getDrawable(R.drawable.ic_check_blue));
+//                    ToastUtil.showShortToast("该手术已结束！");
+//                }
+//            }
+//        });
         helper.addOnClickListener(R.id.tv_patient);
         helper.addOnClickListener(R.id.tv_patient_1);
     }

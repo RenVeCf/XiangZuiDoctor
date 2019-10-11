@@ -23,7 +23,7 @@ public interface IConstants {
     String NAME = "name"; //用户真实姓名
     String NIKE_NAME = "nike_name"; //用户姓名
     String PHONE = "phone"; //用户手机号码
-    String SERVICE_PHONE = "service_phone"; //咨询客服号码
+    String SERVICE_PHONE = "15139877951"; //咨询客服号码
     String AVATAR = "avatar"; //头像
     String LATIUDE = "latitude"; //经度
     String LONGTITUDE = "longtitude"; //纬度
@@ -45,9 +45,9 @@ public interface IConstants {
     int REQUEST_CODE_95 = 95;//医生信息回跳
     int REQUEST_CODE_96 = 96;//订单详情-开始手术回跳
     int REQUEST_CODE_97 = 97;//订单-进行中-结束手术-结束手术界面回跳刷新
-    int REQUEST_CODE_98 = 98;//
-    int REQUEST_CODE_99 = 99;//
-    int REQUEST_CODE_100 = 100;//
+    int REQUEST_CODE_98 = 98;// 详情回跳刷新列表
+    int REQUEST_CODE_99 = 99;//钱包回跳刷新
+    int REQUEST_CODE_100 = 100;//首页刷新回跳
     int REQUEST_CODE_101 = 101;//
     int REQUEST_CODE_102 = 102;//
     int REQUEST_CODE_103 = 103;//

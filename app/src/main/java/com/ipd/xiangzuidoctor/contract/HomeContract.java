@@ -3,6 +3,7 @@ package com.ipd.xiangzuidoctor.contract;
 import com.ipd.xiangzuidoctor.base.BasePresenter;
 import com.ipd.xiangzuidoctor.base.BaseView;
 import com.ipd.xiangzuidoctor.bean.GetOrderBean;
+import com.ipd.xiangzuidoctor.bean.GetUserInfoBean;
 import com.ipd.xiangzuidoctor.bean.HomeBean;
 import com.ipd.xiangzuidoctor.bean.IsArrivalsBean;
 import com.ipd.xiangzuidoctor.bean.OrderCancelBean;
@@ -29,6 +30,8 @@ public interface HomeContract {
 
         void resultGetOrder(GetOrderBean data);
 
+        void resultGetUserInfo(GetUserInfoBean data);
+
         <T> ObservableTransformer<T, T> bindLifecycle();
     }
 
@@ -40,5 +43,7 @@ public interface HomeContract {
         public abstract void getOrderCancel(TreeMap<String, String> map, boolean isDialog, boolean cancelable);
 
         public abstract void getGetOrder(TreeMap<String, String> map, boolean isDialog, boolean cancelable);
+
+        public abstract void getGetUserInfo(TreeMap<String, String> map, boolean isDialog, boolean cancelable);
     }
 }

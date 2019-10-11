@@ -2,7 +2,7 @@ package com.ipd.xiangzuidoctor.contract;
 
 import com.ipd.xiangzuidoctor.base.BasePresenter;
 import com.ipd.xiangzuidoctor.base.BaseView;
-import com.ipd.xiangzuidoctor.bean.HomeBean;
+import com.ipd.xiangzuidoctor.bean.RefundDepositBean;
 import com.ipd.xiangzuidoctor.bean.WithdrawAliPayBean;
 
 import java.util.TreeMap;
@@ -21,10 +21,14 @@ public interface WithdrawAliPayContract {
         //不同的Bean单独处理
         void resultWithdrawAliPay(WithdrawAliPayBean data);
 
+        void resultRefundDeposit(RefundDepositBean data);
+
         <T> ObservableTransformer<T, T> bindLifecycle();
     }
 
     abstract class Presenter extends BasePresenter<View> {
         public abstract void getWithdrawAliPay(TreeMap<String, String> map, boolean isDialog, boolean cancelable);
+
+        public abstract void getRefundDeposit(TreeMap<String, String> map, boolean isDialog, boolean cancelable);
     }
 }

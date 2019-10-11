@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -67,6 +68,7 @@ import butterknife.OnClick;
 import io.reactivex.ObservableTransformer;
 
 import static com.ipd.xiangzuidoctor.common.config.IConstants.IS_SUPPLEMENT_INFO;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_98;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
 import static com.ipd.xiangzuidoctor.utils.DateUtils.StartTimeToEndTime;
@@ -169,6 +171,18 @@ public class OrderFragment extends BaseFragment<OrderContract.View, OrderContrac
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            switch (requestCode) {
+                case REQUEST_CODE_98:
+                    initData();
+                    break;
+            }
+        }
+    }
+
+    @Override
     public void resultOrderList(OrderListBean data) {
         switch (data.getCode()) {
             case 200:
@@ -192,13 +206,15 @@ public class OrderFragment extends BaseFragment<OrderContract.View, OrderContrac
                                     case R.id.stv_fee:
                                     case R.id.stv_name:
                                     case R.id.stv_address:
-                                        startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()));
+                                        startActivityForResult(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()), REQUEST_CODE_98);
                                         break;
                                     case R.id.bt_first:
                                         switch (orderType) {
                                             case "0":
+                                            case "2":
+                                            case "3":
                                                 if (isFastClick())
-                                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()));
+                                                    startActivityForResult(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()), REQUEST_CODE_98);
                                                 break;
                                             case "1":
                                                 if (isFastClick())
@@ -215,14 +231,6 @@ public class OrderFragment extends BaseFragment<OrderContract.View, OrderContrac
                                                         }
                                                     }.show();
                                                 break;
-                                            case "2":
-                                                if (isFastClick())
-                                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()));
-                                                break;
-                                            case "3":
-                                                if (isFastClick())
-                                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()));
-                                                break;
                                         }
                                         break;
                                     case R.id.bt_second:
@@ -232,7 +240,7 @@ public class OrderFragment extends BaseFragment<OrderContract.View, OrderContrac
                                                     break;
                                             case "1":
                                                 if (isFastClick())
-                                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()));
+                                                    startActivityForResult(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()), REQUEST_CODE_98);
                                                 break;
                                             case "2":
                                                 if (isFastClick())
@@ -283,14 +291,14 @@ public class OrderFragment extends BaseFragment<OrderContract.View, OrderContrac
                                                         case "8":
                                                             int endTime = Integer.parseInt(String.format("%010d", System.currentTimeMillis() / 1000));
                                                             String useTime = StartTimeToEndTime(orderList.get(position).getArriveTime(), timedate(endTime + ""), 1);
-                                                            startActivity(new Intent(getContext(), StartOperationActivity.class).putExtra("title", "开始手术").putExtra("content", "麻醉器械、药品、急救设备及药品齐全").putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()).putExtra("waitTime", useTime));
+                                                            startActivityForResult(new Intent(getContext(), StartOperationActivity.class).putExtra("title", "开始手术").putExtra("content", "麻醉器械、药品、急救设备及药品齐全").putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()).putExtra("waitTime", useTime), REQUEST_CODE_98);
                                                             break;
                                                     }
                                                 }
                                                 break;
                                             case "2":
                                                 if (isFastClick())
-                                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()));
+                                                    startActivityForResult(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", orderList.get(position).getStatus()).putExtra("orderId", data.getData().getOrderList().get(position).getOrderId()), REQUEST_CODE_98);
 //                                                startActivity(new Intent(getContext(), EndOperationActivity.class));
                                                 break;
                                         }

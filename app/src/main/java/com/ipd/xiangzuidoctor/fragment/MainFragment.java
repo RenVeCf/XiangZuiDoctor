@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -32,6 +33,7 @@ import com.ipd.xiangzuidoctor.adapter.RecyclerViewBannerAdapter;
 import com.ipd.xiangzuidoctor.adapter.TodayRecommendationAdapter;
 import com.ipd.xiangzuidoctor.base.BaseFragment;
 import com.ipd.xiangzuidoctor.bean.GetOrderBean;
+import com.ipd.xiangzuidoctor.bean.GetUserInfoBean;
 import com.ipd.xiangzuidoctor.bean.HomeBean;
 import com.ipd.xiangzuidoctor.bean.IsArrivalsBean;
 import com.ipd.xiangzuidoctor.bean.OrderCancelBean;
@@ -63,6 +65,7 @@ import butterknife.OnClick;
 import io.reactivex.ObservableTransformer;
 
 import static com.ipd.xiangzuidoctor.common.config.IConstants.IS_SUPPLEMENT_INFO;
+import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_100;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
 import static com.ipd.xiangzuidoctor.utils.DateUtils.StartTimeToEndTime;
@@ -222,6 +225,23 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
         homeMap.put("userId", SPUtil.get(getContext(), USER_ID, "") + "");
         homeMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(homeMap.toString().replaceAll(" ", "") + SIGN)));
         getPresenter().getHome(homeMap, true, false);
+
+        TreeMap<String, String> getUserInfoMap = new TreeMap<>();
+        getUserInfoMap.put("userId", SPUtil.get(getContext(), USER_ID, "") + "");
+        getUserInfoMap.put("sign", StringUtils.toUpperCase(MD5Utils.encodeMD5(getUserInfoMap.toString().replaceAll(" ", "") + SIGN)));
+        getPresenter().getGetUserInfo(getUserInfoMap, false, false);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null) {
+            switch (requestCode) {
+                case REQUEST_CODE_100:
+                    initData();
+                    break;
+            }
+        }
     }
 
     @OnClick({R.id.tv_authentication, R.id.bt_is_more_order, R.id.bt_wait_more_order})
@@ -289,7 +309,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                             case R.id.stv_name:
                             case R.id.stv_address:
                                 if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
+                                    startActivityForResult(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()), REQUEST_CODE_100);
                                 else
                                     ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
                                 break;
@@ -298,7 +318,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                                     case "1":
                                         if (isFastClick()) {
                                             if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
+                                                startActivityForResult(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()), REQUEST_CODE_100);
                                             else
                                                 ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
                                         }
@@ -324,7 +344,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                                     case "8":
                                         if (isFastClick()) {
                                             if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
+                                                startActivityForResult(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()), REQUEST_CODE_100);
                                             else
                                                 ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
                                         }
@@ -337,7 +357,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                                     case "8":
                                         if (isFastClick()) {
                                             if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
+                                                startActivityForResult(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()), REQUEST_CODE_100);
                                             else
                                                 ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
                                         }
@@ -351,7 +371,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                                             new TwoBtDialog(getActivity(), "请先实名认证后才可以接单", "去认证") {
                                                 @Override
                                                 public void confirm() {
-                                                    startActivity(new Intent(getContext(), AuthenticationActivity.class));
+                                                    startActivityForResult(new Intent(getContext(), AuthenticationActivity.class), REQUEST_CODE_100);
                                                 }
                                             }.show();
                                         else if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "") + ""))
@@ -385,7 +405,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                                     case "3":
                                         if (isFastClick()) {
                                             if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()));
+                                                startActivityForResult(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getAlreadyList().get(position).getStatus()).putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()), REQUEST_CODE_100);
                                             else
                                                 ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
                                         }
@@ -393,7 +413,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                                     case "8":
                                         int endTime = Integer.parseInt(String.format("%010d", System.currentTimeMillis() / 1000));
                                         String useTime = StartTimeToEndTime(data.getData().getAlreadyList().get(position).getArriveTime(), timedate(endTime + ""), 1);
-                                        startActivity(new Intent(getContext(), StartOperationActivity.class).putExtra("title", "开始手术").putExtra("content", "麻醉器械、药品、急救设备及药品齐全").putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()).putExtra("waitTime", useTime));
+                                        startActivityForResult(new Intent(getContext(), StartOperationActivity.class).putExtra("title", "开始手术").putExtra("content", "麻醉器械、药品、急救设备及药品齐全").putExtra("orderId", data.getData().getAlreadyList().get(position).getOrderId()).putExtra("waitTime", useTime), REQUEST_CODE_100);
                                         break;
                                 }
                                 break;
@@ -417,7 +437,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                             case R.id.stv_name:
                             case R.id.stv_address:
                                 if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                    startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
+                                    startActivityForResult(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()), REQUEST_CODE_100);
                                 else
                                     ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
                                 break;
@@ -426,7 +446,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                                     case "1":
                                         if (isFastClick()) {
                                             if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
+                                                startActivityForResult(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()), REQUEST_CODE_100);
                                             else
                                                 ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
                                         }
@@ -452,7 +472,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                                     case "8":
                                         if (isFastClick()) {
                                             if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
+                                                startActivityForResult(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()), REQUEST_CODE_100);
                                             else
                                                 ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
                                         }
@@ -465,7 +485,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                                     case "8":
                                         if (isFastClick()) {
                                             if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
+                                                startActivityForResult(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()), REQUEST_CODE_100);
                                             else
                                                 ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
                                         }
@@ -513,7 +533,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                                     case "3":
                                         if (isFastClick()) {
                                             if ("2".equals(SPUtil.get(getContext(), IS_SUPPLEMENT_INFO, "")))
-                                                startActivity(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()));
+                                                startActivityForResult(new Intent(getContext(), OrderDetailsActivity.class).putExtra("order_status", data.getData().getStayList().get(position).getStatus()).putExtra("orderId", data.getData().getStayList().get(position).getOrderId()), REQUEST_CODE_100);
                                             else
                                                 ToastUtil.showShortToast("您的身份尚未认证,请您先去认证！");
                                         }
@@ -521,7 +541,7 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                                     case "8":
                                         int endTime = Integer.parseInt(String.format("%010d", System.currentTimeMillis() / 1000));
                                         String useTime = StartTimeToEndTime(data.getData().getStayList().get(position).getArriveTime(), timedate(endTime + ""), 1);
-                                        startActivity(new Intent(getContext(), StartOperationActivity.class).putExtra("title", "开始手术").putExtra("content", "麻醉器械、药品、急救设备及药品齐全").putExtra("orderId", data.getData().getStayList().get(position).getOrderId()).putExtra("waitTime", useTime));
+                                        startActivityForResult(new Intent(getContext(), StartOperationActivity.class).putExtra("title", "开始手术").putExtra("content", "麻醉器械、药品、急救设备及药品齐全").putExtra("orderId", data.getData().getStayList().get(position).getOrderId()).putExtra("waitTime", useTime), REQUEST_CODE_100);
                                         break;
                                 }
                                 break;
@@ -598,6 +618,26 @@ public class MainFragment extends BaseFragment<HomeContract.View, HomeContract.P
                 SPUtil.clear(ApplicationUtil.getContext());
                 ApplicationUtil.getManager().finishActivity(MainActivity.class);
                 startActivity(new Intent(getContext(), CaptchaLoginActivity.class));
+                getActivity().finish();
+                break;
+        }
+    }
+
+    @Override
+    public void resultGetUserInfo(GetUserInfoBean data) {
+        switch (data.getCode()) {
+            case 200:
+                if (data.getData().getApproveStatus() == 2) {
+                    if ("2".equals(data.getData().getApprove().getStatus()))
+                        SPUtil.put(getContext(), IS_SUPPLEMENT_INFO, "2");
+                }
+                break;
+            case 900:
+                ToastUtil.showLongToast(data.getMsg());
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(getActivity(), CaptchaLoginActivity.class));
                 getActivity().finish();
                 break;
         }

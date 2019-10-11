@@ -3,6 +3,7 @@ package com.ipd.xiangzuidoctor.presenter;
 import android.content.Context;
 
 import com.ipd.xiangzuidoctor.bean.GetOrderBean;
+import com.ipd.xiangzuidoctor.bean.GetUserInfoBean;
 import com.ipd.xiangzuidoctor.bean.HomeBean;
 import com.ipd.xiangzuidoctor.bean.IsArrivalsBean;
 import com.ipd.xiangzuidoctor.bean.OrderCancelBean;
@@ -101,6 +102,27 @@ public class HomePresenter extends HomeContract.Presenter {
                 //这一步是必须的，判断view是否已经被销毁
                 if (getView() != null) {
                     getView().resultGetOrder((GetOrderBean) o);
+                }
+            }
+
+            @Override
+            public void onError(ExceptionHandle.ResponeThrowable e) {
+                if (getView() != null) {
+                    //// TODO: 2017/12/28 自定义处理异常
+                    ToastUtil.showShortToast(ExceptionHandle.handleException(e).message);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void getGetUserInfo(TreeMap<String, String> map, boolean isDialog, boolean cancelable) {
+        model.getGetUserInfo(context, map, isDialog, cancelable, getView().bindLifecycle(), new ObserverResponseListener() {
+            @Override
+            public void onNext(Object o) {
+                //这一步是必须的，判断view是否已经被销毁
+                if (getView() != null) {
+                    getView().resultGetUserInfo((GetUserInfoBean) o);
                 }
             }
 

@@ -126,6 +126,7 @@ public class StartOperationActivity extends BaseActivity<OrderContract.View, Ord
         ToastUtil.showLongToast(data.getMsg());
         switch (data.getCode()) {
             case 200:
+                setResult(RESULT_OK, new Intent().putExtra("refresh", 1));
                 finish();
                 break;
             case 900:

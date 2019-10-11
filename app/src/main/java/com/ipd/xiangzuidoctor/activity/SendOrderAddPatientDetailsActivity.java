@@ -1,5 +1,6 @@
 package com.ipd.xiangzuidoctor.activity;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -128,18 +129,32 @@ public class SendOrderAddPatientDetailsActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.stv_id_card:
+                if (!isEmpty(orderDetailList.getPositiveCard()) && !isEmpty(orderDetailList.getReverseCard()))
+                    startActivity(new Intent(this, AgentCardActivity.class).putExtra("positiveUrl", orderDetailList.getPositiveCard()).putExtra("negativeUrl", orderDetailList.getReverseCard()).putExtra("cardImgType", 1));
                 break;
             case R.id.stv_insurance_consent:
+                if (!isEmpty(orderDetailList.getInsurance()))
+                    startActivity(new Intent(this, PhotoActivity.class).putExtra("title", "保险同意书").putExtra("imgUrl", orderDetailList.getInsurance()).putExtra("oneImgType", 1));
                 break;
             case R.id.stv_surgery_about_medical_record:
+                if (!isEmpty(orderDetailList.getSurgeryRelated()))
+                    startActivity(new Intent(this, SelectPhotosActivity.class).putExtra("title", "手术相关病历").putExtra("imgUrl", orderDetailList.getSurgeryRelated()));
                 break;
             case R.id.stv_blood_routine:
+                if (!isEmpty(orderDetailList.getRoutineBlood()))
+                    startActivity(new Intent(this, SelectPhotosActivity.class).putExtra("title", "血常规").putExtra("imgUrl", orderDetailList.getRoutineBlood()));
                 break;
             case R.id.stv_electrocardiogram:
+                if (!isEmpty(orderDetailList.getEcg()))
+                    startActivity(new Intent(this, SelectPhotosActivity.class).putExtra("title", "心电图").putExtra("imgUrl", orderDetailList.getEcg()));
                 break;
             case R.id.stv_coagulation:
+                if (!isEmpty(orderDetailList.getCruor()))
+                    startActivity(new Intent(this, SelectPhotosActivity.class).putExtra("title", "凝血功能").putExtra("imgUrl", orderDetailList.getCruor()));
                 break;
             case R.id.stv_infectious_disease_index:
+                if (!isEmpty(orderDetailList.getContagion()))
+                    startActivity(new Intent(this, SelectPhotosActivity.class).putExtra("title", "传染病指标").putExtra("imgUrl", orderDetailList.getContagion()));
                 break;
         }
     }

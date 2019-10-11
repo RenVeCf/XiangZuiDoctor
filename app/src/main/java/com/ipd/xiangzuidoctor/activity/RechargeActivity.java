@@ -105,9 +105,19 @@ public class RechargeActivity extends BaseActivity<RechargeContract.View, Rechar
         }
     }
 
-    @OnClick({R.id.stv_wechat_withdraw, R.id.stv_ali_withdraw, R.id.sb_confirm})
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK, new Intent().putExtra("refresh", 1));
+        finish();
+    }
+
+    @OnClick({R.id.ll_top_back, R.id.stv_wechat_withdraw, R.id.stv_ali_withdraw, R.id.sb_confirm})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.ll_top_back:
+                setResult(RESULT_OK, new Intent().putExtra("refresh", 1));
+                finish();
+                break;
             case R.id.stv_wechat_withdraw:
                 stvWechatWithdraw.setRightIcon(R.drawable.ic_check_blue);
                 stvAliWithdraw.setRightIcon(R.drawable.ic_check_gray);

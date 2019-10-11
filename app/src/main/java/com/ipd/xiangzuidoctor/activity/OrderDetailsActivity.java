@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.CompoundButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -53,7 +52,6 @@ import io.reactivex.ObservableTransformer;
 
 import static com.ipd.xiangzuidoctor.common.config.IConstants.IS_SUPPLEMENT_INFO;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_96;
-import static com.ipd.xiangzuidoctor.common.config.IConstants.REQUEST_CODE_97;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.SIGN;
 import static com.ipd.xiangzuidoctor.common.config.IConstants.USER_ID;
 import static com.ipd.xiangzuidoctor.utils.DateUtils.StartTimeToEndTime;
@@ -192,6 +190,7 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
     private List<OrderDetailsBean.DataBean.OrderDetailBean> orderDetail = new ArrayList<>();
     private SuperTextView selectPatient; //选中的患者
     private int orderDetailId = 0;
+    private String ahNumber = ""; //医院电话
     private String orderType; //1:单台，2：多台
     private OrderDetailsBean.DataBean.OrderBean orderBean = new OrderDetailsBean.DataBean.OrderBean();
     private String narcosisForm = "", positiveUrl = "", negativeUrl = "", insuranceConsentUrl = "", surgeryAboutMedicalRecordUrl = "", bloodRoutineUrl = "", electrocardiogramUrl = "", coagulationUrl = "", infectiousDiseaseIndexUrl = "";
@@ -249,7 +248,7 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                 tvAnesthesiaTool.setVisibility(View.VISIBLE);
                 tvAnesthesiaType.setVisibility(View.VISIBLE);
                 tvAnesthesiaSheet.setVisibility(View.VISIBLE);
-                tvWaitingTimeFee.setVisibility(View.VISIBLE);
+//                tvWaitingTimeFee.setVisibility(View.VISIBLE);
                 tvSurgeryFee.setVisibility(View.VISIBLE);
                 tvQuickenFee.setVisibility(View.VISIBLE);
                 tvAddFeeFee.setVisibility(View.VISIBLE);
@@ -274,7 +273,7 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                 tvAnesthesiaTool.setVisibility(View.VISIBLE);
                 tvAnesthesiaType.setVisibility(View.VISIBLE);
                 tvAnesthesiaSheet.setVisibility(View.VISIBLE);
-                tvWaitingTimeFee.setVisibility(View.VISIBLE);
+//                tvWaitingTimeFee.setVisibility(View.VISIBLE);
                 tvSurgeryFee.setVisibility(View.VISIBLE);
                 tvQuickenFee.setVisibility(View.VISIBLE);
                 tvAddFeeFee.setVisibility(View.VISIBLE);
@@ -299,7 +298,7 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                 tvAnesthesiaTool.setVisibility(View.VISIBLE);
                 tvAnesthesiaType.setVisibility(View.VISIBLE);
                 tvAnesthesiaSheet.setVisibility(View.VISIBLE);
-                tvWaitingTimeFee.setVisibility(View.VISIBLE);
+//                tvWaitingTimeFee.setVisibility(View.VISIBLE);
                 tvSurgeryFee.setVisibility(View.VISIBLE);
                 tvQuickenFee.setVisibility(View.VISIBLE);
                 tvAddFeeFee.setVisibility(View.VISIBLE);
@@ -324,7 +323,7 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                 tvAnesthesiaTool.setVisibility(View.VISIBLE);
                 tvAnesthesiaType.setVisibility(View.VISIBLE);
                 tvAnesthesiaSheet.setVisibility(View.VISIBLE);
-                tvWaitingTimeFee.setVisibility(View.VISIBLE);
+//                tvWaitingTimeFee.setVisibility(View.VISIBLE);
                 tvSurgeryFee.setVisibility(View.VISIBLE);
                 tvQuickenFee.setVisibility(View.VISIBLE);
                 tvAddFeeFee.setVisibility(View.VISIBLE);
@@ -379,11 +378,8 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
         if (data != null) {
             switch (requestCode) {
                 case REQUEST_CODE_96:
-                    //FIXME 通知上层列表刷新
+                    setResult(RESULT_OK, new Intent().putExtra("refresh", 1));
                     finish();
-                    break;
-                case REQUEST_CODE_97:
-                    initData();
                     break;
             }
         }
@@ -462,13 +458,13 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                     }.show();
                 break;
             case R.id.bt_medical_record:
-                new CallPhoneDialog(this) {
+                new CallPhoneDialog(this, ahNumber) {
                 }.show();
                 break;
             case R.id.bt_call_doctor:
                 if (isFastClick()) {
                     switch (orderStatus) {
-                        case "1":
+                        case "2":
                             new TwoBtDialog(this, "是否确认已到达？", "温馨提示") {
                                 @Override
                                 public void confirm() {
@@ -483,7 +479,8 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                         case "8":
                             int endTime = Integer.parseInt(String.format("%010d", System.currentTimeMillis() / 1000));
                             String useTime = StartTimeToEndTime(arriveTime, timedate(endTime + ""), 1);
-                            startActivity(new Intent(this, StartOperationActivity.class).putExtra("title", "开始手术").putExtra("content", "麻醉器械、药品、急救设备及药品齐全").putExtra("orderId", orderId).putExtra("waitTime", useTime));                            break;
+                            startActivity(new Intent(this, StartOperationActivity.class).putExtra("title", "开始手术").putExtra("content", "麻醉器械、药品、急救设备及药品齐全").putExtra("orderId", orderId).putExtra("waitTime", useTime));
+                            break;
                     }
                 }
                 break;
@@ -518,6 +515,7 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
     public void resultOrderDetails(OrderDetailsBean data) {
         switch (data.getCode()) {
             case 200:
+                ahNumber = data.getData().getOrder().getAhNumber();
                 tvOrderCode.setRightString(data.getData().getOrder().getOrderNo());
                 tvHospitalName.setRightString(data.getData().getOrder().getHospitalName());
                 tvHospitalAddress.setRightString(data.getData().getOrder().getAddress());
@@ -571,29 +569,80 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                     patientAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
                         @Override
                         public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                            startActivity(new Intent(OrderDetailsActivity.this, SendOrderAddPatientDetailsActivity.class).putExtra("patient_details", orderDetail.get(position)).putExtra("position", position + 1));
-
                             selectPatient = (SuperTextView) view;
-                            selectPatient.setCheckBoxCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                @Override
-                                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                                    if ("1".equals(orderDetail.get(position).getStatus())) {
-                                        for (int i = 0; i < orderDetail.size(); i++) {
-                                            if ("1".equals(orderDetail.get(position).getStatus()))
-                                                orderDetail.get(i).setSelectPatient(false);
-                                            else
-                                                orderDetail.get(i).setSelectPatient(true);
-                                        }
-                                        orderDetail.get(position).setSelectPatient(true);
-                                        orderDetailId = orderDetail.get(position).getOrderDetailId();
-                                        patientAdapter.notifyDataSetChanged();
-                                    } else {
-                                        orderDetail.get(position).setSelectPatient(true);
-                                        patientAdapter.notifyDataSetChanged();
-                                        ToastUtil.showShortToast("该手术已结束！");
+//                            selectPatient.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
+//                                @Override
+//                                public void onClickListener(SuperTextView superTextView) {
+//                                    startActivity(new Intent(OrderDetailsActivity.this, SendOrderAddPatientDetailsActivity.class).putExtra("patient_details", orderDetail.get(position)).putExtra("position", position + 1));
+//                                }
+//                            });
+//                            selectPatient.setRightImageViewClickListener(new SuperTextView.OnRightImageViewClickListener() {
+//                                @Override
+//                                public void onClickListener(ImageView imageView) {
+//                                    if ("1".equals(orderDetail.get(position).getStatus())) {
+//                                        for (int i = 0; i < orderDetail.size(); i++) {
+//                                            if ("1".equals(orderDetail.get(position).getStatus()))
+//                                                orderDetail.get(i).setSelectPatient(false);
+//                                            else
+//                                                orderDetail.get(i).setSelectPatient(true);
+//                                        }
+//                                        orderDetail.get(position).setSelectPatient(true);
+//                                        orderDetailId = orderDetail.get(position).getOrderDetailId();
+//                                        patientAdapter.notifyDataSetChanged();
+//                                    } else {
+//                                        orderDetail.get(position).setSelectPatient(true);
+//                                        patientAdapter.notifyDataSetChanged();
+//                                        ToastUtil.showShortToast("该手术已结束！");
+//                                    }
+//                                }
+//                            });
+
+                            if ("3".equals(orderStatus)) {
+                                selectPatient.setRightTvClickListener(new SuperTextView.OnRightTvClickListener() {
+                                    @Override
+                                    public void onClickListener() {
+                                        startActivity(new Intent(OrderDetailsActivity.this, SendOrderAddPatientDetailsActivity.class).putExtra("patient_details", orderDetail.get(position)).putExtra("position", position + 1));
                                     }
+                                });
+
+                                if ("1".equals(orderDetail.get(position).getStatus())) {
+                                    for (int i = 0; i < orderDetail.size(); i++) {
+                                        if ("1".equals(orderDetail.get(position).getStatus()))
+                                            orderDetail.get(i).setSelectPatient(false);
+                                        else
+                                            orderDetail.get(i).setSelectPatient(true);
+                                    }
+                                    orderDetail.get(position).setSelectPatient(true);
+                                    orderDetailId = orderDetail.get(position).getOrderDetailId();
+                                    patientAdapter.notifyDataSetChanged();
+                                } else {
+                                    orderDetail.get(position).setSelectPatient(true);
+                                    patientAdapter.notifyDataSetChanged();
+                                    ToastUtil.showShortToast("该手术已结束！");
                                 }
-                            });
+                            } else {
+                                startActivity(new Intent(OrderDetailsActivity.this, SendOrderAddPatientDetailsActivity.class).putExtra("patient_details", orderDetail.get(position)).putExtra("position", position + 1));
+                            }
+//                            selectPatient.setCheckBoxCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                                @Override
+//                                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                                    if ("1".equals(orderDetail.get(position).getStatus())) {
+//                                        for (int i = 0; i < orderDetail.size(); i++) {
+//                                            if ("1".equals(orderDetail.get(position).getStatus()))
+//                                                orderDetail.get(i).setSelectPatient(false);
+//                                            else
+//                                                orderDetail.get(i).setSelectPatient(true);
+//                                        }
+//                                        orderDetail.get(position).setSelectPatient(true);
+//                                        orderDetailId = orderDetail.get(position).getOrderDetailId();
+//                                        patientAdapter.notifyDataSetChanged();
+//                                    } else {
+//                                        orderDetail.get(position).setSelectPatient(true);
+//                                        patientAdapter.notifyDataSetChanged();
+//                                        ToastUtil.showShortToast("该手术已结束！");
+//                                    }
+//                                }
+//                            });
                         }
                     });
 
@@ -682,7 +731,7 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                             tvAnesthesiaTool.setRightString("已确认");
                             tvAnesthesiaType.setRightString(data.getData().getOrderDetail().get(0).getNarcosisType());
 
-                            tvWaitingTimeFee.setRightString("+ ¥ " + data.getData().getOrder().getWaitMoney() + "元");
+//                            tvWaitingTimeFee.setRightString("+ ¥ " + data.getData().getOrder().getWaitMoney() + "元");
                             tvSurgeryFee.setRightString("¥ " + data.getData().getOrder().getSurgeryMoney() + "元");
                             tvQuickenFee.setRightString("+ ¥ " + data.getData().getOrder().getUrgentMoney() + "元");
                             tvAddFeeFee.setRightString("+ ¥ " + data.getData().getOrder().getAdpremiumMoney() + "元");
@@ -694,6 +743,22 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                             if ("6".equals(orderStatus))
                                 tvPayType.setRightString("已入账");
                         }
+                    } else {
+                        tvAnesthesiaInfo.setVisibility(View.GONE);
+                        tvAnesthesiaTool.setVisibility(View.GONE);
+                        tvAnesthesiaType.setVisibility(View.GONE);
+                        tvAnesthesiaSheet.setVisibility(View.GONE);
+//                        tvWaitingTimeFee.setRightString("+ ¥ " + data.getData().getOrder().getWaitMoney() + "元");
+                        tvSurgeryFee.setRightString("¥ " + data.getData().getOrder().getSurgeryMoney() + "元");
+                        tvQuickenFee.setRightString("+ ¥ " + data.getData().getOrder().getUrgentMoney() + "元");
+                        tvAddFeeFee.setRightString("+ ¥ " + data.getData().getOrder().getAdpremiumMoney() + "元");
+                        tvTaxPaymentFee.setRightString("- ¥ " + data.getData().getOrder().getTaxMoney() + "元");
+                        tvPlatformFee.setRightString("- ¥ " + data.getData().getOrder().getPromptMoney() + "元");
+                        tvSumFee.setRightString("+ ¥ " + data.getData().getOrder().getTotalMoney() + "元");
+                        if ("5".equals(orderStatus))
+                            tvPayType.setRightString("未入账");
+                        if ("6".equals(orderStatus))
+                            tvPayType.setRightString("已入账");
                     }
                 }
 
@@ -740,7 +805,7 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
                 }
                 if ("1".equals(orderType))
                     lastPatient = 1;
-                startActivityForResult(new Intent(this, EndOperationActivity.class).putExtra("orderDetailId", orderDetailId).putExtra("orderId", orderId).putExtra("lastPatient", lastPatient), REQUEST_CODE_97);
+                startActivityForResult(new Intent(this, EndOperationActivity.class).putExtra("orderDetailId", orderDetailId).putExtra("orderId", orderId).putExtra("lastPatient", lastPatient), REQUEST_CODE_96);
                 finish();
                 break;
             case 900:
@@ -763,6 +828,7 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
         ToastUtil.showLongToast(data.getMsg());
         switch (data.getCode()) {
             case 200:
+                setResult(RESULT_OK, new Intent().putExtra("refresh", 1));
                 finish();
                 break;
             case 900:
@@ -780,6 +846,7 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
         ToastUtil.showLongToast(data.getMsg());
         switch (data.getCode()) {
             case 200:
+                setResult(RESULT_OK, new Intent().putExtra("refresh", 1));
                 finish();
                 break;
             case 900:
@@ -794,7 +861,20 @@ public class OrderDetailsActivity extends BaseActivity<OrderContract.View, Order
 
     @Override
     public void resultGetOrder(GetOrderBean data) {
-
+        ToastUtil.showLongToast(data.getMsg());
+        switch (data.getCode()) {
+            case 200:
+                setResult(RESULT_OK, new Intent().putExtra("refresh", 1));
+                finish();
+                break;
+            case 900:
+                //清除所有临时储存
+                SPUtil.clear(ApplicationUtil.getContext());
+                ApplicationUtil.getManager().finishActivity(MainActivity.class);
+                startActivity(new Intent(this, CaptchaLoginActivity.class));
+                finish();
+                break;
+        }
     }
 
     @Override
