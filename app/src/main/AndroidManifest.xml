@@ -31,7 +31,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon, android:allowBackup, theme, label">
-        <activity android:name=".activity.SelectPhotosActivity"></activity>
+
         <activity
             android:name=".activity.CaptchaLoginActivity"
             android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
@@ -220,6 +220,11 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".activity.SendOrderAddPatientDetailsActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.SelectPhotosActivity"
             android:configChanges="screenSize|keyboardHidden|orientation|keyboard"
             android:exported="false"
             android:launchMode="singleTask" />
